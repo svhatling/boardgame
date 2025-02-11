@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003;
+package entity;
 
 public class Tile {
 
