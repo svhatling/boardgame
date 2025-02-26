@@ -15,10 +15,10 @@ public class PlayerTest {
     // Oppretting av brett
     board = new Board();
 
-    // Spilleren skal opprettes med navn, startfelt og brett
+    // Spiller opprettes med navn, tile og board
     player = new Player("TestPlayer", new Tile(1), board);
 
-    // Legg til noen startfelter på brettet
+    // Legger til noen tiles på brettet
     board.addTile(new Tile(1));  // Startfelt
     board.addTile(new Tile(2));  // Felt for stigen
     board.addTile(new Tile(45)); // Feltet hvor stigen ender
@@ -30,13 +30,13 @@ public class PlayerTest {
 
   @Test
   void testPlayerMovesUpViaLadder() {
-    // Spilleren starter på felt 2
+    // Spiller starter på felt 2
     player.placeOnTile(board.getTile(2));
 
-    // Spilleren ruller terningen (rull = 1 betyr at spilleren skal gå én plass videre)
+    // Spiller ruller terningen (1 betyr at spilleren flytter går en plass bortover)
     player.move(1, board);
 
-    // Spilleren skal bruke stigen på felt 2 og gå direkte til felt 45
+    // Spilleren bruker stigen på felt 2 og går direkte til felt 45
     assertEquals(45, player.getCurrentTile().getTileId());
   }
 
@@ -45,10 +45,10 @@ public class PlayerTest {
     // Spilleren starter på felt 1
     player.placeOnTile(board.getTile(1));
 
-    // Spilleren ruller terningen (rull = 1 betyr at spilleren skal gå én plass videre)
+    // Spilleren ruller terning (1 betyr at spilleren går en plass bortover)
     player.move(1, board);
 
-    // Spilleren skal være på felt 2 (ettersom det ikke er noen stige på felt 1)
-    assertEquals(2, player.getCurrentTile().getTileId());
+    // Spilleren skal være på felt 45 fra 2 (siden det ikke er noen stige på felt 1)
+    assertEquals(45, player.getCurrentTile().getTileId());
   }
 }

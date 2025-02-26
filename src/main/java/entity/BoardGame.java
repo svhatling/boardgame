@@ -26,21 +26,21 @@ public class BoardGame {
     }
 
     // Stiger opp
-    addLadder(2, 45, "klatrer opp stigen!");
-    addLadder(8, 29, "klatrer opp stigen!");
-    addLadder(34, 53, "klatrer opp stigen!");
-    addLadder(40, 58, "klatrer opp stigen!");
-    addLadder(55, 74, "klatrer opp stigen!");
-    addLadder(65, 86, "klatrer opp stigen!");
-    addLadder(68, 89, "klatrer opp stigen!");
+    addLadder(2, 45, "climbing up the ladder!");
+    addLadder(8, 29, "climbing up the ladder!");
+    addLadder(34, 53, "climbing up the ladder!");
+    addLadder(40, 58, "climbing up the ladder!");
+    addLadder(55, 74, "climbing up the ladder!");
+    addLadder(65, 86, "climbing up the ladder!");
+    addLadder(68, 89, "climbing up the ladder!");
 
     // Stiger ned
-    addLadder(88, 46, "faller ned stigen!");
-    addLadder(84, 63, "faller ned stigen!");
-    addLadder(82, 14, "faller ned stigen!");
-    addLadder(71, 31, "faller ned stigen!");
-    addLadder(62, 25, "faller ned stigen!");
-    addLadder(27, 6, "faller ned stigen!");
+    addLadder(88, 46, "falling down the ladder!");
+    addLadder(84, 63, "falling down the ladder!");
+    addLadder(82, 14, "falling down the ladder!");
+    addLadder(71, 31, "falling down the ladder!");
+    addLadder(62, 25, "falling down the ladder!");
+    addLadder(27, 6, "falling down the ladder!");
   }
 
   private void addLadder(int start, int end, String description) {
@@ -57,20 +57,31 @@ public class BoardGame {
   }
 
   public void play() {
+    System.out.println("The following players are playing the game: ");
+    for (Player player : players) {
+      System.out.println("Name: " + player.getName());
+    }
+    System.out.println();
+
     int round = 1;
     while (!gameOver) {
       System.out.println("Round number " + round);
       for (Player player : players) {
         int diceValue = dice.rollDice();
-        System.out.println(player.getName() + " trillet " + diceValue);
+        System.out.println(player.getName() + " is currently on tile " + player.getCurrentTile().getTileId());
+        System.out.println(player.getName() + " rolled " + diceValue);
+
         player.move(diceValue, board);
-        System.out.println(player.getName() + " er på felt " + player.getCurrentTile().getTileId());
+
+        System.out.println(player.getName() + " is now on tile " + player.getCurrentTile().getTileId());
+
         if (player.getCurrentTile().getTileId() >= 90) {
           System.out.println("And the winner is: " + player.getName());
           gameOver = true;
           break;
         }
       }
+      System.out.println();
       round++;
     }
   }

@@ -11,7 +11,7 @@ public class TileTest {
     Board board = new Board();
 
     // Opprett en tile og legg til en LadderAction
-    Tile tile = new Tile(1);  // Sørg for at ID er satt til 1
+    Tile tile = new Tile(1);  // ID satt til 1
     LadderAction action = new LadderAction(20, "Move up to 20");
     tile.setTileAction(action);
 
