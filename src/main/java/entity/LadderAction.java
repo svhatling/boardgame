@@ -15,19 +15,22 @@ public class LadderAction implements TileAction {
   public void perform(Player player) {
     // Hent boardet fra spilleren
     Board board = player.getBoard();  // Henter boardet fra spilleren
-    System.out.println("Player is currently on tile: " + player.getCurrentTile().getTileId());
 
     // Hent destinationTile fra brettet ved hjelp av destinationTileId
-    Tile destinationTile = board.getTile(destinationTileId);
+    Tile currentTile = player.getCurrentTile();
 
-    // Debugging: Sjekk om destinationTileId er riktig
-    System.out.println("Destination tile ID: " + destinationTileId);
+    if (currentTile.getTileId() != destinationTileId) {
+      System.out.println(player.getName() + " is currently on tile: " + currentTile.getTileId());
+      System.out.println(player.getName() + " should move to tile: " + destinationTileId);
 
-    // Flytt spilleren til destinationTile
-    player.placeOnTile(destinationTile);
-
-    // Skriver ut meldingen om at spilleren har klatret opp stigen
-    System.out.println(message);
+      Tile newTile = board.getTile(destinationTileId);
+      if (newTile != null) {
+        player.placeOnTile(newTile);
+        System.out.println(player.getName() + " " + message);
+      } else {
+        System.out.println("Error: Destination tile " + destinationTileId + " does not exist!");
+      }
+    }
   }
 
   // Gettere for destinationTileId og message
