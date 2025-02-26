@@ -10,6 +10,9 @@ public class Dice extends Die {
 
   public Dice(int numberOfDice, int sides) {
     super(sides);
+    if (numberOfDice <= 0) {
+      throw new IllegalArgumentException("Number of dice must be greater than 0");
+    }
     dice = new ArrayList<>();
     for (int i = 0; i < numberOfDice; i++) {
       dice.add(new Die(sides));
@@ -32,6 +35,9 @@ public class Dice extends Die {
   public List<Integer> getDiceValues() {
     List<Integer> values = new ArrayList<>();
     for (Die die : dice) {
+      if (die.getValue() == 0) {
+        throw new IllegalStateException("Dice has not been rolled");
+      }
       values.add(die.getValue());
     }
     return values;
