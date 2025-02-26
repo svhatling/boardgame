@@ -11,16 +11,16 @@ public class Board {
   }
 
   public void addTile(Tile tile) {
-    // Add debug print to verify tiles are being added correctly
+    if (tiles.containsKey(tile.getTileId())) {
+      throw new IllegalArgumentException("Tile with ID " + tile.getTileId() + " already exists");
+    }
     System.out.println("Adding tile with ID: " + tile.getTileId());
     tiles.put(tile.getTileId(), tile);
   }
 
   public Tile getTile(int tileId) {
-    // Check if the tile exists before returning it
     if (!tiles.containsKey(tileId)) {
-      System.out.println("Tile with ID " + tileId + " not found in board map. Map size: " + tiles.size());
-      return null;
+      throw new IllegalArgumentException("Tile with ID " + tileId + " not found. Map size: " + tiles.size());
     }
     return tiles.get(tileId);
   }
