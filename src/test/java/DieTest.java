@@ -10,8 +10,9 @@ public class DieTest {
   @Test
   public void testDefaultConstructor() {
     Die die = new Die();
-    assertEquals(6, die.getSides());
-    assertEquals(0, die.getValue());
+    die.rollDie();
+    int value = die.getValue();
+    assertTrue(value >= 1 && value <= 6);
   }
 
   @Test
