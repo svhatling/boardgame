@@ -1,72 +1,77 @@
 package entity;
 
-public class BoardGame {
+import java.util.*;
 
+public class BoardGame {
   private Board board;
   private List<Player> players;
   private Dice dice;
-  private Player currentPlayer;
+  private boolean gameOver;
 
-  // Constructor
   public BoardGame() {
     players = new ArrayList<>();
+    gameOver = false;
+    board = new Board();
   }
 
-  // Legg til en spiller
   public void addPlayer(Player player) {
     players.add(player);
   }
 
-  // Sett opp brettet
   public void createBoard() {
     board = new Board();
-    for (int i = 1; i <= 100; i++) { // Eksempel: 100 felt
+    for (int i = 1; i <= 90; i++) {
       Tile tile = new Tile(i);
       board.addTile(tile);
     }
 
-    // Eksempel på en stige (ladder action) mellom felt 5 og 20
-    Tile startTile = board.getTile(5);
-    Tile endTile = board.getTile(20);
-    startTile.setLandAction(new LadderAction(20, "Stige til felt 20"));
+    // Stiger opp
+    addLadder(2, 45, "klatrer opp stigen!");
+    addLadder(8, 29, "klatrer opp stigen!");
+    addLadder(34, 53, "klatrer opp stigen!");
+    addLadder(40, 58, "klatrer opp stigen!");
+    addLadder(55, 74, "klatrer opp stigen!");
+    addLadder(65, 86, "klatrer opp stigen!");
+    addLadder(68, 89, "klatrer opp stigen!");
+
+    // Stiger ned
+    addLadder(88, 46, "faller ned stigen!");
+    addLadder(84, 63, "faller ned stigen!");
+    addLadder(82, 14, "faller ned stigen!");
+    addLadder(71, 31, "faller ned stigen!");
+    addLadder(62, 25, "faller ned stigen!");
+    addLadder(27, 6, "faller ned stigen!");
   }
 
-  // Sett opp terningene
+  private void addLadder(int start, int end, String description) {
+    Tile startTile = board.getTile(start);
+    startTile.setTileAction(new LadderAction(end, description));
+  }
+
   public void createDice() {
-    dice = new Dice(1); // Eksempel: 1 terning
+    dice = new Dice(1, 6);
   }
 
-  // Spill selve spillet
+  public Board getBoard() {
+    return board;
+  }
+
   public void play() {
-    boolean gameOver = false;
-
+    int round = 1;
     while (!gameOver) {
+      System.out.println("Round number " + round);
       for (Player player : players) {
-        currentPlayer = player;
-        int diceValue = dice.roll();
+        int diceValue = dice.rollDice();
         System.out.println(player.getName() + " trillet " + diceValue);
-
-        // Flytt spilleren
-        player.move(diceValue);
-
-        // Sjekk om spilleren har vunnet
-        if (player.getCurrentTile().getTileId() == 100) { // Eksempel: Mål er felt 100
-          System.out.println(player.getName() + " har vunnet spillet!");
+        player.move(diceValue, board);
+        System.out.println(player.getName() + " er på felt " + player.getCurrentTile().getTileId());
+        if (player.getCurrentTile().getTileId() >= 90) {
+          System.out.println("And the winner is: " + player.getName());
           gameOver = true;
           break;
         }
       }
+      round++;
     }
   }
-
-  // Hent vinneren (kan være nyttig for sluttlogikk)
-  public Player getWinner() {
-    for (Player player : players) {
-      if (player.getCurrentTile().getTileId() == 100) { // Eksempel: Mål er felt 100
-        return player;
-      }
-    }
-    return null;
-  }
-
 }
