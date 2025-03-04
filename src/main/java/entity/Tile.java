@@ -1,7 +1,7 @@
 package entity;
 
 public class Tile {
-  private int tileId;
+  private final int tileId;
   private TileAction tileAction;
 
   public Tile(int tileId) {
@@ -12,9 +12,6 @@ public class Tile {
     return tileId;
   }
 
-  public TileAction getTileAction() {
-    return tileAction;
-  }
 
   public void setTileAction(TileAction action) {
     this.tileAction = action;
