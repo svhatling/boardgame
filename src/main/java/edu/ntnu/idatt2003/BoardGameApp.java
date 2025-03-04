@@ -3,22 +3,25 @@ package edu.ntnu.idatt2003;
 import entity.*;
 
 public class BoardGameApp {
-  public static void main(String[] args) {
-    // Lag et nytt spill
-    BoardGame game = new BoardGame();
+  private BoardGame game;
 
+  public BoardGameApp() {
+    this.game = new BoardGame();
+  }
 
+  public void start() {
     // Opprett brettet og terningen i spillet
-    game.createBoard();
-    game.createDice();
+    this.game.createBoard();
+    this.game.createDice(2);
 
-    Board board = game.getBoard();
+    Board board = this.game.getBoard();
+
 
     // Legg til spillere, hver spiller får sitt startfelt og brett
-    Player player1 = new Player("Mikke", board.getTile(1), board);
-    Player player2 = new Player("Donald", board.getTile(1), board);
-    Player player3 = new Player("Langbein", board.getTile(1), board);
-    Player player4 = new Player("Dolly", board.getTile(1), board);
+    Player player1 = new Player("Mikke", board);
+    Player player2 = new Player("Donald", board);
+    Player player3 = new Player("Langbein", board);
+    Player player4 = new Player("Dolly", board);
 
     // Add players to the game
     game.addPlayer(player1);
@@ -26,7 +29,22 @@ public class BoardGameApp {
     game.addPlayer(player3);
     game.addPlayer(player4);
 
-    // Start spillet
-    game.play();
+    game.players();
+
+    int roundNumber = 1;
+    while (!game.isFinished()) {
+      System.out.println("Round number " + roundNumber++);
+      game.playOneRound();
+      if (!game.isFinished()) {
+        game.showPlayerStatus();
+      }
+      System.out.println();
+    }
+    System.out.println("And the winner is: " + game.getWinner().getName());
+  }
+
+  public static void main(String[] args) {
+    BoardGameApp app = new BoardGameApp();
+    app.start();
   }
 }
