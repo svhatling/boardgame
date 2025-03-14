@@ -1,58 +1,90 @@
-package test;
+package entity;
 
-import entity.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class LadderActionTest {
+class LadderActionTest {
 
-  private LadderAction ladderAction;
-  private Player player;
-  private Tile startTile;
   private Board board;
-  private Dice dice;
+  private Player player;
+  private LadderAction ladderAction;
+  private int startTileId = 5;
+  private int destinationTileId = 20;
 
   @BeforeEach
   void setUp() {
-    // Create a new BoardGame instance and set up the board with ladders
-    BoardGame boardGame = new BoardGame();
-    boardGame.createBoard(); // Set up board with ladders
-    boardGame.createDice(); // Create the dice
+    // Oppretter brett og spilleren
+    board = new Board();
+    for (int i = 1; i <= 90; i++) {
+      board.addTile(new Tile(i));
+    }
+    player = new Player("TestPlayer", board);
 
-    // Get the board to use in this test
-    board = boardGame.getBoard();
+    // Oppretter en LadderAction fra startTileId til destinationTileId
+    ladderAction = new LadderAction(destinationTileId, "climbing up the ladder!");
+    board.getTile(startTileId).setTileAction(ladderAction);
 
-    // Access the Tile for starting on tile 3
-    startTile = board.getTile(3);
-    ladderAction = new LadderAction(20, "Climb to 20");
-    startTile.setTileAction(ladderAction);
-
-    // Initialize the player on startTile
-    player = new Player("TestPlayer", startTile, board);
-
-    // Initialize dice (1 die with 6 sides, as presumably configured elsewhere)
-    dice = new Dice(1, 6);
+    // Plasserer spilleren på startTileId
+    player.setCurrentTile(board.getTile(startTileId));
   }
 
+  // Tester at LadderAction flytter spilleren til riktig tile
   @Test
-  void testLadderActionMovesPlayer() {
-    // Setup the Board and Tiles
-    Board board = new Board();
-    board.addTile(new Tile(1)); // Define tile 1 without a laddder
-    board.addTile(new Tile(2));
+  void testLadderActionMovesPlayerToCorrectTile() {
+    board.getTile(startTileId).landPlayer(player);
 
-    // Assume the starting Tile is tile 1
-    Tile startingTile = board.getTile(1);
+    assertEquals(destinationTileId, player.getCurrentTile().getTileId(),
+        "Spilleren skal flyttes til destinasjonstilen etter ladder action.");
+  }
 
-    // Now create the Player with name, starting tile, and the board
-    Player player = new Player("Player1", startingTile, board);
+  // Tester at LadderAction ikke gjør noe hvis den ikke er satt på tile
+  @Test
+  void testLadderActionNotSet() {
+    Tile tileWithoutAction = board.getTile(10);
+    player.setCurrentTile(tileWithoutAction);
 
-    // Simulate a roll to move from tile 1 to tile 2
-    int rollValue = 1; // Move from tile 1 to tile 2
-    player.move(rollValue, board); // Move to tile 2
+    tileWithoutAction.landPlayer(player);
 
-    // Check if the action from tile 2 executed correctly, moving to tile 45
-    assertEquals(45, player.getCurrentTile().getTileId(), "Player should land on tile 45 after using the ladder from tile 2");
+    assertEquals(10, player.getCurrentTile().getTileId(),
+        "Spilleren skal forbli på samme tile når det ikke er en ladder action.");
+  }
+
+  // Tester at LadderAction håndterer en ugyldig destinasjon (utenfor brettet)
+  @Test
+  void testLadderActionWithInvalidDestination() {
+    int invalidDestination = 200; // Destinasjon utenfor brettet
+    LadderAction invalidLadder = new LadderAction(invalidDestination, "Invalid ladder!");
+    board.getTile(15).setTileAction(invalidLadder);
+
+    player.setCurrentTile(board.getTile(15));
+    board.getTile(15).landPlayer(player);
+
+    assertEquals(invalidDestination, player.getCurrentTile().getTileId(),
+        "Spilleren skal bli satt til ugyldig tile dersom LadderAction tillater det.");
+  }
+
+  // Tester at LadderAction håndterer en negativ destinasjon
+  @Test
+  void testLadderActionWithNegativeDestination() {
+    int negativeDestination = -5;
+    LadderAction negativeLadder = new LadderAction(negativeDestination, "Falling into the void!");
+    board.getTile(7).setTileAction(negativeLadder);
+
+    player.setCurrentTile(board.getTile(7));
+    board.getTile(7).landPlayer(player);
+
+    assertEquals(negativeDestination, player.getCurrentTile().getTileId(),
+        "Spilleren skal bli flyttet til en negativ tile dersom LadderAction tillater det.");
+  }
+
+  // Tester at LadderAction utfører handlingen flere ganger korrekt
+  @Test
+  void testLadderActionMultipleTimes() {
+    board.getTile(startTileId).landPlayer(player);
+    board.getTile(startTileId).landPlayer(player); // Samme handling på nytt
+
+    assertEquals(destinationTileId, player.getCurrentTile().getTileId(),
+        "Spilleren skal fortsatt ende opp på destinasjonstilen.");
   }
 }
