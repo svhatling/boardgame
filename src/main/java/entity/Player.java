@@ -32,7 +32,7 @@ public class Player {
   }
 
   public void move(int roll) {
-    int targetTileId = Math.min(currentTile.getTileId() + roll, 90);
+    int targetTileId = Math.max(1, Math.min(currentTile.getTileId() + roll, 90));
     Tile targetTile = board.getTile(targetTileId);
     setCurrentTile(targetTile);
     targetTile.landPlayer(this);
