@@ -14,76 +14,59 @@ class LadderActionTest {
 
   @BeforeEach
   void setUp() {
-    // Creates board and player
     board = new Board();
     for (int i = 1; i <= 90; i++) {
       board.addTile(new Tile(i));
     }
     player = new Player("TestPlayer", board);
 
-    // Creates a LadderAction from startTileId to destinationTileId
     ladderAction = new LadderAction(destinationTileId, "climbing up the ladder!");
     board.getTile(startTileId).setTileAction(ladderAction);
 
-    // Places the player on startTileId
     player.setCurrentTile(board.getTile(startTileId));
   }
 
-  // Testing that LadderAction moves the player to the correct tile
   @Test
   void testLadderActionMovesPlayerToCorrectTile() {
     board.getTile(startTileId).landPlayer(player);
-
     assertEquals(destinationTileId, player.getCurrentTile().getTileId(),
         "The player should be moved to the destination tile after ladder action.");
   }
 
-  // Testing that LadderAction does nothing if it's not set on a tile
   @Test
   void testLadderActionNotSet() {
     Tile tileWithoutAction = board.getTile(10);
     player.setCurrentTile(tileWithoutAction);
 
     tileWithoutAction.landPlayer(player);
-
     assertEquals(10, player.getCurrentTile().getTileId(),
         "The player should remain on the same tile when there is no ladder action.");
   }
 
-  // Testing that LadderAction handles an invalid destination (outside the board)
   @Test
-  void testLadderActionWithInvalidDestination() {
-    int invalidDestination = 200; // Destination outside the board
-    LadderAction invalidLadder = new LadderAction(invalidDestination, "Invalid ladder!");
-    board.getTile(15).setTileAction(invalidLadder);
-
-    player.setCurrentTile(board.getTile(15));
-    board.getTile(15).landPlayer(player);
-
-    assertEquals(invalidDestination, player.getCurrentTile().getTileId(),
-        "The player should be moved to an invalid tile if LadderAction allows it.");
+  void testLadderActionWithNegativeDestinationThrowsException() {
+    Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        new LadderAction(-5, "Invalid ladder!")
+    );
+    assertEquals("Destination tile ID cannot be negative or zero.", exception.getMessage());
   }
 
-  // Testing that LadderAction handles a negative destination
   @Test
-  void testLadderActionWithNegativeDestination() {
-    int negativeDestination = -5;
-    LadderAction negativeLadder = new LadderAction(negativeDestination, "Falling into the void!");
-    board.getTile(7).setTileAction(negativeLadder);
+  void testLadderActionMovesPlayerToMaxTileIfOver90() {
+    LadderAction ladderAction = new LadderAction(110, "Too high! Moving to 90.");
+    board.getTile(startTileId).setTileAction(ladderAction);
 
-    player.setCurrentTile(board.getTile(7));
-    board.getTile(7).landPlayer(player);
+    player.setCurrentTile(board.getTile(startTileId));
+    board.getTile(startTileId).landPlayer(player);
 
-    assertEquals(negativeDestination, player.getCurrentTile().getTileId(),
-        "The player should be moved to a negative tile if LadderAction allows it.");
+    assertEquals(90, player.getCurrentTile().getTileId(),
+        "The player should be moved to tile 90 if the destination is higher than 90.");
   }
 
-  // Testing that LadderAction executes the action multiple times correctly
   @Test
   void testLadderActionMultipleTimes() {
     board.getTile(startTileId).landPlayer(player);
-    board.getTile(startTileId).landPlayer(player); // Execute the action again
-
+    board.getTile(startTileId).landPlayer(player);
     assertEquals(destinationTileId, player.getCurrentTile().getTileId(),
         "The player should still end up on the destination tile.");
   }
