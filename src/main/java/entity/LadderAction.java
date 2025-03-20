@@ -5,17 +5,18 @@ public class LadderAction implements TileAction {
   private int destinationTileId;
   private String message;
 
-  // Konstruktør for LadderAction
   public LadderAction(int destinationTileId, String message) {
-    this.destinationTileId = destinationTileId;
+    if (destinationTileId < 1) {
+      throw new IllegalArgumentException("Destination tile ID cannot be negative or zero.");
+    }
+    this.destinationTileId = destinationTileId; // Beholder original ID
     this.message = message;
   }
 
-  // Implementering av perform-metoden fra TileAction
   @Override
   public void perform(Player player) {
-    player.setCurrentTile(player.getBoard().getTile(destinationTileId));
+    int finalTile = Math.min(destinationTileId, 90); // Begrens spilleren til maks 90
+    player.setCurrentTile(player.getBoard().getTile(finalTile));
     System.out.println(player.getName() + " " + message);
   }
 }
-
