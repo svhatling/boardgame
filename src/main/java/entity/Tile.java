@@ -5,6 +5,9 @@ public class Tile {
   private TileAction tileAction;
 
   public Tile(int tileId) {
+    if (tileId < 1) {
+      throw new IllegalArgumentException("Tile ID cannot be negative.");
+    }
     this.tileId = tileId;
   }
 
