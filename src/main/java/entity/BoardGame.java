@@ -83,7 +83,6 @@ public class BoardGame {
       if (player.getCurrentTile().getTileId() >= 90) {
         winner = player;
         gameOver = true;
-        System.out.println("The winner is " + winner.getName());
         return;
       }
     }
@@ -99,4 +98,10 @@ public class BoardGame {
   public Player getWinner() {
     return winner;
   }
+
+  public List<Player> getPlayers() {
+    return players;
+  }
+
+
 }
