@@ -77,7 +77,8 @@ public class BoardGame {
   }
 
 
-  public void setCurrentplayer(Player player) {
+  public void setCurrentPlayer(Player player) {
     this.currentplayer = player;
   }
+
 }

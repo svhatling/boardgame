@@ -41,7 +41,7 @@ public class BoardGameApp {
       System.out.println("Round " + roundNumber++);
 
       for (Player player : game.getPlayers()) {
-        game.setCurrentplayer(player);
+        game.setCurrentPlayer(player);
         int diceRoll = game.getDice().rollDice();
         player.move(diceRoll);
 

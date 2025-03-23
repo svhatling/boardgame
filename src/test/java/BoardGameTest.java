@@ -1,8 +1,8 @@
-package entity;
-
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import entity.BoardGame;
+import entity.Player;
 
 class BoardGameTest {
 
@@ -12,8 +12,8 @@ class BoardGameTest {
   @BeforeEach
   void setUp() {
     game = new BoardGame();
-    game.createBoard();
-    game.createDice(2);
+    game.createBoard("snakesandladders"); // Opprett spillbrett for Snakes and Ladders
+    game.createDice(2); // Opprett 2 terninger
     player1 = new Player("Player1", game.getBoard());
     player2 = new Player("Player2", game.getBoard());
     game.addPlayer(player1);
@@ -22,31 +22,32 @@ class BoardGameTest {
 
   @Test
   void testBoardIsCreated() {
-    assertNotNull(game.getBoard());
+    assertNotNull(game.getBoard(), "The board should be created.");
   }
 
   @Test
   void testPlayersAreAdded() {
-    assertEquals(2, game.getPlayers().size()); // Sjekker riktig antall spillere
+    assertEquals(2, game.getPlayers().size(), "The game should have 2 players.");
   }
 
   @Test
-  void testGameStartsNotFinished() {
-    assertFalse(game.isFinished());
+  void testGameStartsWithoutWinner() {
+    assertNull(game.getWinner(), "There should be no winner at the start of the game.");
   }
 
   @Test
-  void testPlayerMovesAfterRound() {
+  void testPlayerMovesAfterDiceRoll() {
     int initialTile = player1.getCurrentTile().getTileId();
-    game.playOneRound();
-    assertNotEquals(initialTile, player1.getCurrentTile().getTileId());
+    game.setCurrentPlayer(player1);
+    int diceRoll = game.getDice().rollDice();
+    player1.move(diceRoll);
+    assertNotEquals(initialTile, player1.getCurrentTile().getTileId(), "Player should move after rolling the dice.");
   }
 
   @Test
-  void testGameEndsWhenPlayerReachesTile90() {
-    player1.setCurrentTile(game.getBoard().getTile(90));
-    game.playOneRound();
-    assertTrue(game.isFinished());
-    assertEquals(player1, game.getCurrentplayer());
+  void testGameEndsWhenPlayerReachesLastTile() {
+    game.setCurrentPlayer(player1);
+    player1.setCurrentTile(game.getBoard().getTile(game.getBoard().getTiles().size())); // Sett spilleren på siste brikke
+    assertEquals(player1, game.getWinner(), "The player on the last tile should be the winner.");
   }
 }
