@@ -8,13 +8,11 @@ public class BoardGame {
   private Board board;
   private List<Player> players;
   private Dice dice;
-  private boolean gameOver;
   private Player currentplayer;
 
   public BoardGame() {
     this.board = new Board();
     this.players = new ArrayList<>();
-    this.gameOver = false;
     this.currentplayer = null;
   }
 
