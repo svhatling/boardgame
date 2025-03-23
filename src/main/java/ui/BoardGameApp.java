@@ -11,7 +11,7 @@ public class BoardGameApp {
 
   public void start() {
     // Opprett brettet og terningen i spillet
-    this.game.createBoard();
+    this.game.createBoard("snakesandladders");
     this.game.createDice(2);
 
     Board board = this.game.getBoard();
@@ -29,18 +29,33 @@ public class BoardGameApp {
     game.addPlayer(player3);
     game.addPlayer(player4);
 
-    game.players();
+    System.out.println("The following players are playing:");
+    for (Player player : game.getPlayers()) {
+      System.out.println("Name: " + player.getName());
+    }
+    System.out.println();
 
     int roundNumber = 1;
-    while (!game.isFinished()) {
-      System.out.println("Round number " + roundNumber++);
-      game.playOneRound();
-      if (!game.isFinished()) {
+    Player winner = null;
+    while (winner == null) {
+      System.out.println("Round " + roundNumber++);
+
+      for (Player player : game.getPlayers()) {
+        game.setCurrentplayer(player);
+        int diceRoll = game.getDice().rollDice();
+        player.move(diceRoll);
+
+        if (player.getCurrentTile().getTileId() == board.getTiles().size()) {
+          winner = player;
+          break;
+        }
+      }
+      if (winner == null) {
         game.showPlayerStatus();
       }
       System.out.println();
     }
-    System.out.println("And the winner is: " + game.getWinner().getName());
+    System.out.println("Winner is " + winner.getName());
   }
 
   public static void main(String[] args) {

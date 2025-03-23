@@ -47,6 +47,6 @@ class BoardGameTest {
     player1.setCurrentTile(game.getBoard().getTile(90));
     game.playOneRound();
     assertTrue(game.isFinished());
-    assertEquals(player1, game.getWinner());
+    assertEquals(player1, game.getCurrentplayer());
   }
 }
