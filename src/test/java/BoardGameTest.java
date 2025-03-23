@@ -1,41 +1,52 @@
-package test;
+package entity;
 
-import entity.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class BoardGameTest {
-  private BoardGame boardGame;
-  private Player player;
+class BoardGameTest {
+
+  private BoardGame game;
+  private Player player1, player2;
 
   @BeforeEach
   void setUp() {
-    boardGame = new BoardGame();
-    boardGame.createBoard();
-    player = new Player("TestPlayer", new Tile(1), boardGame.getBoard()); // Oppdaterte konstruktøren her
-    boardGame.addPlayer(player);
+    game = new BoardGame();
+    game.createBoard();
+    game.createDice(2);
+    player1 = new Player("Player1", game.getBoard());
+    player2 = new Player("Player2", game.getBoard());
+    game.addPlayer(player1);
+    game.addPlayer(player2);
   }
 
   @Test
-  void testPlayerWinsGame() {
-    player.placeOnTile(new Tile(1));
-    player.move(89, boardGame.getBoard());  // Spilleren beveger seg 89 steg fremover
-    assertEquals(90, player.getCurrentTile().getTileId());  // Spilleren skal være på felt 90
+  void testBoardIsCreated() {
+    assertNotNull(game.getBoard());
   }
 
   @Test
-  void testPlayerLadderAction() {
-    // Spilleren starter på et felt med en stige
-    Tile startTile = boardGame.getBoard().getTile(2);  // Felt 2 som har en stige
-    LadderAction ladderAction = new LadderAction(10, "klatrer opp stigen!");
-    startTile.setTileAction(ladderAction);
-    player.placeOnTile(startTile);
+  void testPlayersAreAdded() {
+    assertEquals(2, game.getPlayers().size()); // Sjekker riktig antall spillere
+  }
 
-    // Spilleren lander på feltet og stigen utføres
-    startTile.landPlayer(player);
+  @Test
+  void testGameStartsNotFinished() {
+    assertFalse(game.isFinished());
+  }
 
-    // Spilleren skal ha kommet til felt 10 etter å ha brukt stigen
-    assertEquals(10, player.getCurrentTile().getTileId());
+  @Test
+  void testPlayerMovesAfterRound() {
+    int initialTile = player1.getCurrentTile().getTileId();
+    game.playOneRound();
+    assertNotEquals(initialTile, player1.getCurrentTile().getTileId());
+  }
+
+  @Test
+  void testGameEndsWhenPlayerReachesTile90() {
+    player1.setCurrentTile(game.getBoard().getTile(90));
+    game.playOneRound();
+    assertTrue(game.isFinished());
+    assertEquals(player1, game.getWinner());
   }
 }

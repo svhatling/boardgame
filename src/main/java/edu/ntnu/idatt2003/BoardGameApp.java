@@ -1,4 +1,4 @@
-package ui;
+package edu.ntnu.idatt2003;
 
 import entity.*;
 
@@ -29,4 +29,22 @@ public class BoardGameApp {
     game.addPlayer(player3);
     game.addPlayer(player4);
 
+    game.players();
+
+    int roundNumber = 1;
+    while (!game.isFinished()) {
+      System.out.println("Round number " + roundNumber++);
+      game.playOneRound();
+      if (!game.isFinished()) {
+        game.showPlayerStatus();
+      }
+      System.out.println();
+    }
+    System.out.println("And the winner is: " + game.getWinner().getName());
+  }
+
+  public static void main(String[] args) {
+    BoardGameApp app = new BoardGameApp();
+    app.start();
+  }
 }

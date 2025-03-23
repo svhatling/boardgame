@@ -1,42 +1,73 @@
-package test;
+package entity;
 
-import entity.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class LadderActionTest {
-  private LadderAction ladderAction;
-  private Player player;
-  private Tile startTile, destinationTile;
+class LadderActionTest {
+
   private Board board;
+  private Player player;
+  private LadderAction ladderAction;
+  private int startTileId = 5;
+  private int destinationTileId = 20;
 
   @BeforeEach
   void setUp() {
-    // Opprett Board-objekt som trengs av Player
     board = new Board();
+    for (int i = 1; i <= 90; i++) {
+      board.addTile(new Tile(i));
+    }
+    player = new Player("TestPlayer", board);
 
-    // Opprett Tiles og LadderAction
-    startTile = new Tile(3); // Start på felt 3
-    destinationTile = new Tile(20); // Destinasjon er felt 20
-    ladderAction = new LadderAction(20, "Climb to 20");
+    ladderAction = new LadderAction(destinationTileId, "climbing up the ladder!");
+    board.getTile(startTileId).setTileAction(ladderAction);
 
-    // Sett LadderAction på startTile
-    startTile.setTileAction(ladderAction);
-
-    // Opprett Player med startTile og board
-    player = new Player("TestPlayer", startTile, board);
+    player.setCurrentTile(board.getTile(startTileId));
   }
 
   @Test
-  void testLadderActionMovesPlayer() {
-    // Spilleren lander på startTile og utløser LadderAction
-    startTile.landPlayer(player);
+  void testLadderActionMovesPlayerToCorrectTile() {
+    board.getTile(startTileId).landPlayer(player);
+    assertEquals(destinationTileId, player.getCurrentTile().getTileId(),
+        "The player should be moved to the destination tile after ladder action.");
+  }
 
-    // Sjekk spillerens posisjon etter LadderAction
-    System.out.println("Test: Player is on tile " + player.getCurrentTile().getTileId());
+  @Test
+  void testLadderActionNotSet() {
+    Tile tileWithoutAction = board.getTile(10);
+    player.setCurrentTile(tileWithoutAction);
 
-    // Test at spilleren er på destinationTile etter LadderAction
-    assertEquals(20, player.getCurrentTile().getTileId(), "Player should land on tile 20 after using ladder");
+    tileWithoutAction.landPlayer(player);
+    assertEquals(10, player.getCurrentTile().getTileId(),
+        "The player should remain on the same tile when there is no ladder action.");
+  }
+
+  @Test
+  void testLadderActionWithNegativeDestinationThrowsException() {
+    Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        new LadderAction(-5, "Invalid ladder!")
+    );
+    assertEquals("Destination tile ID cannot be negative or zero.", exception.getMessage());
+  }
+
+  @Test
+  void testLadderActionMovesPlayerToMaxTileIfOver90() {
+    LadderAction ladderAction = new LadderAction(110, "Too high! Moving to 90.");
+    board.getTile(startTileId).setTileAction(ladderAction);
+
+    player.setCurrentTile(board.getTile(startTileId));
+    board.getTile(startTileId).landPlayer(player);
+
+    assertEquals(90, player.getCurrentTile().getTileId(),
+        "The player should be moved to tile 90 if the destination is higher than 90.");
+  }
+
+  @Test
+  void testLadderActionMultipleTimes() {
+    board.getTile(startTileId).landPlayer(player);
+    board.getTile(startTileId).landPlayer(player);
+    assertEquals(destinationTileId, player.getCurrentTile().getTileId(),
+        "The player should still end up on the destination tile.");
   }
 }

@@ -1,5 +1,4 @@
 package entity;
-
 import java.util.*;
 
 public class BoardGame {
@@ -7,11 +6,14 @@ public class BoardGame {
   private List<Player> players;
   private Dice dice;
   private boolean gameOver;
+  private Player winner;
 
   public BoardGame() {
-    players = new ArrayList<>();
-    gameOver = false;
-    board = new Board();
+    this.board = new Board();
+    this.players = new ArrayList<>();
+    this.gameOver = false;
+    this.winner = null;
+    createBoard();
   }
 
   public void addPlayer(Player player) {
@@ -19,70 +21,87 @@ public class BoardGame {
   }
 
   public void createBoard() {
-    board = new Board();
     for (int i = 1; i <= 90; i++) {
-      Tile tile = new Tile(i);
-      board.addTile(tile);
+      board.addTile(new Tile(i));
     }
 
-    // Stiger opp
-    addLadder(2, 45, "climbing up the ladder!");
-    addLadder(8, 29, "climbing up the ladder!");
-    addLadder(34, 53, "climbing up the ladder!");
-    addLadder(40, 58, "climbing up the ladder!");
-    addLadder(55, 74, "climbing up the ladder!");
-    addLadder(65, 86, "climbing up the ladder!");
-    addLadder(68, 89, "climbing up the ladder!");
+    //Stiger opp
+    addLadder(2, 45);
+    addLadder(8, 29);
+    addLadder(34, 53);
+    addLadder(40, 58);
+    addLadder(55, 74);
+    addLadder(65, 86);
+    addLadder(68, 89);
 
-    // Stiger ned
-    addLadder(88, 46, "falling down the ladder!");
-    addLadder(84, 63, "falling down the ladder!");
-    addLadder(82, 14, "falling down the ladder!");
-    addLadder(71, 31, "falling down the ladder!");
-    addLadder(62, 25, "falling down the ladder!");
-    addLadder(27, 6, "falling down the ladder!");
+    //Stiger ned
+    addLadder(88, 46);
+    addLadder(84, 63);
+    addLadder(82, 14);
+    addLadder(71, 31);
+    addLadder(62, 25);
+    addLadder(27, 6);
   }
 
-  private void addLadder(int start, int end, String description) {
-    Tile startTile = board.getTile(start);
-    startTile.setTileAction(new LadderAction(end, description));
+  private void addLadder(int start, int end) {
+    String message = (start < end) ? "climbing up the ladder!" : "falling down the ladder!";
+    board.getTile(start).setTileAction(new LadderAction(end, message));
   }
 
-  public void createDice() {
-    dice = new Dice(1, 6);
+  public void createDice(int numDice) {
+    dice = new Dice(numDice, 6);
   }
 
   public Board getBoard() {
     return board;
   }
 
-  public void play() {
+  public void players() {
     System.out.println("The following players are playing the game: ");
     for (Player player : players) {
       System.out.println("Name: " + player.getName());
     }
     System.out.println();
+  }
 
-    int round = 1;
-    while (!gameOver) {
-      System.out.println("Round number " + round);
-      for (Player player : players) {
-        int diceValue = dice.rollDice();
-        System.out.println(player.getName() + " is currently on tile " + player.getCurrentTile().getTileId());
-        System.out.println(player.getName() + " rolled " + diceValue);
+  public boolean isFinished() {
+    return gameOver;
+  }
 
-        player.move(diceValue, board);
+  public void playOneRound(){
+    for (Player player : players) {
+      int roll = dice.rollDice();
+      System.out.println(player.getName() + " rolled " + roll);
 
-        System.out.println(player.getName() + " is now on tile " + player.getCurrentTile().getTileId());
+      int targetTileId = Math.min(player.getCurrentTile().getTileId() + roll, 90);
 
-        if (player.getCurrentTile().getTileId() >= 90) {
-          System.out.println("And the winner is: " + player.getName());
-          gameOver = true;
-          break;
-        }
-      }
+      player.move(roll);
+
+      System.out.println(player.getName() + " is on tile " + player.getCurrentTile().getTileId());
       System.out.println();
-      round++;
+
+      if (player.getCurrentTile().getTileId() >= 90) {
+        winner = player;
+        gameOver = true;
+        return;
+      }
     }
   }
+
+  public void showPlayerStatus () {
+    for (Player player : players) {
+      System.out.println(player.getName() + " is on tile " + player.getCurrentTile().getTileId());
+    }
+    System.out.println();
+  }
+
+  public Player getWinner() {
+    return winner;
+  }
+
+  public List<Player> getPlayers() {
+    return players;
+  }
+
+
 }

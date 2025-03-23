@@ -1,30 +1,54 @@
-package test;
+package entity;
 
-import entity.*;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class TileTest {
+class TileTest {
+
+  private Tile tile;
+  private Player player;
+  private Board board;
+  private boolean actionPerformed;
+
+  @BeforeEach
+  void setUp() {
+    board = new Board();
+    tile = new Tile(10);
+    board.addTile(tile);
+    player = new Player("TestPlayer", board);
+    actionPerformed = false;
+  }
+
   @Test
-  void testTileActionExecution() {
-    // Opprett et brett (Board)
-    Board board = new Board();
+  void testTileHasCorrectId() {
+    assertEquals(10, tile.getTileId());
+  }
 
-    // Opprett en tile og legg til en LadderAction
-    Tile tile = new Tile(1);  // ID satt til 1
-    LadderAction action = new LadderAction(20, "Move up to 20");
-    tile.setTileAction(action);
-
-    // Opprett en spiller og plasser den på tile (nå trenger vi Board)
-    Player player = new Player("TestPlayer", tile, board); // Spilleren starter på tile 1
-
-    System.out.println("Before action: Player is on tile " + player.getCurrentTile().getTileId());
-
-    // Spilleren lander på tile og utfører action
+  @Test
+  void testPlayerLandsOnTileWithoutAction() {
     tile.landPlayer(player);
+    assertEquals(1, player.getCurrentTile().getTileId());
+  }
 
-    // Test at spilleren er på felt 20 etter å ha brukt stigen
-    System.out.println("After action: Player is on tile " + player.getCurrentTile().getTileId());
-    assertEquals(20, player.getCurrentTile().getTileId());
+  @Test
+  void testPlayerLandsOnTileWithAction() {
+    TileAction testAction = p -> actionPerformed = true;
+    tile.setTileAction(testAction);
+    tile.landPlayer(player);
+    assertTrue(actionPerformed);
+  }
+
+  @Test
+  void testTileActionIsNull() {
+    tile.setTileAction(null);
+    tile.landPlayer(player);
+    assertEquals(1, player.getCurrentTile().getTileId());
+  }
+
+  @Test
+  void testNegativeTileIdNotAllowed() {
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> new Tile(-5));
+    assertEquals("Tile ID cannot be negative.", exception.getMessage());
   }
 }

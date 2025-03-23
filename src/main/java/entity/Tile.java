@@ -1,10 +1,13 @@
 package entity;
 
 public class Tile {
-  private int tileId;
+  private final int tileId;
   private TileAction tileAction;
 
   public Tile(int tileId) {
+    if (tileId < 1) {
+      throw new IllegalArgumentException("Tile ID cannot be negative.");
+    }
     this.tileId = tileId;
   }
 
@@ -12,9 +15,6 @@ public class Tile {
     return tileId;
   }
 
-  public TileAction getTileAction() {
-    return tileAction;
-  }
 
   public void setTileAction(TileAction action) {
     this.tileAction = action;
