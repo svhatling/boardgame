@@ -1,6 +1,10 @@
-package entity;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import entity.Board;
+import entity.Player;
+import entity.Tile;
+import entity.TileAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +20,7 @@ class TileTest {
     board = new Board();
     tile = new Tile(10);
     board.addTile(tile);
-    player = new Player("TestPlayer", board);
+    player = new Player("TestPlayer", board, "Train");
     actionPerformed = false;
   }
 

@@ -1,6 +1,11 @@
-package entity;
+
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import entity.Board;
+import entity.LadderAction;
+import entity.Player;
+import entity.Tile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +23,7 @@ class LadderActionTest {
     for (int i = 1; i <= 90; i++) {
       board.addTile(new Tile(i));
     }
-    player = new Player("TestPlayer", board);
+    player = new Player("TestPlayer", board, "Train");
 
     ladderAction = new LadderAction(destinationTileId, "climbing up the ladder!");
     board.getTile(startTileId).setTileAction(ladderAction);
