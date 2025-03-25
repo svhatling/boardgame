@@ -1,8 +1,7 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import entity.Die;
+import exception.InvalidDiceRollException;
 import org.junit.jupiter.api.Test;
 
 public class DieTest {
@@ -16,13 +15,13 @@ public class DieTest {
   }
 
   @Test
-  public void testCustomConstructor() {
+  public void testCustomConstructorSetsCorrectSides() {
     Die die = new Die(10);
     assertEquals(10, die.getSides());
   }
 
   @Test
-  public void testRollDie() {
+  public void testRollDieReturnsValueInRange() {
     Die die = new Die();
     int roll = die.rollDie();
     assertTrue(roll >= 1 && roll <= 6);
@@ -30,7 +29,7 @@ public class DieTest {
   }
 
   @Test
-  public void testSetSides() {
+  public void testSetSidesUpdatesSideCount() {
     Die die = new Die(6);
     die.setSides(10);
     assertEquals(10, die.getSides());
@@ -40,7 +39,7 @@ public class DieTest {
   }
 
   @Test
-  public void testRollMultipleTimes() {
+  public void testRollMultipleTimesStaysInRange() {
     Die die = new Die(6);
     for (int i = 0; i < 100; i++) {
       int roll = die.rollDie();
@@ -49,29 +48,28 @@ public class DieTest {
   }
 
   @Test
-  public void testIllegalSides() {
-    assertThrows(IllegalArgumentException.class, () -> new Die(0));
-    assertThrows(IllegalArgumentException.class, () -> new Die(-1));
-  }
-
-  @Test
-  public void testInvalidConstructorThrowsException() {
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> new Die(0));
+  public void testConstructorWithZeroSidesThrowsException() {
+    Exception exception = assertThrows(InvalidDiceRollException.class, () -> new Die(0));
     assertEquals("Number of sides must be greater than 0", exception.getMessage());
   }
 
   @Test
-  public void testSetSidesInvalidValueThrowsException() {
+  public void testConstructorWithNegativeSidesThrowsException() {
+    Exception exception = assertThrows(InvalidDiceRollException.class, () -> new Die(-1));
+    assertEquals("Number of sides must be greater than 0", exception.getMessage());
+  }
+
+  @Test
+  public void testSetSidesWithInvalidValueThrowsException() {
     Die die = new Die();
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> die.setSides(0));
+    Exception exception = assertThrows(InvalidDiceRollException.class, () -> die.setSides(0));
     assertEquals("Number of sides must be greater than 0", exception.getMessage());
   }
 
   @Test
   public void testGetValueBeforeRollThrowsException() {
     Die die = new Die();
-    Exception exception = assertThrows(IllegalStateException.class, die::getValue);
+    Exception exception = assertThrows(InvalidDiceRollException.class, die::getValue);
     assertEquals("Die has not been rolled", exception.getMessage());
   }
-
 }

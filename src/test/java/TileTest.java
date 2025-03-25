@@ -1,6 +1,8 @@
 package entity;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import exception.InvalidTileException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +16,7 @@ class TileTest {
   @BeforeEach
   void setUp() {
     board = new Board();
+    board.addTile(new Tile(1));
     tile = new Tile(10);
     board.addTile(tile);
     player = new Player("TestPlayer", board);
@@ -48,7 +51,7 @@ class TileTest {
 
   @Test
   void testNegativeTileIdNotAllowed() {
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> new Tile(-5));
+    Exception exception = assertThrows(InvalidTileException.class, () -> new Tile(-5));
     assertEquals("Tile ID cannot be negative.", exception.getMessage());
   }
 }

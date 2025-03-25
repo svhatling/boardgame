@@ -1,4 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
+
+import exception.BoardNotInitializedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import entity.BoardGame;
@@ -49,5 +51,12 @@ class BoardGameTest {
     game.setCurrentPlayer(player1);
     player1.setCurrentTile(game.getBoard().getTile(game.getBoard().getTiles().size())); // Sett spilleren på siste brikke
     assertEquals(player1, game.getWinner(), "The player on the last tile should be the winner.");
+  }
+
+  @Test
+  void testGetWinnerThrowsExceptionWhenBoardNotInitialized() {
+    BoardGame notInitializedGame = new BoardGame();
+    Exception exception = assertThrows(BoardNotInitializedException.class, notInitializedGame::getWinner);
+    assertEquals("Board must be created before checking for a winner.", exception.getMessage());
   }
 }

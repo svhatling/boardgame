@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import entity.Board;
 import entity.Tile;
+import exception.BoardNotInitializedException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ public class BoardTest {
     Tile tile2 = new Tile(1);
     board.addTile(tile1);
     Exception exception = assertThrows(IllegalArgumentException.class, () -> board.addTile(tile2));
-    assertEquals("Tile with ID 1 already exists", exception.getMessage());
+    assertEquals("Tile with ID 1 already exists.", exception.getMessage());
   }
 
   @Test
@@ -50,7 +51,7 @@ public class BoardTest {
   @Test
   public void testGetTileNotFoundThrowsException() {
     Board board = new Board();
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> board.getTile(1));
+    Exception exception = assertThrows(BoardNotInitializedException.class, () -> board.getTile(1));
     assertEquals("Tile with ID 1 not found. Map size: 0", exception.getMessage());
   }
 
