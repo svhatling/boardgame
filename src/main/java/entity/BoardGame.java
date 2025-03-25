@@ -2,6 +2,10 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import util.BoardConfigLoader;
+import util.BoardConfigLoader.TileConfig;
+
 
 public class BoardGame {
 
@@ -22,17 +26,27 @@ public class BoardGame {
 
   public void createBoard(String gameType) {
     board = new Board();
+
     switch (gameType.toLowerCase()) {
       case "snakesandladders":
         for (int i = 1; i <= 90; i++) {
           board.addTile(new Tile(i));
         }
+        Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
+
+        for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
+          int from = entry.getKey();
+          TileConfig cfg = entry.getValue();
+          board.getTile(from).setTileAction(new LadderAction(cfg.to, cfg.message));
+        }
         break;
+
       case "ludo":
         for (int i = 1; i <= 40; i++) {
           board.addTile(new Tile(i));
         }
         break;
+
       default:
         throw new IllegalArgumentException("Invalid game type");
     }
