@@ -2,11 +2,19 @@ package ui;
 
 import entity.*;
 
-public class BoardGameApp {
+public class BoardGameApp implements BoardGameObserver {
   private BoardGame game;
 
   public BoardGameApp() {
     this.game = new BoardGame();
+    // Registrer appen som en observer
+    this.game.registerObserver(this);
+  }
+
+  @Override
+  public void gameStateChanged(String message) {
+    // Håndter tilstandsoppdateringer fra BoardGame
+    System.out.println("Game Update: " + message);
   }
 
   public void start() {
@@ -16,14 +24,12 @@ public class BoardGameApp {
 
     Board board = this.game.getBoard();
 
-
-    // Legg til spillere, hver spiller får sitt startfelt og brett
+    // Legg til spillere
     Player player1 = new Player("Mikke", board);
     Player player2 = new Player("Donald", board);
     Player player3 = new Player("Langbein", board);
     Player player4 = new Player("Dolly", board);
 
-    // Add players to the game
     game.addPlayer(player1);
     game.addPlayer(player2);
     game.addPlayer(player3);
@@ -44,9 +50,11 @@ public class BoardGameApp {
         game.setCurrentPlayer(player);
         int diceRoll = game.getDice().rollDice();
         player.move(diceRoll);
+        game.playerMoved(player, player.getCurrentTile().getTileId());
 
         if (player.getCurrentTile().getTileId() == board.getTiles().size()) {
           winner = player;
+          game.declareWinner(winner);
           break;
         }
       }
@@ -63,3 +71,4 @@ public class BoardGameApp {
     app.start();
   }
 }
+

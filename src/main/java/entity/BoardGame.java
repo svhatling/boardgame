@@ -2,6 +2,7 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import ui.BoardGameObserver;
 
 public class BoardGame {
 
@@ -9,11 +10,13 @@ public class BoardGame {
   private List<Player> players;
   private Dice dice;
   private Player currentplayer;
+  private List<BoardGameObserver> observers;
 
   public BoardGame() {
     this.board = new Board();
     this.players = new ArrayList<>();
     this.currentplayer = null;
+    this.observers = new ArrayList<>();
   }
 
   public void addPlayer(Player player) {
@@ -78,5 +81,31 @@ public class BoardGame {
   public void setCurrentPlayer(Player player) {
     this.currentplayer = player;
   }
+
+  public void registerObserver(BoardGameObserver observer) {
+    if (!observers.contains(observer)) {
+      observers.add(observer);
+    }
+  }
+
+  public void unregisterObserver(BoardGameObserver observer) {
+    observers.remove(observer);
+  }
+
+  public void notifyObservers(String message) {
+    for (BoardGameObserver observer : observers) {
+      observer.gameStateChanged(message);
+    }
+  }
+
+  public void playerMoved(Player player, int newTileId) {
+    player.setCurrentTile(new Tile(newTileId));
+    notifyObservers("Player moved to tile " + newTileId);
+  }
+
+  public void declareWinner(Player winner) {
+    notifyObservers("Winner is " + winner.getName());
+  }
+
 
 }
