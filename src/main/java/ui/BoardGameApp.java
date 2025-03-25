@@ -40,9 +40,15 @@ public class BoardGameApp {
       for (Player player : game.getPlayers()) {
         game.setCurrentPlayer(player);
         int diceRoll = game.getDice().rollDice();
-        player.move(diceRoll);
 
-        if (player.getCurrentTile().getTileId() == board.getTiles().size()) {
+        System.out.println(player.getName() + " rolled " + diceRoll);
+        int previousTile = player.getCurrentTile().getTileId();
+        player.move(diceRoll);
+        int newTile = player.getCurrentTile().getTileId();
+
+        System.out.println(player.getName() + " moved from tile " + previousTile + " to tile " + newTile);
+
+        if (newTile == board.getTiles().size()) {
           winner = player;
           break;
         }
@@ -52,7 +58,7 @@ public class BoardGameApp {
       }
       System.out.println();
     }
-    System.out.println("Winner is " + winner.getName());
+    System.out.println("Winner is " + winner.getName() + "!!<3<3");
   }
 
   public static void main(String[] args) {
