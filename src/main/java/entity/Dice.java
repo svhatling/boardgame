@@ -1,5 +1,6 @@
 package entity;
 
+import exception.InvalidDiceRollException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class Dice extends Die {
   public Dice(int numberOfDice, int sides) {
     super(sides);
     if (numberOfDice <= 0) {
-      throw new IllegalArgumentException("Number of dice must be greater than 0");
+      throw new InvalidDiceRollException("Number of dice must be greater than 0");
     }
     dice = new ArrayList<>();
     for (int i = 0; i < numberOfDice; i++) {
@@ -36,7 +37,7 @@ public class Dice extends Die {
     List<Integer> values = new ArrayList<>();
     for (Die die : dice) {
       if (die.getValue() == 0) {
-        throw new IllegalStateException("Dice has not been rolled");
+        throw new InvalidDiceRollException("Dice has not been rolled");
       }
       values.add(die.getValue());
     }

@@ -1,12 +1,14 @@
 package entity;
 
+import exception.InvalidTileException;
+
 public class Tile {
   private final int tileId;
   private TileAction tileAction;
 
   public Tile(int tileId) {
     if (tileId < 1) {
-      throw new IllegalArgumentException("Tile ID cannot be negative.");
+      throw new InvalidTileException("Tile ID cannot be negative.");
     }
     this.tileId = tileId;
   }

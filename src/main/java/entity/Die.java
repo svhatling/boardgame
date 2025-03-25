@@ -1,5 +1,6 @@
 package entity;
 
+import exception.InvalidDiceRollException;
 import java.util.Random;
 
 public class Die {
@@ -13,7 +14,7 @@ public class Die {
 
     public Die(int sides) {
         if (sides <= 0){
-            throw new IllegalArgumentException("Number of sides must be greater than 0");
+            throw new InvalidDiceRollException("Number of sides must be greater than 0");
         }
         this.sides = sides;
         this.value = 0;
@@ -30,7 +31,7 @@ public class Die {
 
     public int getValue() {
         if (this.value == 0) {
-            throw new IllegalStateException("Die has not been rolled");
+            throw new InvalidDiceRollException("Die has not been rolled");
         }
         return this.value;
     }
@@ -41,7 +42,7 @@ public class Die {
 
     public void setSides(int sides) {
         if (sides <= 0){
-            throw new IllegalArgumentException("Number of sides must be greater than 0");
+            throw new InvalidDiceRollException("Number of sides must be greater than 0");
         }
         this.sides = sides;
     }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import util.BoardConfigLoader;
 import util.BoardConfigLoader.TileConfig;
+import exception.InvalidGameTypeException;
+import exception.BoardNotInitializedException;
 
 
 public class BoardGame {
@@ -48,7 +50,7 @@ public class BoardGame {
         break;
 
       default:
-        throw new IllegalArgumentException("Invalid game type");
+        throw new InvalidGameTypeException("Invalid game type: " + gameType);
     }
   }
 
@@ -57,6 +59,10 @@ public class BoardGame {
   }
 
   public Player getWinner() {
+    if (board == null || board.getTiles() == null || board.getTiles().isEmpty()) {
+      throw new BoardNotInitializedException("Board must be created before checking for a winner.");
+    }
+
     for (Player player : players) {
       if (player.getCurrentTile().getTileId() == board.getTiles().size()) {
         return player;
