@@ -19,7 +19,7 @@ class TileTest {
     board.addTile(new Tile(1));
     tile = new Tile(10);
     board.addTile(tile);
-    player = new Player("TestPlayer", board);
+    player = new Player("TestPlayer", board, "testtest");
     actionPerformed = false;
   }
 

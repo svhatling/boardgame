@@ -15,10 +15,10 @@ public class BoardGameApp {
 
 
     // Add players, each player gets a start tile and board
-    Player player1 = new Player("Mikke", board);
-    Player player2 = new Player("Donald", board);
-    Player player3 = new Player("Langbein", board);
-    Player player4 = new Player("Dolly", board);
+    Player player1 = new Player("Mikke", board, "Mouse");
+    Player player2 = new Player("Donald", board, "Duck");
+    Player player3 = new Player("Langbein", board, "Dog");
+    Player player4 = new Player("Dolly", board, "Goose");
 
     // Add players to the game
     game.addPlayer(player1);
