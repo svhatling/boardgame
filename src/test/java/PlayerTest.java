@@ -15,7 +15,7 @@ class PlayerTest {
     for (int i = 1; i <= 90; i++) {
       board.addTile(new Tile(i));
     }
-    player = new Player("TestPlayer", board);
+    player = new Player("TestPlayer", board, "TopHat");
   }
 
   @Test

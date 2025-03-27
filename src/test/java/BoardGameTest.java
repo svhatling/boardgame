@@ -16,8 +16,8 @@ class BoardGameTest {
     game = new BoardGame();
     game.createBoard("snakesandladders"); // Opprett spillbrett for Snakes and Ladders
     game.createDice(2); // Opprett 2 terninger
-    player1 = new Player("Player1", game.getBoard());
-    player2 = new Player("Player2", game.getBoard());
+    player1 = new Player("Player1", game.getBoard(), "Car");
+    player2 = new Player("Player2", game.getBoard(), "Hat");
     game.addPlayer(player1);
     game.addPlayer(player2);
   }

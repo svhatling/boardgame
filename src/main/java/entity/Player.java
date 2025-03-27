@@ -4,11 +4,13 @@ public class Player {
   private String name;
   private Tile currentTile;
   private final Board board;
+  private String piece;
 
   // Konstruktør
-  public Player(String name, Board board) {
+  public Player(String name, Board board, String piece) {
     this.name = name;
     this.board = board;
+    this.piece = piece;
     this.currentTile = board.getTile(1);
   }
 
@@ -16,6 +18,8 @@ public class Player {
   public String getName() {
     return name;
   }
+
+  public String getPiece() {return piece;}
 
   // Henter nåværende tile
   public Tile getCurrentTile() {
