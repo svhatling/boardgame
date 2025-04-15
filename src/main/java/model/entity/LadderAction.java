@@ -1,4 +1,4 @@
-package entity;
+package model.entity;
 
 public class LadderAction implements TileAction {
 

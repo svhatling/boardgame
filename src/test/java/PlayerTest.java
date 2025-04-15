@@ -1,6 +1,10 @@
-package entity;
+package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import model.entity.Board;
+import model.entity.Player;
+import model.entity.Tile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

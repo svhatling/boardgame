@@ -1,5 +1,5 @@
-import entity.Dice;
-import exception.InvalidDiceRollException;
+import model.entity.Dice;
+import model.exception.InvalidDiceRollException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

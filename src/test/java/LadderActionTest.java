@@ -2,10 +2,10 @@
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import entity.Board;
-import entity.LadderAction;
-import entity.Player;
-import entity.Tile;
+import model.entity.Board;
+import model.entity.LadderAction;
+import model.entity.Player;
+import model.entity.Tile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

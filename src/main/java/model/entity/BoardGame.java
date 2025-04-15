@@ -1,12 +1,12 @@
-package entity;
+package model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import util.BoardConfigLoader;
-import util.BoardConfigLoader.TileConfig;
-import exception.InvalidGameTypeException;
-import exception.BoardNotInitializedException;
+import model.util.BoardConfigLoader;
+import model.util.BoardConfigLoader.TileConfig;
+import model.exception.InvalidGameTypeException;
+import model.exception.BoardNotInitializedException;
 
 
 public class BoardGame {

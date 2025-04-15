@@ -1,10 +1,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import exception.BoardNotInitializedException;
+import model.exception.BoardNotInitializedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import entity.BoardGame;
-import entity.Player;
+import model.entity.BoardGame;
+import model.entity.Player;
 
 class BoardGameTest {
 

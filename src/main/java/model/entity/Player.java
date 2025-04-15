@@ -1,4 +1,4 @@
-package entity;
+package model.entity;
 
 public class Player {
   private String name;

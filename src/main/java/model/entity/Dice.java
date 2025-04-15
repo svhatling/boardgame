@@ -1,6 +1,6 @@
-package entity;
+package model.entity;
 
-import exception.InvalidDiceRollException;
+import model.exception.InvalidDiceRollException;
 import java.util.ArrayList;
 import java.util.List;
 

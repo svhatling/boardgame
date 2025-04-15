@@ -1,6 +1,6 @@
-package entity;
+package model.entity;
 
-import exception.BoardNotInitializedException;
+import model.exception.BoardNotInitializedException;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,5 +1,5 @@
-package factory;
-import entity.BoardGame;
+package model.factory;
+import model.entity.BoardGame;
 
 public class BoardGameFactory {
 

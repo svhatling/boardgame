@@ -1,6 +1,6 @@
-package entity;
+package model.entity;
 
-import exception.InvalidDiceRollException;
+import model.exception.InvalidDiceRollException;
 import java.util.Random;
 
 public class Die {

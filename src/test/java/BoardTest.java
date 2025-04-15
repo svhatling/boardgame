@@ -1,9 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import entity.Board;
-import entity.Tile;
-import exception.BoardNotInitializedException;
+import model.entity.Board;
+import model.entity.Tile;
+import model.exception.BoardNotInitializedException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 

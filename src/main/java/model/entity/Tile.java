@@ -1,6 +1,6 @@
-package entity;
+package model.entity;
 
-import exception.InvalidTileException;
+import model.exception.InvalidTileException;
 
 public class Tile {
   private final int tileId;

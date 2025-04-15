@@ -1,7 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import entity.Die;
-import exception.InvalidDiceRollException;
+import model.entity.Die;
+import model.exception.InvalidDiceRollException;
 import org.junit.jupiter.api.Test;
 
 public class DieTest {

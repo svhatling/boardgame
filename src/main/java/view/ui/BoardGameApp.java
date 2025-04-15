@@ -1,7 +1,9 @@
-package ui;
+package view.ui;
 
-import entity.*;
-import factory.BoardGameFactory;
+import model.entity.Board;
+import model.entity.BoardGame;
+import model.entity.Player;
+import model.factory.BoardGameFactory;
 
 public class BoardGameApp {
   private BoardGame game;
