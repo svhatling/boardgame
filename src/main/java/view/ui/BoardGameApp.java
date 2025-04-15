@@ -1,9 +1,12 @@
 package view.ui;
 
 import controller.MainViewController;
+import controller.AmountOfPlayersController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -13,18 +16,34 @@ public class BoardGameApp extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    primaryStage.setTitle("Board Game - Choose Game");
+    Label title = new Label("Boardgame");
+    title.getStyleClass().add("label-title");
 
     Button laddersButton = new Button("Ladders & Snakes");
     Button ludoButton = new Button("Ludo");
 
-    laddersButton.setOnAction(e -> controller.selectGame("Ladders"));
-    ludoButton.setOnAction(e -> controller.selectGame("Ludo"));
+    laddersButton.getStyleClass().add("button-main");
+    ludoButton.getStyleClass().add("button-main");
 
-    VBox layout = new VBox(15, laddersButton, ludoButton);
-    layout.setStyle("-fx-padding: 40; -fx-alignment: center;");
+    laddersButton.setOnAction(e -> {
+      controller.selectGame("Ladders");
+      new AmountOfPlayersView(primaryStage, new AmountOfPlayersController());
+    });
 
-    Scene scene = new Scene(layout, 300, 200);
+    ludoButton.setOnAction(e -> {
+      controller.selectGame("Ludo");
+      new AmountOfPlayersView(primaryStage, new AmountOfPlayersController());
+    });
+
+    VBox layout = new VBox(20, title, laddersButton, ludoButton);
+    layout.setStyle("-fx-alignment: center;");
+    StackPane root = new StackPane(layout);
+    root.getStyleClass().add("root");
+
+    Scene scene = new Scene(root, 400, 300);
+    scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+    primaryStage.setTitle("Choose Game");
     primaryStage.setScene(scene);
     primaryStage.show();
   }
