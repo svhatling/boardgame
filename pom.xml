@@ -54,7 +54,7 @@
         <version>0.0.8</version>
         <configuration>
           <!-- MainClass -->
-          <mainClass>org.openjfx.App</mainClass>
+          <mainClass>view.ui.BoardGameApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
