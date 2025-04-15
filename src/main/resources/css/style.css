@@ -1,0 +1,29 @@
+.root {
+  -fx-background-color: #c1c4f7;
+}
+
+.label-title {
+  -fx-font-size: 36px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #000000;
+  -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0.0, 2, 2);
+}
+
+.label-sub {
+  -fx-font-size: 14px;
+  -fx-text-fill: #111111;
+}
+
+.button-main {
+  -fx-background-color: #a271f8;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-background-radius: 10;
+  -fx-padding: 10 20;
+}
+
+.combo-box {
+  -fx-background-color: #fce4ec;
+  -fx-background-radius: 20;
+  -fx-padding: 5px;
+}
