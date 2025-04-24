@@ -42,15 +42,18 @@ public class AmountOfPlayersView implements BoardGameObserver {
     comboBox.getItems().addAll(1, 2, 3, 4, 5);
     comboBox.setValue(1);
     comboBox.getStyleClass().add("combo-box");
+    comboBox.setMaxWidth(150);
 
     // start button
     Button startButton = new Button("Start");
     startButton.getStyleClass().add("button-main");
+    startButton.setPrefWidth(100);
     startButton.setOnAction(e -> controller.startGame(comboBox.getValue()));
 
     // arrange in a vertical box
     VBox layout = new VBox(20, title, instruction, comboBox, startButton);
     layout.setAlignment(Pos.CENTER);
+    layout.setMaxWidth(320);
 
     // root pane that fills the stage
     StackPane root = new StackPane(layout);
@@ -88,5 +91,6 @@ public class AmountOfPlayersView implements BoardGameObserver {
   @Override
   public void onPlayerCountChosen(int count) {
     // TODO: Go to the PlayerView using 'count'
+    System.out.println("Starting game with " + count + " players");
   }
 }
