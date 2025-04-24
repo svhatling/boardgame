@@ -6,24 +6,57 @@
   -fx-font-size: 36px;
   -fx-font-weight: bold;
   -fx-text-fill: #000000;
-  -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0.0, 2, 2);
 }
 
 .label-sub {
-  -fx-font-size: 14px;
-  -fx-text-fill: #111111;
+  -fx-font-size: 16px;
+  -fx-text-fill: #333333;
+  -fx-padding: 0 0 10 0;
 }
 
 .button-main {
   -fx-background-color: #a271f8;
   -fx-text-fill: white;
-  -fx-font-size: 14px;
-  -fx-background-radius: 10;
-  -fx-padding: 10 20;
+  -fx-font-size: 16px;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+  -fx-cursor: hand;
+  -fx-min-width: 100px;
+}
+
+.button-main:hover {
+  -fx-background-color: #9260e8;
+}
+
+.button-main:pressed {
+  -fx-background-color: #8450d8;
 }
 
 .combo-box {
   -fx-background-color: #fce4ec;
   -fx-background-radius: 20;
   -fx-padding: 5px;
+  -fx-min-width: 120px;
+}
+
+.combo-box .list-cell {
+  -fx-text-fill: #333333;
+  -fx-padding: 4 8;
+}
+
+.combo-box .arrow-button {
+  -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+  -fx-background-color: #a271f8;
+}
+
+.back-button {
+  -fx-background-color: #a271f8;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-background-radius: 20;
+  -fx-padding: 6 12;
+  -fx-cursor: hand;
 }
