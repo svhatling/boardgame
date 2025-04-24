@@ -2,6 +2,7 @@ package view.ui;
 
 import controller.MainViewController;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,30 +33,38 @@ public class BoardGameApp extends Application {
 
     Button laddersButton = new Button("Ladders & Snakes");
     laddersButton.getStyleClass().add("button-main");
-    laddersButton.setOnAction(e ->
-        new AmountOfPlayersView(primaryStage, "Ladders & Snakes")
-    );
+    laddersButton.setPrefWidth(200);
+    laddersButton.setOnAction(e -> {
+      controller.selectGame("Ladders & Snakes");
+      new AmountOfPlayersView(primaryStage, "Ladders & Snakes");
+    });
 
     Button ludoButton = new Button("Ludo");
     ludoButton.getStyleClass().add("button-main");
-    ludoButton.setOnAction(e ->
-        new AmountOfPlayersView(primaryStage, "Ludo")
-    );
+    ludoButton.setPrefWidth(200);
+    ludoButton.setOnAction(e -> {
+      controller.selectGame("Ludo");
+      new AmountOfPlayersView(primaryStage, "Ludo");
+    });
 
     VBox layout = new VBox(20, title, laddersButton, ludoButton);
-    layout.setStyle("-fx-alignment: center;");
+    layout.setAlignment(Pos.CENTER);
+    layout.setMaxWidth(300);
 
     StackPane root = new StackPane(layout);
     root.getStyleClass().add("root");
 
-    Scene scene = new Scene(root);
+    // Bind to the stage size so the content scales properly
+    root.prefWidthProperty().bind(primaryStage.widthProperty());
+    root.prefHeightProperty().bind(primaryStage.heightProperty());
+
+    Scene scene = new Scene(root, 800, 600);
     scene.getStylesheets().add(getClass()
         .getResource("/css/style.css")
         .toExternalForm());
 
     primaryStage.setTitle("Choose Game");
     primaryStage.setScene(scene);
-    primaryStage.setMaximized(true);
     primaryStage.show();
   }
 
