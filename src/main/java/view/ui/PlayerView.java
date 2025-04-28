@@ -50,23 +50,38 @@ public class PlayerView extends VBox {
       this.getChildren().add(row);
     }
 
+    Button startButton = new Button("Start Game");
+    startButton.getStyleClass().add("button-main");
+    startButton.setOnAction(e -> handleStart(controller));
+    this.getChildren().add(startButton);
+
     this.getStyleClass().add("root");
     this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
   }
 
   /** Henter data fra radene og lagrer nye spillernavn før spillet kjøres */
-  private void handleStart() {
+  private void handleStart(PlayerViewController controller) {
+    List<PlayerData> players = new ArrayList<>();
     for (PlayerInputRow row : rows) {
       String name = row.getPlayerName();
-      if (!savedPlayers.contains(name)) {
-        // Ny spiller: legg til CSV og i lokalt minne
+      String piece = row.getSelectedPiece();
+      if (!savedPlayers.contains(name) && row.shouldSaveNewPlayer()) {
         savedPlayers.add(name);
         saveToCSV.addPlayer(name);
       }
-      Color color = row.getColor();
-      // TODO: send videre til spillmotoren: name + color
+      players.add(new PlayerData(name, piece));
     }
-    // F.eks.: mainApp.startGame(playerDataList);
+    controller.startGameWithPlayers(players);
+  }
+
+  public static class PlayerData {
+    public final String name;
+    public final String piece;
+
+    public PlayerData(String name, String piece) {
+      this.name = name;
+      this.piece = piece;
+    }
   }
 }
 

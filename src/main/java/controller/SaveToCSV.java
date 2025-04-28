@@ -24,7 +24,7 @@ public class SaveToCSV {
   }
 
   public void addPlayer(String player) {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
       writer.write(player);
       writer.newLine();
       System.out.println("Added player to" + filename);

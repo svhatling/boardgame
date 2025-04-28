@@ -2,9 +2,9 @@
 package view.ui;
 
 import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.collections.ObservableList;
 
 import java.util.List;
@@ -13,6 +13,7 @@ public class PlayerInputRow extends HBox {
   private final ComboBox<String> combo;
   private final TextField nameField;
   private final ComboBox<String> pieceCombo;
+  private final CheckBox saveNewCheck;
 
   /**
    * @param label        Tekst som vises foran raden (f.eks. "Spiller 1")
@@ -20,7 +21,7 @@ public class PlayerInputRow extends HBox {
    */
   public PlayerInputRow(String label, ObservableList<String> savedPlayers, List<String> pieceOptions) {
     super(10);
-    setSpacing(10);
+    setAlignment(Pos.CENTER);
 
     Label lbl = new Label(label);
 
@@ -36,6 +37,8 @@ public class PlayerInputRow extends HBox {
     pieceCombo = new ComboBox<>(FXCollections.observableArrayList(pieceOptions));
     pieceCombo.setPromptText("Choose piece");
 
+    saveNewCheck = new CheckBox("Save new player");
+
     // Når man bytter mellom «Ny spiller» og en lagret spiller
     combo.setOnAction(e -> {
       String val = combo.getValue();
@@ -48,7 +51,7 @@ public class PlayerInputRow extends HBox {
       }
     });
 
-    getChildren().addAll(lbl, combo, nameField, pieceCombo);
+    getChildren().addAll(lbl, combo, nameField, pieceCombo, saveNewCheck);
   }
 
   public String getPlayerName() {
@@ -57,6 +60,10 @@ public class PlayerInputRow extends HBox {
 
   public String getSelectedPiece() {
     return pieceCombo.getValue();
+  }
+
+  public boolean shouldSaveNewPlayer() {
+    return saveNewCheck.isSelected();
   }
 }
 

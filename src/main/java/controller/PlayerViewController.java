@@ -1,10 +1,12 @@
 package controller;
 
-import javafx.scene.Parent;
+import java.util.List;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import view.ui.AmountOfPlayersView;
 import view.ui.PlayerView;
+import view.ui.PlayerView.PlayerData;
+
 
 public class PlayerViewController {
   private final Stage primaryStage;
@@ -30,7 +32,9 @@ public class PlayerViewController {
     int numPlayers = amountController.getNumberOfPlayers();
     playerView = new PlayerView(numPlayers, this);
 
-    Scene scene = new Scene(playerView, 700, 500);
+    BorderPane root = new BorderPane();
+    root.setCenter(playerView);
+    Scene scene = new Scene(root, 700, 500);
     primaryStage.setScene(scene);
     primaryStage.setTitle("Ladders & Snakes - Player View");
     primaryStage.show();
@@ -49,5 +53,14 @@ public class PlayerViewController {
     } else {
       System.out.println("No previous scene to go back to.");
     }
+  }
+
+  public void startGameWithPlayers(List<PlayerData> playerList) {
+    // Her kan du håndtere logikken for å starte spillet med spillerne
+
+    Scene scene = new Scene(playerView, 800, 600); //Bytt ut playerview med din spillvisning
+    primaryStage.setScene(scene);
+    primaryStage.setTitle("Ladders & Snakes - Player View");
+    primaryStage.show();
   }
 }
