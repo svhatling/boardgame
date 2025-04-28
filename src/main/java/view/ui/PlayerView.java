@@ -3,9 +3,6 @@ package view.ui;
 
 import controller.PlayerViewController;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.*;
@@ -27,7 +24,7 @@ public class PlayerView extends VBox {
    * @param numPlayers Antall spillere brukeren har valgt på forrige side
    */
   public PlayerView(int numPlayers, PlayerViewController controller) {
-    // Sett opp CSV-hjelperne
+    super(20);
     this.saveToCSV = new SaveToCSV("players.csv");
     ReadFromCSV r = new ReadFromCSV("players.csv");
     this.savedPlayers = FXCollections.observableArrayList(r.readPlayers());
@@ -44,6 +41,14 @@ public class PlayerView extends VBox {
 
     this.setAlignment(Pos.CENTER);
     this.getChildren().addAll(title, instruction, backbutton);
+
+    List<String> pieceOptions = List.of("Car", "Hat", "Dog", "Ship", "Plane", "Crown");
+    for (int i = 0; i < numPlayers; i++) {
+      String label = "Player " + (i + 1);
+      PlayerInputRow row = new PlayerInputRow(label, savedPlayers, pieceOptions);
+      rows.add(row);
+      this.getChildren().add(row);
+    }
 
     this.getStyleClass().add("root");
     this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());

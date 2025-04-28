@@ -7,36 +7,39 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
 public class PlayerInputRow extends HBox {
   private final ComboBox<String> combo;
   private final TextField nameField;
-  private final ColorPicker colorPicker;
+  private final ComboBox<String> pieceCombo;
 
   /**
    * @param label        Tekst som vises foran raden (f.eks. "Spiller 1")
    * @param savedPlayers Liste over spillernavn fra CSV
    */
-  public PlayerInputRow(String label, ObservableList<String> savedPlayers) {
+  public PlayerInputRow(String label, ObservableList<String> savedPlayers, List<String> pieceOptions) {
+    super(10);
     setSpacing(10);
 
     Label lbl = new Label(label);
 
     // ComboBox med «Ny spiller» + alle lagrede
     combo = new ComboBox<>(FXCollections.observableArrayList(savedPlayers));
-    combo.getItems().add(0, "Ny spiller");
-    combo.setValue("Ny spiller");
+    combo.getItems().add(0, "New player");
+    combo.setValue("New player");
 
     // Navne-felt
     nameField = new TextField();
-    nameField.setPromptText("Navn");
+    nameField.setPromptText("Name");
 
-    // Fargevelger
-    colorPicker = new ColorPicker(Color.WHITE);
+    pieceCombo = new ComboBox<>(FXCollections.observableArrayList(pieceOptions));
+    pieceCombo.setPromptText("Choose piece");
 
     // Når man bytter mellom «Ny spiller» og en lagret spiller
     combo.setOnAction(e -> {
       String val = combo.getValue();
-      if ("Ny spiller".equals(val)) {
+      if ("New player".equals(val)) {
         nameField.clear();
         nameField.setDisable(false);
       } else {
@@ -45,15 +48,15 @@ public class PlayerInputRow extends HBox {
       }
     });
 
-    getChildren().addAll(lbl, combo, nameField, colorPicker);
+    getChildren().addAll(lbl, combo, nameField, pieceCombo);
   }
 
   public String getPlayerName() {
     return nameField.getText().trim();
   }
 
-  public Color getColor() {
-    return colorPicker.getValue();
+  public String getSelectedPiece() {
+    return pieceCombo.getValue();
   }
 }
 
