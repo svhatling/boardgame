@@ -1,6 +1,7 @@
 package view.ui;
 
 import controller.AmountOfPlayersController;
+import controller.PlayerViewController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,8 +32,11 @@ public class AmountOfPlayersView {
     startButton.setOnAction(e -> {
       int selected = comboBox.getValue();
       controller.setNumberOfPlayers(selected);
-      // TODO: Gå videre til PlayerView
-      System.out.println("Go to PlayerView with " + selected + " players");
+
+      // Bytt scene til PlayerView
+
+      PlayerViewController pvc = new PlayerViewController(stage, controller, stage.getScene());
+      pvc.showPlayerView();
     });
 
     VBox layout = new VBox(20, title, instruction, comboBox, startButton);

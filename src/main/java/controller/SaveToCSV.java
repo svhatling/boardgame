@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -12,26 +13,23 @@ public class SaveToCSV {
   }
 
   public void savePlayers(List<String> players) {
-    try {
-      FileWriter writer = new FileWriter(filename);
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
       for (String player : players) {
-        writer.write(player + System.lineSeparator());
+        writer.write(player);
+        writer.newLine();
       }
-      writer.close();
-      System.out.println("Saved player to " + filename);
     } catch (IOException e) {
       System.err.println("Error saving player to " + e.getMessage());
     }
   }
 
   public void addPlayer(String player) {
-    try {
-      FileWriter writer = new FileWriter(filename);
-      writer.write(player + "\n");
-      writer.close();
-      System.out.println("Saved player to " + filename);
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+      writer.write(player);
+      writer.newLine();
+      System.out.println("Added player to" + filename);
     } catch (IOException e) {
-      System.err.println("Error saving player to " + filename);
+      System.err.println("Error adding player to " + filename);
     }
   }
 
