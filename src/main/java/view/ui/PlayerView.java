@@ -32,7 +32,7 @@ public class PlayerView extends VBox {
     Label title = new Label("Ladders & Snakes");
     title.getStyleClass().add("label-title");
 
-    Label instruction = new Label("Enter player names and colors:");
+    Label instruction = new Label("Enter player names and choose a piece:");
     instruction.getStyleClass().add("label-sub");
 
     Button backbutton = new Button("Back");
@@ -40,7 +40,7 @@ public class PlayerView extends VBox {
     backbutton.setOnAction(e -> controller.goBack());
 
     this.setAlignment(Pos.CENTER);
-    this.getChildren().addAll(title, instruction, backbutton);
+    this.getChildren().addAll(title, instruction);
 
     List<String> pieceOptions = List.of("Car", "Hat", "Dog", "Ship", "Plane", "Crown");
     for (int i = 0; i < numPlayers; i++) {
@@ -53,7 +53,11 @@ public class PlayerView extends VBox {
     Button startButton = new Button("Start Game");
     startButton.getStyleClass().add("button-main");
     startButton.setOnAction(e -> handleStart(controller));
-    this.getChildren().add(startButton);
+
+    HBox buttonBox = new HBox(10);
+    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.getChildren().addAll(backbutton, startButton);
+    this.getChildren().add(buttonBox);
 
     this.getStyleClass().add("root");
     this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
