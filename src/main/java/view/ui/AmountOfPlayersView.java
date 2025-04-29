@@ -55,7 +55,7 @@ public class AmountOfPlayersView implements BoardGameObserver {
       int selected = comboBox.getValue();
       controller.setNumberOfPlayers(selected);
 
-      // Bytt scene til PlayerView
+      // Change scene to PlayerView
 
       PlayerViewController pvc = new PlayerViewController(stage, controller, stage.getScene());
       pvc.showPlayerView();
