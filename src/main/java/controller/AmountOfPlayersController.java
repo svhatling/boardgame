@@ -6,7 +6,9 @@ import view.BoardGameObserver;
  * Controller for dealing the number of players selection in the board game.
  */
 public class AmountOfPlayersController {
+
   private final BoardGameObserver observer;
+  private int numberOfPlayers = 2;
 
   /**
    * Constructs a new AmountOfPlayersController.
@@ -15,6 +17,15 @@ public class AmountOfPlayersController {
    */
   public AmountOfPlayersController(BoardGameObserver observer) {
     this.observer = observer;
+  }
+
+  public void setNumberOfPlayers(int number) {
+    this.numberOfPlayers = number;
+    System.out.println("Number of players set to: " + number);
+  }
+
+  public int getNumberOfPlayers() {
+    return numberOfPlayers;
   }
 
   /**
@@ -26,3 +37,5 @@ public class AmountOfPlayersController {
     observer.onPlayerCountChosen(numberOfPlayers);
   }
 }
+
+
