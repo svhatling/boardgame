@@ -19,11 +19,17 @@ public class PlayerView extends VBox {
   private final SaveToCSV saveToCSV;
   private final ObservableList<String> savedPlayers;
   private final List<PlayerInputRow> rows = new ArrayList<>();
+  private Observer observer;
+
+  public interface Observer {
+    void onBack();
+    void onStartGame(List<PlayerData> players);
+  }
 
   /**
    * @param numPlayers Antall spillere brukeren har valgt på forrige side
    */
-  public PlayerView(int numPlayers, PlayerViewController controller) {
+  public PlayerView(int numPlayers) {
     super(20);
     this.saveToCSV = new SaveToCSV("players.csv");
     ReadFromCSV r = new ReadFromCSV("players.csv");
@@ -37,7 +43,9 @@ public class PlayerView extends VBox {
 
     Button backbutton = new Button("Back");
     backbutton.getStyleClass().add("button-main");
-    backbutton.setOnAction(e -> controller.goBack());
+    backbutton.setOnAction(e -> {
+      if (observer != null) observer.onBack();
+    });
 
     this.setAlignment(Pos.CENTER);
     this.getChildren().addAll(title, instruction);
@@ -52,7 +60,7 @@ public class PlayerView extends VBox {
 
     Button startButton = new Button("Start Game");
     startButton.getStyleClass().add("button-main");
-    startButton.setOnAction(e -> handleStart(controller));
+    startButton.setOnAction(e -> handleStart());
 
     HBox buttonBox = new HBox(10);
     buttonBox.setAlignment(Pos.CENTER);
@@ -64,7 +72,7 @@ public class PlayerView extends VBox {
   }
 
   /** Henter data fra radene og lagrer nye spillernavn før spillet kjøres */
-  private void handleStart(PlayerViewController controller) {
+  private void handleStart() {
     List<PlayerData> players = new ArrayList<>();
     for (PlayerInputRow row : rows) {
       String name = row.getPlayerName();
@@ -75,7 +83,7 @@ public class PlayerView extends VBox {
       }
       players.add(new PlayerData(name, piece));
     }
-    controller.startGameWithPlayers(players);
+    if (observer != null) observer.onStartGame(players);
   }
 
   public static class PlayerData {
@@ -86,6 +94,10 @@ public class PlayerView extends VBox {
       this.name = name;
       this.piece = piece;
     }
+  }
+
+  public void setObserver(Observer observer){
+    this.observer = observer;
   }
 }
 
