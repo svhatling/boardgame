@@ -1,6 +1,7 @@
 package view.ui;
 
 import controller.AmountOfPlayersController;
+import controller.PlayerViewController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -49,6 +50,16 @@ public class AmountOfPlayersView implements BoardGameObserver {
     startButton.getStyleClass().add("button-main");
     startButton.setPrefWidth(100);
     startButton.setOnAction(e -> controller.startGame(comboBox.getValue()));
+
+    startButton.setOnAction(e -> {
+      int selected = comboBox.getValue();
+      controller.setNumberOfPlayers(selected);
+
+      // Bytt scene til PlayerView
+
+      PlayerViewController pvc = new PlayerViewController(stage, controller, stage.getScene());
+      pvc.showPlayerView();
+    });
 
     // arrange in a vertical box
     VBox layout = new VBox(20, title, instruction, comboBox, startButton);
