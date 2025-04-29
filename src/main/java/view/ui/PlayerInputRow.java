@@ -32,12 +32,14 @@ public class PlayerInputRow extends HBox {
 
     // Navne-felt
     nameField = new TextField();
+    nameField.getStyleClass().add("player-input-name");
     nameField.setPromptText("Name");
 
     pieceCombo = new ComboBox<>(FXCollections.observableArrayList(pieceOptions));
     pieceCombo.setPromptText("Choose piece");
 
     saveNewCheck = new CheckBox("Save new player");
+    saveNewCheck.getStyleClass().add("checkbox-save");
 
     // Når man bytter mellom «Ny spiller» og en lagret spiller
     combo.setOnAction(e -> {

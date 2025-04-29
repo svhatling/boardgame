@@ -60,3 +60,27 @@
   -fx-padding: 6 12;
   -fx-cursor: hand;
 }
+
+.player-input-name {
+  -fx-background-color: #fce4ec;
+  -fx-background-radius: 20;
+  -fx-padding: 5px;
+  -fx-pref-width: 150px;
+  -fx-pref-height: 35px;
+}
+
+.checkbox-save {
+  -fx-font-size: 12px;
+  -fx-text-fill: #333333;
+}
+
+.checkbox-save .box {
+  -fx-background-color: #fce4ec;
+  -fx-background-radius: 20;
+  -fx-padding: 5px;
+}
+
+.checkbox-save:selected .mark {
+  -fx-background-color: #a271f8;
+  -fx-background-radius: 20;
+}
