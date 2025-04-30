@@ -11,29 +11,30 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import model.entity.BoardGame;
 import model.entity.Player;
-import model.util.BoardConfigLoader;    // ← import for config
+import model.util.BoardConfigLoader;
 import model.util.BoardConfigLoader.TileConfig;
-
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * INITIAL DRAFT.
  *
- * A view that displays:
- *  - a top header with title, current player and last roll
- *  - a center board grid plus a canvas layer for ladders/snakes
- *  - a right panel listing all players and their tile positions
+ * This view displays:
+ *  - A top header with title, current player and dice roll
+ *  - A center board grid plus with a canvas layer for ladders and snakes
+ *  - A right panel showing all players and what tile they are currently on
  */
 public class BoardGameView extends BorderPane {
 
-  /** Listener for user actions on the board screen. */
+  /** Observer for user actions on the boardgame screen. */
   public interface Observer {
     void onRollDice();
-    void onSaveGame();
-    void onLoadGame();
   }
 
   private static final int COLS = 10;
@@ -42,7 +43,7 @@ public class BoardGameView extends BorderPane {
   private final BoardGame game;
   private Observer observer;
 
-  // --- UI parts ---
+  // UI, text showing current player, all players, and dice roll.
   private final Label currentPlayerLabel = new Label("Current: -");
   private final Label diceResultLabel   = new Label("Last roll: -");
 
@@ -52,60 +53,74 @@ public class BoardGameView extends BorderPane {
   private final Canvas ladderCanvas = new Canvas(500, 450);
   private final VBox playerListBox  = new VBox(5);
 
+  private final ImageView die1View = new ImageView();
+  private final ImageView die2View = new ImageView();
+  private final Image[] diceImages = new Image[7];
+
   /**
-   * Build the view: header at top, board in center, player list on right.
+   * Constructor of view, with header on top, board in center, and player list on the right.
    *
-   * @param game the game model containing board, players, dice
+   * @param game the game model with board, players and dice.
    */
   public BoardGameView(BoardGame game) {
     this.game = game;
+    // Using css styling
+    this.getStyleClass().add("root");
+    this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
-    // --- HEADER ---
+    for (int face = 1; face <= 6; face++) {
+      diceImages[face] =
+          new Image(getClass().getResourceAsStream("/icons/dice" + face + ".png"));
+    }
+    die1View.setFitWidth(64);
+    die1View.setFitHeight(64);
+    die2View.setFitWidth(64);
+    die2View.setFitHeight(64);
+    die1View.setImage(diceImages[1]);
+    die2View.setImage(diceImages[1]);
+
+    //Title, sub labels and roll button
     Label title = new Label("Game Board");
     title.getStyleClass().add("label-title");
 
-    Button rollBtn = new Button("Roll Dice");
-    rollBtn.setOnAction(e -> {
+    currentPlayerLabel.getStyleClass().add("label-sub");
+
+    HBox diceBox = new HBox(10, die1View, die2View);
+    diceBox.setAlignment(Pos.CENTER);
+
+    Button rollButton = new Button("Roll Dice");
+    rollButton.getStyleClass().add("button-main");
+    rollButton.setOnAction(e -> {
       if (observer != null) observer.onRollDice();
+      updateDiceImages();
       updateView();
     });
-
-    Button saveBtn = new Button("Save Game");
-    saveBtn.setOnAction(e -> {
-      if (observer != null) observer.onSaveGame();
-    });
-
-    Button loadBtn = new Button("Load Game");
-    loadBtn.setOnAction(e -> {
-      if (observer != null) observer.onLoadGame();
-    });
+    currentPlayerLabel.getStyleClass().add("label-sub");
 
     VBox header = new VBox(5,
         title,
         currentPlayerLabel,
-        diceResultLabel,
-        rollBtn,
-        saveBtn,
-        loadBtn
+        diceBox,
+        rollButton
     );
     header.setAlignment(Pos.CENTER);
     header.setPadding(new Insets(10));
     setTop(header);
 
-    // --- BOARD AREA ---
+    // Board area
     buildBoardGrid();
 
     double cellW = 50, cellH = 50;
     ladderCanvas.setWidth(COLS * cellW);
     ladderCanvas.setHeight(ROWS * cellH);
-    drawLaddersAndSnakes();   // ← now draws all ladders & snakes
+    drawLaddersAndSnakes();
 
     StackPane boardPane = new StackPane(boardGrid, ladderCanvas);
     boardPane.setAlignment(Pos.CENTER);
     boardPane.setPadding(new Insets(10));
     setCenter(boardPane);
 
-    // --- PLAYER LIST PANEL ---
+    // Player list panel
     playerListBox.setPadding(new Insets(10));
     playerListBox.setAlignment(Pos.TOP_LEFT);
     setRight(playerListBox);
@@ -113,17 +128,25 @@ public class BoardGameView extends BorderPane {
     updateView();
   }
 
+  private void updateDiceImages() {
+    List<Integer> vals = game.getDice().getDiceValues();
+    int v1 = vals.get(0);
+    int v2 = vals.size() > 1 ? vals.get(1) : 1;
+    die1View.setImage(diceImages[v1]);
+    die2View.setImage(diceImages[v2]);
+  }
+
   /**
    * Register the observer for button events.
    *
-   * @param observer an implementation of Observer
+   * @param observer implementation of Observer
    */
   public void setObserver(Observer observer) {
     this.observer = observer;
   }
 
   /**
-   * Draw all ladders and snakes based on the JSON config.
+   * Draw all ladders and snakes from the JSON config file.
    */
   private void drawLaddersAndSnakes() {
     Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
@@ -145,13 +168,13 @@ public class BoardGameView extends BorderPane {
       double x2 = rcTo  [1] * cellW + cellW/2;
       double y2 = (ROWS - 1 - rcTo  [0]) * cellH + cellH/2;
 
-      // green for ladder (to > from), red for snake
+      // Green for ladder, red for snake
       gc.setStroke(to > from ? Color.GREEN : Color.RED);
       gc.strokeLine(x1, y1, x2, y2);
     }
   }
 
-  /** Lay out the COLS×ROWS grid of tile labels. */
+  /** Cols X rows grid of tiles. */
   private void buildBoardGrid() {
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER);
@@ -168,7 +191,7 @@ public class BoardGameView extends BorderPane {
   }
 
   /**
-   * Convert a 1-based tile ID into zero-based [row,col].
+   * Convert a tile ID into row X col coordinates.
    * Row 0 is bottom, col 0 is left.
    */
   private int[] tileIdToRowCol(int tileId) {
@@ -180,8 +203,8 @@ public class BoardGameView extends BorderPane {
   }
 
   /**
-   * Refreshes header labels, board highlight, and player list.
-   * Call after any change in the game model.
+   * Refreshing header labels, board highlight, and player list.
+   * Call after change in the game model.
    */
   public void updateView() {
     // Header
@@ -195,17 +218,17 @@ public class BoardGameView extends BorderPane {
             : "Last roll: -"
     );
 
-    // Clear old highlights
+    // Removes the old highlights
     tileLabels.values().forEach(cell -> cell.setStyle(""));
 
-    // Highlight current tile
+    // Highlight the tile the current player is on
     if (current != null) {
       int id = current.getCurrentTile().getTileId();
       Label cell = tileLabels.get(id);
       if (cell != null) cell.setStyle("-fx-background-color: lightblue;");
     }
 
-    // Rebuild player list on right
+    // Rebuild player list on the right
     playerListBox.getChildren().clear();
     Label pplTitle = new Label("Players:");
     pplTitle.getStyleClass().add("label-sub");

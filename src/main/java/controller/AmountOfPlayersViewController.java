@@ -3,9 +3,9 @@ package controller;
 import view.BoardGameObserver;
 
 /**
- * Controller for dealing the number of players selection in the board game.
+ * Controller for dealing with amount of players selection.
  */
-public class AmountOfPlayersController {
+public class AmountOfPlayersViewController {
 
   private final BoardGameObserver observer;
   private int numberOfPlayers = 2;
@@ -13,9 +13,9 @@ public class AmountOfPlayersController {
   /**
    * Constructs a new AmountOfPlayersController.
    *
-   * @param observer the observer to be notified when the user starts the game
+   * @param observer the observer that is notified when the user starts the game
    */
-  public AmountOfPlayersController(BoardGameObserver observer) {
+  public AmountOfPlayersViewController(BoardGameObserver observer) {
     this.observer = observer;
   }
 
@@ -29,7 +29,7 @@ public class AmountOfPlayersController {
   }
 
   /**
-   * Notifies the observer that the game should start with the given number of players.
+   * Notifies the observer that the game should start with the selected number of players.
    *
    * @param numberOfPlayers the number of players selected to start the game
    */

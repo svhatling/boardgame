@@ -1,6 +1,6 @@
 package view.ui;
 
-import controller.AmountOfPlayersController;
+import controller.AmountOfPlayersViewController;
 import controller.PlayerViewController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,22 +13,21 @@ import javafx.stage.Stage;
 import view.BoardGameObserver;
 
 /**
- * View for selecting how many players will be in the game.
- * <p>This view reuses the primary stage, binds the layout to fill the whole window,
- * and restores maximized/fullscreen state after switching scenes.</p>
+ * View for selecting amount of players.
+ * <p>The view reuses the primary stage and binds the layout to fill the whole window.
  */
 public class AmountOfPlayersView implements BoardGameObserver {
 
   /**
-   * Constructs the player selection view on the stage. The layout will automatically resize with
-   * the stage, and maximized/fullscreen state will continue.
+   * Constructs player selection view. The layout resizes with
+   * the stage.
    *
    * @param stage    the primary stage to display the scene on
-   * @param gameType the name of the game variant (for example "Ladders & Snakes" or "Ludo")
+   * @param gameType the name of the game variant ("Ladders & Snakes" or "Ludo")
    */
   public AmountOfPlayersView(Stage stage, String gameType) {
     // creates controller and registers this view as observer
-    AmountOfPlayersController controller = new AmountOfPlayersController(this);
+    AmountOfPlayersViewController controller = new AmountOfPlayersViewController(this);
 
     // header label
     Label title = new Label(gameType);
@@ -50,47 +49,42 @@ public class AmountOfPlayersView implements BoardGameObserver {
     startButton.getStyleClass().add("button-main");
     startButton.setPrefWidth(100);
     startButton.setOnAction(e -> controller.startGame(comboBox.getValue()));
-
-    startButton.setOnAction(e -> {
-      int selected = comboBox.getValue();
+    startButton.setOnAction(e -> { int selected = comboBox.getValue();
       controller.setNumberOfPlayers(selected);
 
       // Change scene to PlayerView
-
       PlayerViewController pvc = new PlayerViewController(stage, controller, stage.getScene());
       pvc.showPlayerView();
     });
 
-    // arrange in a vertical box
+    // Arranges in a vertical box
     VBox layout = new VBox(20, title, instruction, comboBox, startButton);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(320);
 
-    // root pane that fills the stage
+    // Root pane that fills the stage
     StackPane root = new StackPane(layout);
     root.getStyleClass().add("root");
 
-    // bind to stage size so that new scene always fills the window
+    // Bind new scenes to stage size. So that new scene always fills the window
     root.prefWidthProperty().bind(stage.widthProperty());
     root.prefHeightProperty().bind(stage.heightProperty());
 
-    // create scene without hardcoded size
+    // create scene with css style
     Scene scene = new Scene(root);
     scene.getStylesheets().add(getClass()
         .getResource("/css/style.css")
         .toExternalForm());
 
-    // switch scene and keep fullscreen
+    // change scene and keep screen size
     boolean wasFullScreen = stage.isFullScreen();
     boolean wasMaximized = stage.isMaximized();
-
     stage.setScene(scene);
     if (wasFullScreen) {
       stage.setFullScreen(true);
     } else {
       stage.setMaximized(wasMaximized);
     }
-
     stage.setTitle("Choose Number of Players");
   }
 
@@ -101,7 +95,7 @@ public class AmountOfPlayersView implements BoardGameObserver {
    */
   @Override
   public void onPlayerCountChosen(int count) {
-    // TODO: Go to the PlayerView using 'count'
+    // TODO: Go to the PlayerView using count
     System.out.println("Starting game with " + count + " players");
   }
 }
