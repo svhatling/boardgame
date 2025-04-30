@@ -2,8 +2,11 @@ package view.ui;
 
 import controller.MainViewController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -13,12 +16,11 @@ import javafx.stage.Stage;
 /**
  * Main class for the board game.
  * <p>
- * Shows a menu for choosing the game variant and
- * user actions tasks is delegated to the relevant view classes.
+ * Shows a menu for choosing game variant and user action
+ * tasks are given to the relevant view classes.
  * </p>
  */
 public class BoardGameApp extends Application {
-
   private final MainViewController controller = new MainViewController();
 
   /**
@@ -54,7 +56,7 @@ public class BoardGameApp extends Application {
     StackPane root = new StackPane(layout);
     root.getStyleClass().add("root");
 
-    // Bind to the stage size so the content scales properly
+    // Bind to the stage size so the UI elements scales accordingly
     root.prefWidthProperty().bind(primaryStage.widthProperty());
     root.prefHeightProperty().bind(primaryStage.heightProperty());
 
@@ -69,11 +71,34 @@ public class BoardGameApp extends Application {
   }
 
   /**
-   * Starts the JavaFX application.
+   * Application entry point.
+   * Exception handling before launching JavaFX, is practical
+   * for seeing whether the program can launch or has errors.
    *
-   * @param args command-line arguments (not used yet)
+   * @param args command-line arguments
    */
   public static void main(String[] args) {
-    launch(args);
+    // Handler for uncaught exceptions on any thread
+    Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+      // Print to console
+      throwable.printStackTrace();
+
+      // Show an error dialog in UI
+      Platform.runLater(() -> {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Unexpected Error");
+        alert.setHeaderText("Unexpected error occurred");
+        alert.setContentText(throwable.getMessage());
+        alert.showAndWait();
+      });
+    });
+
+
+    /**
+     * Starts the JavaFX application.
+     *
+     * @param args command-line arguments
+     */
+      launch(args);
+    }
   }
-}
