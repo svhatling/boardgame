@@ -6,16 +6,16 @@ import java.io.IOException;
 import java.util.List;
 
 public class SaveToCSV {
-  private String filename;
+  private final String filename;
 
   public SaveToCSV(String filename) {
     this.filename = filename;
   }
 
-  public void savePlayers(List<String> players) {
+  public void savePlayers(List<PlayerRecord> players) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-      for (String player : players) {
-        writer.write(player);
+      for (PlayerRecord player : players) {
+        writer.write(player.name + "," + player.piece);
         writer.newLine();
       }
     } catch (IOException e) {
@@ -23,11 +23,11 @@ public class SaveToCSV {
     }
   }
 
-  public void addPlayer(String player) {
+  public void addPlayer(PlayerRecord player) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-      writer.write(player);
+      writer.write(player.name + "," + player.piece);
       writer.newLine();
-      System.out.println("Added player to" + filename);
+      System.out.println("Added player to: " + filename);
     } catch (IOException e) {
       System.err.println("Error adding player to " + filename);
     }

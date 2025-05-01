@@ -21,6 +21,7 @@ import model.util.BoardConfigLoader.TileConfig;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import model.util.PieceImageLoader;
 
 /**
  * INITIAL DRAFT.
@@ -218,10 +219,13 @@ public class BoardGameView extends BorderPane {
             : "Last roll: -"
     );
 
-    // Removes the old highlights
-    tileLabels.values().forEach(cell -> cell.setStyle(""));
+    // Clear old highlights
+    tileLabels.values().forEach(cell -> {
+      cell.setStyle("");
+      cell.setGraphic(null);
+    });
 
-    // Highlight the tile the current player is on
+    // Highlight current tile
     if (current != null) {
       int id = current.getCurrentTile().getTileId();
       Label cell = tileLabels.get(id);
@@ -229,18 +233,36 @@ public class BoardGameView extends BorderPane {
     }
 
     // Rebuild player list on the right
+
+
+    for (Player p : game.getPlayers()) {
+      int id = p.getCurrentTile().getTileId();
+      Label cell = tileLabels.get(id);
+      if (cell == null) {
+        continue;
+      }
+      Image img = PieceImageLoader.get(p.getPiece());
+      if (img != null) {
+        ImageView imgView = new ImageView(img);
+        imgView.setFitWidth(30);
+        imgView.setFitHeight(30);
+        imgView.setPreserveRatio(true);
+        cell.setGraphic(imgView);
+      }
+    }
+
+    // Player list
     playerListBox.getChildren().clear();
     Label pplTitle = new Label("Players:");
     pplTitle.getStyleClass().add("label-sub");
     playerListBox.getChildren().add(pplTitle);
-
     for (Player p : game.getPlayers()) {
-      String text = p.getName() + " → tile " + p.getCurrentTile().getTileId();
-      Label lbl = new Label(text);
+      String text = p.getName() + " -> tile " + p.getCurrentTile().getTileId();
+      Label label = new Label(text);
       if (p == current) {
-        lbl.setStyle("-fx-font-weight: bold;");
+        label.setStyle("-fx-font-weight: bold;");
       }
-      playerListBox.getChildren().add(lbl);
+      playerListBox.getChildren().add(label);
     }
   }
 }
