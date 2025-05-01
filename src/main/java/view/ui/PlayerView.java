@@ -32,7 +32,7 @@ public class PlayerView extends VBox {
   }
 
   /**
-   * @param numPlayers Antall spillere brukeren har valgt på forrige side
+   * @param numPlayers Number of players that was chosen on the previous "page"
    */
   public PlayerView(int numPlayers) {
     super(20);
@@ -104,7 +104,7 @@ public class PlayerView extends VBox {
   }
 
   /**
-   * Henter data fra radene og lagrer nye spillernavn før spillet kjøres
+   * Gets data from the rows and saves new playernames before starting the game
    */
   private void handleStart() {
     List<PlayerData> players = new ArrayList<>();

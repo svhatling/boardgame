@@ -27,8 +27,8 @@ public class PlayerInputRow extends HBox {
   private final ImageView piecePreview;
 
   /**
-   * @param label        Tekst som vises foran raden (f.eks. "Spiller 1")
-   * @param savedPlayers Liste over spillernavn fra CSV
+   * @param label        Text that is shown in front of the row
+   * @param savedPlayers List of playernames from CSV
    */
   public PlayerInputRow(String label, ObservableList<String> savedPlayers,
       List<String> pieceOptions, List<PlayerRecord> savedRecords) {
@@ -38,12 +38,12 @@ public class PlayerInputRow extends HBox {
 
     Label lbl = new Label(label);
 
-    // ComboBox med «Ny spiller» + alle lagrede
+    // ComboBox with «New Player» and saved players
     combo = new ComboBox<>(FXCollections.observableArrayList(savedPlayers));
     combo.getItems().add(0, "New player");
     combo.setValue("New player");
 
-    // Navne-felt
+    // Name-field
     nameField = new TextField();
     nameField.getStyleClass().add("player-input-name");
     nameField.setPromptText("Name");
@@ -60,7 +60,7 @@ public class PlayerInputRow extends HBox {
     piecePreview.setFitHeight(40);
     piecePreview.setPreserveRatio(true);
 
-    // Når man bytter mellom «Ny spiller» og en lagret spiller
+    // Action for when you switch between "New Player" and a saved player
     combo.setOnAction(e -> handlePlayerSelection());
 
     getChildren().addAll(lbl, combo, nameField, pieceCombo, piecePreview, saveNewCheck);
