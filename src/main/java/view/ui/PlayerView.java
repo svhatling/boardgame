@@ -13,6 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -107,6 +109,20 @@ public class PlayerView extends VBox {
    * Gets data from the rows and saves new playernames before starting the game
    */
   private void handleStart() {
+    for (PlayerInputRow row : rows) {
+      String name  = row.getPlayerName();
+      String piece = row.getSelectedPiece();
+      if (name == null || name.isBlank() || piece == null) {
+        // Show warning and stop
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid input");
+        alert.setHeaderText(null);
+        alert.setContentText("Please fill in name and choose piece for all players.");
+        alert.showAndWait();
+        return;
+      }
+    }
+
     List<PlayerData> players = new ArrayList<>();
     for (PlayerInputRow row : rows) {
       String name = row.getPlayerName();
