@@ -219,7 +219,7 @@ public class BoardGameView extends BorderPane {
             : "Last roll: -"
     );
 
-    // Clear old highlights
+    // Removes the old highlights
     tileLabels.values().forEach(cell -> {
       cell.setStyle("");
       cell.setGraphic(null);
