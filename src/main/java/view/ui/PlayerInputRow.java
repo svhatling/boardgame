@@ -11,7 +11,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import model.util.PieceImageLoader;
 
 public class PlayerInputRow extends HBox {
 
@@ -21,6 +24,7 @@ public class PlayerInputRow extends HBox {
   private final CheckBox saveNewCheck;
   private final List<PlayerRecord> savedRecords;
   private Consumer<Void> onPieceChanged;
+  private final ImageView piecePreview;
 
   /**
    * @param label        Tekst som vises foran raden (f.eks. "Spiller 1")
@@ -51,10 +55,30 @@ public class PlayerInputRow extends HBox {
     saveNewCheck = new CheckBox("Save new player");
     saveNewCheck.getStyleClass().add("checkbox-save");
 
+    piecePreview = new ImageView();
+    piecePreview.setFitWidth(40);
+    piecePreview.setFitHeight(40);
+    piecePreview.setPreserveRatio(true);
+
     // Når man bytter mellom «Ny spiller» og en lagret spiller
     combo.setOnAction(e -> handlePlayerSelection());
 
-    getChildren().addAll(lbl, combo, nameField, pieceCombo, saveNewCheck);
+    getChildren().addAll(lbl, combo, nameField, pieceCombo, piecePreview, saveNewCheck);
+
+    pieceCombo.setOnAction(e -> {
+      notifyPieceChanged();
+      updatePreview();
+    });
+  }
+
+  private void updatePreview() {
+    String piece = getSelectedPiece();
+    if (piece != null) {
+      Image img = PieceImageLoader.get(piece);
+      piecePreview.setImage(img);
+    } else {
+      piecePreview.setImage(null);
+    }
   }
 
 
