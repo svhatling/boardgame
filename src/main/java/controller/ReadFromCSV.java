@@ -17,10 +17,20 @@ public class ReadFromCSV {
     List<PlayerRecord> list = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
       String line;
-      while ((line = br.readLine()) != null && !line.isBlank()) {
+      while ((line = br.readLine()) != null) {
+        line = line.trim();
+        if (line.isEmpty()) {
+          continue;
+        }
+        if (line.toLowerCase().startsWith("name,")) {
+          continue;
+        }
         String[] data = line.split(",", 2);
+        if (data.length < 2) {
+          continue;
+        }
         String name = data[0].trim();
-        String piece = data.length > 1 ? data[1].trim() : "";
+        String piece = data[1].trim();
         list.add(new PlayerRecord(name, piece));
       }
     } catch (IOException e) {
