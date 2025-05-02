@@ -87,7 +87,7 @@ public class BoardGameView extends BorderPane {
     currentPlayerLabel.getStyleClass().add("label-sub");
 
     HBox diceBox = new HBox(10, die1View, die2View);
-    diceBox.setAlignment(Pos.CENTER);
+    diceBox.setAlignment(Pos.CENTER_RIGHT);
 
     Button rollButton = new Button("Roll Dice");
     rollButton.getStyleClass().add("button-main");
@@ -98,12 +98,16 @@ public class BoardGameView extends BorderPane {
     });
     currentPlayerLabel.getStyleClass().add("label-sub");
 
-    VBox header = new VBox(5,
-        title,
-        currentPlayerLabel,
+    VBox playerAndDice = new VBox(5,
         diceBox,
         rollButton
     );
+    VBox header = new VBox(5,
+        title,
+        currentPlayerLabel
+    );
+    playerAndDice.setAlignment(Pos.CENTER_RIGHT);
+    playerAndDice.setPadding(new Insets(10));
     header.setAlignment(Pos.CENTER);
     header.setPadding(new Insets(10));
     setTop(header);
@@ -117,14 +121,22 @@ public class BoardGameView extends BorderPane {
     drawLaddersAndSnakes();
 
     StackPane boardPane = new StackPane(boardGrid, ladderCanvas);
-    boardPane.setAlignment(Pos.CENTER);
+    boardPane.setAlignment(Pos.CENTER_LEFT);
     boardPane.setPadding(new Insets(10));
     setCenter(boardPane);
 
     // Player list panel
     playerListBox.setPadding(new Insets(10));
-    playerListBox.setAlignment(Pos.TOP_LEFT);
-    setRight(playerListBox);
+    playerListBox.setAlignment(Pos.TOP_RIGHT);
+
+    VBox rightPanel = new VBox(15, diceBox, rollButton, playerListBox
+    );
+    rightPanel.setAlignment(Pos.TOP_RIGHT);
+    rightPanel.setPadding(new Insets(10));
+
+    setRight(rightPanel);
+
+
 
     updateView();
   }
@@ -178,7 +190,7 @@ public class BoardGameView extends BorderPane {
   /** Cols X rows grid of tiles. */
   private void buildBoardGrid() {
     boardGrid.setGridLinesVisible(true);
-    boardGrid.setAlignment(Pos.CENTER);
+    boardGrid.setAlignment(Pos.CENTER_LEFT);
     tileLabels.clear();
 
     for (int id = 1; id <= COLS * ROWS; id++) {
@@ -234,7 +246,6 @@ public class BoardGameView extends BorderPane {
 
     // Rebuild player list on the right
 
-
     for (Player p : game.getPlayers()) {
       int id = p.getCurrentTile().getTileId();
       Label cell = tileLabels.get(id);
@@ -257,7 +268,7 @@ public class BoardGameView extends BorderPane {
     pplTitle.getStyleClass().add("label-sub");
     playerListBox.getChildren().add(pplTitle);
     for (Player p : game.getPlayers()) {
-      String text = p.getName() + " -> tile " + p.getCurrentTile().getTileId();
+      String text = p.getName() + " tile " + p.getCurrentTile().getTileId();
       Label label = new Label(text);
       if (p == current) {
         label.setStyle("-fx-font-weight: bold;");
