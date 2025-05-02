@@ -41,12 +41,12 @@ public class BoardGameApp extends Application {
       new AmountOfPlayersView(primaryStage, "Ladders & Snakes");
     });
 
-    Button ludoButton = new Button("Ludo");
+    Button ludoButton = new Button("Memory");
     ludoButton.getStyleClass().add("button-main");
     ludoButton.setPrefWidth(200);
     ludoButton.setOnAction(e -> {
-      controller.selectGame("Ludo");
-      new AmountOfPlayersView(primaryStage, "Ludo");
+      controller.selectGame("Memory");
+      new AmountOfPlayersView(primaryStage, "Memory");
     });
 
     VBox layout = new VBox(20, title, laddersButton, ludoButton);
