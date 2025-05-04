@@ -84,3 +84,8 @@
   -fx-background-color: #a271f8;
   -fx-background-radius: 20;
 }
+
+.tile-ladder-start { -fx-background-color: lightgreen; }
+.tile-ladder-end   { -fx-background-color: #28d501; }
+.tile-snake-start  { -fx-background-color: #fa6784; }
+.tile-snake-end    { -fx-background-color: #ff0f3e; }
