@@ -187,6 +187,33 @@ public class BoardGameView extends BorderPane {
     }
   }
 
+  /**
+  * Styling tiles where ladders/snakes start and end. Green for ladders, red for snakes.
+  * Light color for start tile, dark color for end tile.
+  */
+  private void styleLaddersAndSnakesTiles() {
+    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
+
+    for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
+      int from = entry.getKey();
+      int to   = entry.getValue().to;
+
+      Label fromCell = tileLabels.get(from);
+      Label toCell   = tileLabels.get(to);
+      if (fromCell == null || toCell == null) continue;
+
+      if (to > from) {
+        fromCell.getStyleClass().add("tile-ladder-start");
+        toCell  .getStyleClass().add("tile-ladder-end");
+      } else {
+        fromCell.getStyleClass().add("tile-snake-start");
+        toCell  .getStyleClass().add("tile-snake-end");
+      }
+    }
+  }
+
+
+
   /** Cols X rows grid of tiles. */
   private void buildBoardGrid() {
     boardGrid.setGridLinesVisible(true);
@@ -201,6 +228,7 @@ public class BoardGameView extends BorderPane {
       boardGrid.add(cell, rc[1], ROWS - 1 - rc[0]);
       tileLabels.put(id, cell);
     }
+    styleLaddersAndSnakesTiles();
   }
 
   /**
@@ -245,7 +273,6 @@ public class BoardGameView extends BorderPane {
     }
 
     // Rebuild player list on the right
-
     for (Player p : game.getPlayers()) {
       int id = p.getCurrentTile().getTileId();
       Label cell = tileLabels.get(id);
@@ -275,5 +302,6 @@ public class BoardGameView extends BorderPane {
       }
       playerListBox.getChildren().add(label);
     }
+    styleLaddersAndSnakesTiles();
   }
 }
