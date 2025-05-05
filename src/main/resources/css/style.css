@@ -9,6 +9,10 @@
   -fx-spacing: 15px;
 }
 
+.root-boardgame {
+  -fx-background: linear-gradient(to bottom right, #a0b8ff, #c9a0ff);
+}
+
 .label-title {
   -fx-font-size: 36px;
   -fx-font-weight: bold;
@@ -278,4 +282,72 @@
 .checkbox-save:selected .mark {
   -fx-background-color: #a271f8;
   -fx-background-radius: 20;
+}
+
+.difficulty-button {
+  -fx-background-color: #ffffff;
+  -fx-background-radius: 20px;
+  -fx-padding: 8px 25px;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
+  -fx-cursor: hand;
+  -fx-border-width: 0;
+  -fx-min-width: 120px;
+  -fx-transition: all 0.3s ease;
+}
+
+.difficulty-button:hover {
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0, 0, 2);
+}
+
+.difficulty-button:pressed {
+  -fx-translate-y: 1px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
+}
+
+/* Easy button specific styling */
+.easy-button {
+  -fx-background-color: linear-gradient(to right, #7bed9f, #2ed573);
+  -fx-text-fill: #1e3a29;
+  -fx-border-width: 0;
+}
+
+.easy-button:hover {
+  -fx-background-color: linear-gradient(to right, #87f7a8, #3ae87e);
+}
+
+/* Hard button specific styling */
+.hard-button {
+  -fx-background-color: linear-gradient(to right, #ff7675, #e84393);
+  -fx-text-fill: #ffffff;
+  -fx-border-width: 0;
+}
+
+.hard-button:hover {
+  -fx-background-color: linear-gradient(to right, #ff8a8a, #f052a0);
+}
+
+/* Styles for the roll dice button */
+.roll-dice-button {
+  -fx-background-color: #7b68ee;
+  -fx-background-radius: 25px;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 10px 30px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 0, 1);
+  -fx-cursor: hand;
+}
+
+.roll-dice-button:hover {
+  -fx-background-color: #6a5acd;
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0, 0, 2);
+}
+
+.roll-dice-button:pressed {
+  -fx-translate-y: 1px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
 }

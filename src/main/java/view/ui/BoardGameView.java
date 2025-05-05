@@ -48,15 +48,23 @@ public class BoardGameView extends BorderPane {
   private final Label currentPlayerLabel = new Label("Current: -");
   private final Label diceResultLabel   = new Label("Last roll: -");
 
-  private final GridPane boardGrid = new GridPane();
-  private final Map<Integer, Label> tileLabels = new HashMap<>();
-
-  private final Canvas ladderCanvas = new Canvas(500, 450);
-  private final VBox playerListBox  = new VBox(5);
-
   private final ImageView die1View = new ImageView();
   private final ImageView die2View = new ImageView();
   private final Image[] diceImages = new Image[7];
+
+  private final GridPane boardGrid = new GridPane();
+  private final Canvas ladderCanvas = new Canvas(500, 450);
+
+  private final VBox difficultyPane;
+  private final Button easyButton;
+  private final Button hardButton;
+
+  private final StackPane boardPane;
+  private final StackPane centerStack;
+
+  private final VBox playerListBox  = new VBox(5);
+
+  private final Map<Integer, Label> tileLabels = new HashMap<>();
 
   /**
    * Constructor of view, with header on top, board in center, and player list on the right.
@@ -66,7 +74,7 @@ public class BoardGameView extends BorderPane {
   public BoardGameView(BoardGame game) {
     this.game = game;
     // Using css styling
-    this.getStyleClass().add("root");
+    this.getStyleClass().add("root-boardgame");
     this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
     for (int face = 1; face <= 6; face++) {
@@ -90,13 +98,12 @@ public class BoardGameView extends BorderPane {
     diceBox.setAlignment(Pos.CENTER);
 
     Button rollButton = new Button("Roll Dice");
-    rollButton.getStyleClass().add("button-main");
+    rollButton.getStyleClass().add("roll-dice-button");
     rollButton.setOnAction(e -> {
       if (observer != null) observer.onRollDice();
       updateDiceImages();
       updateView();
     });
-    currentPlayerLabel.getStyleClass().add("label-sub");
 
     VBox header = new VBox(5,
         title,
@@ -109,17 +116,40 @@ public class BoardGameView extends BorderPane {
     setTop(header);
 
     // Board area
+    boardGrid.setGridLinesVisible(true);
+    boardGrid.setAlignment(Pos.CENTER);
     buildBoardGrid();
 
     double cellW = 50, cellH = 50;
     ladderCanvas.setWidth(COLS * cellW);
     ladderCanvas.setHeight(ROWS * cellH);
-    drawLaddersAndSnakes();
+    drawLaddersAndSnakes("board_config.json");
 
-    StackPane boardPane = new StackPane(boardGrid, ladderCanvas);
+    boardPane = new StackPane(boardGrid, ladderCanvas);
     boardPane.setAlignment(Pos.CENTER);
     boardPane.setPadding(new Insets(10));
-    setCenter(boardPane);
+    boardPane.setVisible(false);
+
+    //Difficulty buttons
+    easyButton = new Button("Easy");
+    easyButton.getStyleClass().addAll("difficulty-button", "easy-button");
+    hardButton = new Button("Hard");
+    hardButton.getStyleClass().addAll("difficulty-button", "hard-button");
+    easyButton.setPrefWidth(100);
+    hardButton.setPrefWidth(100);
+    difficultyPane = new VBox(10, easyButton, hardButton);
+    difficultyPane.setAlignment(Pos.CENTER);
+    difficultyPane.setPadding(new Insets(20));
+
+    //Stack: difficulty on top of board
+    centerStack = new StackPane(difficultyPane, boardPane);
+    setCenter(centerStack);
+
+    //Button actions
+    easyButton.setOnAction(e ->
+      loadConfigAndShowBoard("board_config.json"));
+    hardButton.setOnAction(e ->
+      loadConfigAndShowBoard("board_config.json"));
 
     // Player list panel
     playerListBox.setPadding(new Insets(10));
@@ -146,30 +176,55 @@ public class BoardGameView extends BorderPane {
     this.observer = observer;
   }
 
+  private void loadConfigAndShowBoard(String configFile) {
+    boardGrid.getChildren().clear();
+    boardGrid.setGridLinesVisible(true);
+    boardGrid.setAlignment(Pos.CENTER);
+    buildBoardGrid();
+    drawLaddersAndSnakes(configFile);
+    boardPane.setVisible(true);
+    difficultyPane.setVisible(false);
+  }
+
   /**
    * Draw all ladders and snakes from the JSON config file.
    */
-  private void drawLaddersAndSnakes() {
-    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
+  private void drawLaddersAndSnakes(String configFile) {
     GraphicsContext gc = ladderCanvas.getGraphicsContext2D();
+    double width = ladderCanvas.getWidth();
+    double height = ladderCanvas.getHeight();
+
+    // Clear canvas
+    gc.clearRect(0, 0, width, height);
+
+    // Draw grid
+    double cellW = width / COLS;
+    double cellH = height / ROWS;
+    gc.setStroke(Color.BLACK);
+    gc.setLineWidth(1);
+    for (int i = 0; i <= COLS; i++) {
+      double x = i * cellW;
+      gc.strokeLine(x, 0, x, height);
+    }
+    for (int j = 0; j <= ROWS; j++) {
+      double y = j * cellH;
+      gc.strokeLine(0, y, width, y);
+    }
+
+    // Draw ladders and snakes
     gc.setLineWidth(4);
-
-    double cellW = ladderCanvas.getWidth()  / COLS;
-    double cellH = ladderCanvas.getHeight() / ROWS;
-
+    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configFile);
     for (Map.Entry<Integer, TileConfig> e : config.entrySet()) {
       int from = e.getKey();
       int to   = e.getValue().to;
-
       int[] rcFrom = tileIdToRowCol(from);
       int[] rcTo   = tileIdToRowCol(to);
 
-      double x1 = rcFrom[1] * cellW + cellW/2;
-      double y1 = (ROWS - 1 - rcFrom[0]) * cellH + cellH/2;
-      double x2 = rcTo  [1] * cellW + cellW/2;
-      double y2 = (ROWS - 1 - rcTo  [0]) * cellH + cellH/2;
+      double x1 = rcFrom[1] * cellW + cellW / 2;
+      double y1 = (ROWS - 1 - rcFrom[0]) * cellH + cellH / 2;
+      double x2 = rcTo  [1] * cellW + cellW / 2;
+      double y2 = (ROWS - 1 - rcTo  [0]) * cellH + cellH / 2;
 
-      // Green for ladder, red for snake
       gc.setStroke(to > from ? Color.GREEN : Color.RED);
       gc.strokeLine(x1, y1, x2, y2);
     }
@@ -179,8 +234,6 @@ public class BoardGameView extends BorderPane {
   private void buildBoardGrid() {
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER);
-    tileLabels.clear();
-
     for (int id = 1; id <= COLS * ROWS; id++) {
       int[] rc = tileIdToRowCol(id);
       Label cell = new Label(String.valueOf(id));
@@ -220,34 +273,40 @@ public class BoardGameView extends BorderPane {
     );
 
     // Removes the old highlights
-    tileLabels.values().forEach(cell -> {
-      cell.setStyle("");
-      cell.setGraphic(null);
+    boardGrid.getChildren().forEach(node -> {
+      if (node instanceof Label) {
+        Label cell = (Label) node;
+        cell.setStyle("");
+        cell.setGraphic(null);
+      }
     });
 
     // Highlight current tile
     if (current != null) {
       int id = current.getCurrentTile().getTileId();
-      Label cell = tileLabels.get(id);
-      if (cell != null) cell.setStyle("-fx-background-color: lightblue;");
+      for (javafx.scene.Node node : boardGrid.getChildren()) {
+        if (node instanceof Label && ((Label) node).getText().equals(String.valueOf(id))) {
+          ((Label)node).setStyle("-fx-background-color: lightblue;");
+          break;
+        }
+      }
     }
 
     // Rebuild player list on the right
-
-
     for (Player p : game.getPlayers()) {
       int id = p.getCurrentTile().getTileId();
-      Label cell = tileLabels.get(id);
-      if (cell == null) {
-        continue;
-      }
       Image img = PieceImageLoader.get(p.getPiece());
       if (img != null) {
         ImageView imgView = new ImageView(img);
         imgView.setFitWidth(30);
         imgView.setFitHeight(30);
         imgView.setPreserveRatio(true);
-        cell.setGraphic(imgView);
+        for (javafx.scene.Node node : boardGrid.getChildren()) {
+          if (node instanceof Label && ((Label) node).getText().equals(String.valueOf(id))) {
+            ((Label) node).setGraphic(imgView);
+            break;
+          }
+        }
       }
     }
 
