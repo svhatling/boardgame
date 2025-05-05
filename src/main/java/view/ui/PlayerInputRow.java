@@ -1,17 +1,21 @@
-// view/PlayerInputRow.java
 package view.ui;
 
 import controller.PlayerRecord;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -19,127 +23,203 @@ import model.util.PieceImageLoader;
 
 public class PlayerInputRow extends HBox {
 
-  private final ComboBox<String> combo;
-  private final TextField nameField;
-  private final ComboBox<String> pieceCombo;
-  private final CheckBox saveNewCheck;
+  // Navne‐valg
+  private final ToggleGroup nameGroup = new ToggleGroup();
+  private final RadioButton newRadio     = new RadioButton("New player");
+  private final RadioButton savedRadio   = new RadioButton("Saved player");
+  private final ComboBox<String> savedCombo;
+
+  // Navne‐felt for ny spiller
+  private final TextField nameField      = new TextField();
+
+  // Brikke‐valg
+  private final ToggleGroup pieceGroup   = new ToggleGroup();
+  private final List<ToggleButton> pieceButtons = new ArrayList<>();
+
+  // “Save new player”-checkbox
+  private final CheckBox saveNewCheck    = new CheckBox("Save new player");
+
+  // Preview av brikken
+  private final ImageView piecePreview   = new ImageView();
+
+  // Backend‐data + callback
   private final List<PlayerRecord> savedRecords;
   private Consumer<Void> onPieceChanged;
-  private final ImageView piecePreview;
 
   /**
-   * @param label        Text that is shown in front of the row
-   * @param savedPlayers List of playernames from CSV
+   * @param label         “Player 1”, “Player 2” osv.
+   * @param savedPlayers  navn fra CSV
+   * @param pieceOptions  hvilke brikker som finnes
+   * @param savedRecords  PlayerRecord‐objekter fra CSV
    */
-  public PlayerInputRow(String label, ObservableList<String> savedPlayers,
-      List<String> pieceOptions, List<PlayerRecord> savedRecords) {
+  public PlayerInputRow(String label,
+      List<String> savedPlayers,
+      List<String> pieceOptions,
+      List<PlayerRecord> savedRecords) {
     super(10);
-    setAlignment(Pos.CENTER);
     this.savedRecords = savedRecords;
+    setAlignment(Pos.CENTER);
+    this.setSpacing(10);
+    this.getStyleClass().add("player-row");
 
+    // Label “Player X”
     Label lbl = new Label(label);
+    lbl.getStyleClass().add("player-label");
 
-    // ComboBox with «New Player» and saved players
-    combo = new ComboBox<>(FXCollections.observableArrayList(savedPlayers));
-    combo.getItems().add(0, "New player");
-    combo.setValue("New player");
+    // --- Navne‐velger ---
+    newRadio.setToggleGroup(nameGroup);
+    savedRadio.setToggleGroup(nameGroup);
+    newRadio.setSelected(true);
 
-    // Name-field
-    nameField = new TextField();
-    nameField.getStyleClass().add("player-input-name");
+    savedCombo = new ComboBox<>(FXCollections.observableArrayList(savedPlayers));
+    // default disabled til “Saved player” velges
+    savedCombo.setDisable(true);
+
+    // TextField for ny spiller
     nameField.setPromptText("Name");
+    nameField.getStyleClass().add("player-input-name-playerview");
 
-    pieceCombo = new ComboBox<>(FXCollections.observableArrayList(pieceOptions));
-    pieceCombo.setPromptText("Choose piece");
-    pieceCombo.setOnAction(e -> notifyPieceChanged());
+    // Lytt på endring av radioknapper
+    nameGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
+      boolean isSaved = newT == savedRadio;
+      savedCombo.setDisable(!isSaved);
+      nameField.setDisable(isSaved);
+      saveNewCheck.setDisable(isSaved);
+      if (isSaved) {
+        // hvis vi har valgt en eksisterende spiller, fyll inn nameField og brikke
+        String sel = savedCombo.getValue();
+        if (sel != null) {
+          nameField.setText(sel);
+          savedRecords.stream()
+              .filter(r -> r.name.equals(sel))
+              .findFirst()
+              .ifPresent(r -> setSelectedPiece(r.piece));
+        }
+      } else {
+        // ny spiller → rydd navn/brikke
+        nameField.clear();
+        pieceGroup.selectToggle(null);
+        updatePreview(null);
+      }
+      notifyPieceChanged();
+    });
 
-    saveNewCheck = new CheckBox("Save new player");
-    saveNewCheck.getStyleClass().add("checkbox-save");
+    // når brukeren plukker et navn fra savedCombo:
+    savedCombo.setOnAction(e -> {
+      if (savedRadio.isSelected()) {
+        String sel = savedCombo.getValue();
+        if (sel != null) {
+          nameField.setText(sel);
+          savedRecords.stream()
+              .filter(r -> r.name.equals(sel))
+              .findFirst()
+              .ifPresent(r -> setSelectedPiece(r.piece));
+          notifyPieceChanged();
+          updatePreview(getSelectedPiece());
+        }
+      }
+    });
 
-    piecePreview = new ImageView();
+    saveNewCheck.getStyleClass().add("check-box-player");
+
+    HBox nameBox = new HBox(5, newRadio, savedRadio, savedCombo, nameField, saveNewCheck);
+
+    // --- Brikke‐velger med ToggleButtons ---
+    HBox pieceBox = new HBox(5);
+    for (String piece : pieceOptions) {
+      ToggleButton btn = new ToggleButton(piece);
+      btn.setUserData(piece);
+      btn.setToggleGroup(pieceGroup);
+      btn.setOnAction(e -> {
+        notifyPieceChanged();
+        updatePreview(getSelectedPiece());
+      });
+      pieceButtons.add(btn);
+      pieceBox.getChildren().add(btn);
+    }
+
+    // Preview‐bildet
     piecePreview.setFitWidth(40);
     piecePreview.setFitHeight(40);
     piecePreview.setPreserveRatio(true);
 
-    // Action for when you switch between "New Player" and a saved player
-    combo.setOnAction(e -> handlePlayerSelection());
+    // Legg alt inn i raden
+    getChildren().addAll(lbl, nameBox, pieceBox, piecePreview);
 
-    getChildren().addAll(lbl, combo, nameField, pieceCombo, piecePreview, saveNewCheck);
-
-    pieceCombo.setOnAction(e -> {
-      notifyPieceChanged();
-      updatePreview();
-    });
+    this.getStyleClass().add("player-input-row");
+    nameBox.getStyleClass().add("name-box");
+    pieceBox.getStyleClass().add("piece-box");
   }
 
-  private void updatePreview() {
-    String piece = getSelectedPiece();
+  private void notifyPieceChanged() {
+    if (onPieceChanged != null) onPieceChanged.accept(null);
+  }
+
+  public void setOnPieceChanged(Consumer<Void> cb) {
+    this.onPieceChanged = cb;
+  }
+
+  private void updatePreview(String piece) {
     if (piece != null) {
-      Image img = PieceImageLoader.get(piece);
-      piecePreview.setImage(img);
+      piecePreview.setImage(PieceImageLoader.get(piece));
     } else {
       piecePreview.setImage(null);
     }
   }
 
-
-  private void handlePlayerSelection() {
-    String val = combo.getValue();
-    if (val.equals("New player")) {
-      nameField.clear();
-      nameField.setDisable(false);
-      saveNewCheck.setDisable(false);
-      pieceCombo.getSelectionModel().clearSelection();
-    } else {
-      nameField.setText(val);
-      nameField.setDisable(true);
-      saveNewCheck.setDisable(true);
-      savedRecords.stream()
-          .filter(r -> r.name.equals(val))
-          .findFirst()
-          .ifPresent(record -> pieceCombo.setValue(record.piece));
-    }
-    notifyPieceChanged();
-  }
-
-  private void notifyPieceChanged() {
-    if (onPieceChanged != null) {
-      onPieceChanged.accept(null);
-    }
-  }
-
-  public void setOnPieceChanged(Consumer<Void> callback) {
-    this.onPieceChanged = callback;
-  }
-
+  /** Hent navnet brukeren valgte (enten fra combo eller fra tekstfelt) */
   public String getPlayerName() {
     return nameField.getText().trim();
   }
 
+  /** Hent brikken */
   public String getSelectedPiece() {
-    return pieceCombo.getValue();
+    Toggle sel = pieceGroup.getSelectedToggle();
+    return sel == null ? null : (String) sel.getUserData();
   }
 
-  public boolean shouldSaveNewPlayer() {
-    return saveNewCheck.isSelected();
-  }
-
+  /**
+   * Aktiver/deaktiver brikke‐knapper basert på hva som er ledig.
+   * Hvis en tidligere valgt brikke nå er utilgjengelig, rydd valget.
+   */
   public void setPieceOptions(List<String> options) {
-    String current = pieceCombo.getValue();
-    pieceCombo.getItems().setAll(options);
-    if (options.contains(current)) {
-      pieceCombo.setValue(current);
-    } else {
-      pieceCombo.getSelectionModel().clearSelection();
+    String current = getSelectedPiece();
+    for (ToggleButton btn : pieceButtons) {
+      String piece = (String) btn.getUserData();
+      boolean ok = options.contains(piece);
+      btn.setDisable(!ok);
+      if (!ok && btn.isSelected()) {
+        pieceGroup.selectToggle(null);
+        updatePreview(null);
+      }
+    }
+    // Gjenopprett eventuelt gjeldende valg hvis det fortsatt er ok
+    if (current != null && options.contains(current)) {
+      pieceButtons.stream()
+          .filter(b -> Objects.equals(b.getUserData(), current))
+          .findFirst()
+          .ifPresent(b -> {
+            pieceGroup.selectToggle(b);
+            updatePreview(current);
+          });
     }
   }
 
-  public List<String> getAvailablePieceOptions() {
-    return new ArrayList<>(pieceCombo.getItems());
+  /** Forhåndsvelg en bestemt brikke (f.eks. fra CSV) */
+  public void setSelectedPiece(String piece) {
+    for (ToggleButton btn : pieceButtons) {
+      if (Objects.equals(btn.getUserData(), piece)) {
+        btn.setSelected(true);
+        updatePreview(piece);
+        return;
+      }
+    }
+    pieceGroup.selectToggle(null);
+    updatePreview(null);
   }
 
-  public void setSelectedPiece(String piece) {
-    pieceCombo.setValue(piece);
-    updatePreview();
+  /** Skal vi lagre denne som ny spiller? */
+  public boolean shouldSaveNewPlayer() {
+    return newRadio.isSelected() && saveNewCheck.isSelected();
   }
 }

@@ -51,13 +51,13 @@ public class PlayerView extends VBox {
     );
 
     Label title = new Label("Ladders & Snakes");
-    title.getStyleClass().add("label-title");
+    title.getStyleClass().add("label-title-player");
 
     Label instruction = new Label("Enter player names and choose a piece:");
-    instruction.getStyleClass().add("label-sub");
+    instruction.getStyleClass().add("label-sub-player");
 
     Button backbutton = new Button("Back");
-    backbutton.getStyleClass().add("button-main");
+    backbutton.getStyleClass().addAll("button-main-player", "back");
     backbutton.setOnAction(e -> {
       if (observer != null) {
         observer.onBack();
@@ -79,7 +79,7 @@ public class PlayerView extends VBox {
     updateAvailablePieces();
 
     Button startButton = new Button("Start Game");
-    startButton.getStyleClass().add("button-main");
+    startButton.getStyleClass().add("button-main-player");
     startButton.setOnAction(e -> handleStart());
 
     HBox buttonBox = new HBox(10);
@@ -92,12 +92,16 @@ public class PlayerView extends VBox {
   }
 
   private void updateAvailablePieces() {
+    // 1) Tell opp hvilke brikker som allerede er valgt
     Map<String, Long> used = rows.stream()
         .map(PlayerInputRow::getSelectedPiece)
         .filter(Objects::nonNull)
         .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
 
+    // 2) Alle mulige brikker
     List<String> all = List.of("Car", "Hat", "Dog", "Ship", "Plane", "Crown");
+
+    // 3) For hver rad, regn ut hvilke brikker som fortsatt er tilgjengelige
     for (PlayerInputRow row : rows) {
       String current = row.getSelectedPiece();
       List<String> opts = all.stream()
@@ -106,21 +110,34 @@ public class PlayerView extends VBox {
       row.setPieceOptions(opts);
     }
 
-    Map <String, List<PlayerInputRow>> rowsByPiece = rows.stream()
-        .filter(row -> row.getSelectedPiece() != null)
+    // 4) Dersom samme brikke er valgt i flere rader, tving de nederste over på en ledig brikke
+    Map<String, List<PlayerInputRow>> byPiece = rows.stream()
+        .filter(r -> r.getSelectedPiece() != null)
         .collect(Collectors.groupingBy(PlayerInputRow::getSelectedPiece));
 
-    for (var entry : rowsByPiece.entrySet()) {
+    for (var entry : byPiece.entrySet()) {
       List<PlayerInputRow> dupped = entry.getValue();
       if (dupped.size() > 1) {
+        String duplicatedPiece = entry.getKey();
         for (int i = 1; i < dupped.size(); i++) {
           PlayerInputRow row = dupped.get(i);
-          List<String> available = row.getAvailablePieceOptions()
-              .stream()
-              .filter(p -> !p.equals(entry.getKey()))
+
+          // Regn ut hvilke som er ledige *etter* å ha tatt høyde for duplikatet
+          // (samme logikk som over, men ekskluder duplicatedPiece)
+          List<String> opts = all.stream()
+              .filter(p -> !p.equals(duplicatedPiece))
+              .filter(p -> {
+                // også sjekk at vi ikke forsøker å gi en brikke som allerede er brukt fullt opp
+                long count = used.getOrDefault(p, 0L);
+                return count == 0 || p.equals(row.getSelectedPiece());
+              })
               .collect(Collectors.toList());
-          if (!available.isEmpty()) {
-            row.setSelectedPiece(available.get(0));
+
+          // Om vi har noe ledig, velg første
+          if (!opts.isEmpty()) {
+            row.setSelectedPiece(opts.get(0));
+            // Oppdater tilgjengeligheten for knapper igjen
+            row.setPieceOptions(opts);
           } else {
             row.setSelectedPiece(null);
           }
@@ -128,6 +145,7 @@ public class PlayerView extends VBox {
       }
     }
   }
+
 
   /**
    * Gets data from the rows and saves new playernames before starting the game

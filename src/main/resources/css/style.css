@@ -2,16 +2,211 @@
   -fx-background-color: #c1c4f7;
 }
 
+.root-player {
+  -fx-font-family: 'Segoe UI', Arial, sans-serif;
+  -fx-background: linear-gradient(to bottom right, #a0b8ff, #c9a0ff);
+  -fx-padding: 20px;
+  -fx-spacing: 15px;
+}
+
 .label-title {
   -fx-font-size: 36px;
   -fx-font-weight: bold;
   -fx-text-fill: #000000;
 }
 
+.label-title-player{
+  -fx-font-size: 32px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2a2a72;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
+  -fx-padding: 0 0 15px 0;
+}
+
 .label-sub {
   -fx-font-size: 16px;
   -fx-text-fill: #333333;
   -fx-padding: 0 0 10 0;
+}
+
+.label-sub-player{
+  -fx-font-size: 16px;
+  -fx-text-fill: #444444;
+  -fx-padding: 0 0 20px 0;
+}
+
+.player-input-row {
+  -fx-background-color: rgba(255, 255, 255, 0.8);
+  -fx-background-radius: 15px;
+  -fx-padding: 15px;
+  -fx-spacing: 10px;
+  -fx-alignment: center-left;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+/* Player Label (Player 1, Player 2, etc.) */
+.player-input-row > .label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2a2a72;
+  -fx-min-width: 80px;
+}
+
+/* Radio Buttons */
+.radio-button {
+  -fx-padding: 5px;
+  -fx-font-size: 14px;
+}
+
+.radio-button .radio {
+  -fx-background-color: white;
+  -fx-border-color: #7b68ee;
+  -fx-border-width: 2px;
+  -fx-border-radius: 100%;
+  -fx-padding: 3px;
+}
+
+.radio-button:selected .radio .dot {
+  -fx-background-color: #7b68ee;
+  -fx-background-insets: 0;
+}
+
+/* Name Box and Controls */
+.name-box {
+  -fx-spacing: 10px;
+  -fx-alignment: center-left;
+}
+
+.combo-box-player{
+  -fx-background-color: white;
+  -fx-background-radius: 8px;
+  -fx-border-color: #d8dbe0;
+  -fx-border-radius: 8px;
+  -fx-border-width: 2px;
+  -fx-padding: 5px;
+  -fx-min-width: 150px;
+}
+
+.combo-box-player:focused {
+  -fx-border-color: #7b68ee;
+  -fx-effect: dropshadow(three-pass-box, rgba(123, 104, 238, 0.2), 10, 0, 0, 0);
+}
+
+.combo-box-player .list-cell {
+  -fx-text-fill: #333333;
+  -fx-padding: 5px 10px;
+}
+
+.combo-box-player .arrow {
+  -fx-background-color: #7b68ee;
+}
+
+.player-input-name-playerview {
+  -fx-background-color: white;
+  -fx-background-radius: 8px;
+  -fx-border-color: #d8dbe0;
+  -fx-border-radius: 8px;
+  -fx-border-width: 2px;
+  -fx-padding: 8px 10px;
+  -fx-min-width: 150px;
+  -fx-font-size: 14px;
+}
+
+.player-input-name-playerview:focused {
+  -fx-border-color: #7b68ee;
+  -fx-effect: dropshadow(three-pass-box, rgba(123, 104, 238, 0.2), 10, 0, 0, 0);
+}
+
+.check-box-player {
+  -fx-padding: 5px;
+  -fx-font-size: 14px;
+}
+
+.check-box-player .box {
+  -fx-background-color: white;
+  -fx-border-color: #7b68ee;
+  -fx-border-width: 2px;
+  -fx-border-radius: 4px;
+}
+
+.check-box-player:selected .mark {
+  -fx-background-color: white;
+}
+
+.check-box-player:selected .box {
+  -fx-background-color: #7b68ee;
+}
+
+.piece-box {
+  -fx-spacing: 5px;
+  -fx-alignment: center;
+}
+
+/* Toggle Buttons for Pieces */
+.toggle-button {
+  -fx-background-color: white;
+  -fx-text-fill: #333333;
+  -fx-background-radius: 8px;
+  -fx-border-color: #d8dbe0;
+  -fx-border-radius: 8px;
+  -fx-border-width: 2px;
+  -fx-padding: 8px 12px;
+  -fx-cursor: hand;
+  -fx-font-size: 13px;
+}
+
+.toggle-button:hover {
+  -fx-border-color: #7b68ee;
+  -fx-background-color: #f9f7ff;
+}
+
+.toggle-button:selected {
+  -fx-background-color: #7b68ee;
+  -fx-text-fill: white;
+  -fx-border-color: #7b68ee;
+}
+
+.toggle-button:disabled {
+  -fx-opacity: 0.5;
+}
+
+/* Piece Preview */
+.image-view {
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.button-main-player {
+  -fx-background-color: #7b68ee;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 10px 25px;
+  -fx-background-radius: 25px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.button-main-player:hover {
+  -fx-background-color: #6a5acd;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
+  -fx-translate-y: -1px;
+}
+
+/* Back Button Specific */
+.button-main-player.back {
+  -fx-background-color: #e0e0e0;
+  -fx-text-fill: #444444;
+}
+
+.button-main-player.back:hover {
+  -fx-background-color: #d0d0d0;
+}
+
+/* Button Box */
+.button-box-player {
+  -fx-spacing: 15px;
+  -fx-padding: 15px 0 0 0;
+  -fx-alignment: center;
 }
 
 .button-main {
