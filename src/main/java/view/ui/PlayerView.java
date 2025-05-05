@@ -6,6 +6,8 @@ import controller.ReadFromCSV;
 import controller.SaveToCSV;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
@@ -90,18 +92,40 @@ public class PlayerView extends VBox {
   }
 
   private void updateAvailablePieces() {
-    Set<String> used = rows.stream()
+    Map<String, Long> used = rows.stream()
         .map(PlayerInputRow::getSelectedPiece)
-        .filter(p -> p != null)
-        .collect(Collectors.toSet());
+        .filter(Objects::nonNull)
+        .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
 
     List<String> all = List.of("Car", "Hat", "Dog", "Ship", "Plane", "Crown");
     for (PlayerInputRow row : rows) {
       String current = row.getSelectedPiece();
       List<String> opts = all.stream()
-          .filter(p -> !used.contains(p) || p.equals(current))
+          .filter(p -> !used.containsKey(p) || p.equals(current))
           .collect(Collectors.toList());
       row.setPieceOptions(opts);
+    }
+
+    Map <String, List<PlayerInputRow>> rowsByPiece = rows.stream()
+        .filter(row -> row.getSelectedPiece() != null)
+        .collect(Collectors.groupingBy(PlayerInputRow::getSelectedPiece));
+
+    for (var entry : rowsByPiece.entrySet()) {
+      List<PlayerInputRow> dupped = entry.getValue();
+      if (dupped.size() > 1) {
+        for (int i = 1; i < dupped.size(); i++) {
+          PlayerInputRow row = dupped.get(i);
+          List<String> available = row.getAvailablePieceOptions()
+              .stream()
+              .filter(p -> !p.equals(entry.getKey()))
+              .collect(Collectors.toList());
+          if (!available.isEmpty()) {
+            row.setSelectedPiece(available.get(0));
+          } else {
+            row.setSelectedPiece(null);
+          }
+        }
+      }
     }
   }
 

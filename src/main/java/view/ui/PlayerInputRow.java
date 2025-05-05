@@ -2,6 +2,7 @@
 package view.ui;
 
 import controller.PlayerRecord;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javafx.collections.FXCollections;
@@ -131,5 +132,14 @@ public class PlayerInputRow extends HBox {
     } else {
       pieceCombo.getSelectionModel().clearSelection();
     }
+  }
+
+  public List<String> getAvailablePieceOptions() {
+    return new ArrayList<>(pieceCombo.getItems());
+  }
+
+  public void setSelectedPiece(String piece) {
+    pieceCombo.setValue(piece);
+    updatePreview();
   }
 }
