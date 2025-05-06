@@ -33,6 +33,16 @@
   -fx-padding: 0 0 10 0;
 }
 
+.label-bold {
+  -fx-font-weight: bold;
+}
+
+.label-list-header {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+}
+
+
 .label-sub-player{
   -fx-font-size: 16px;
   -fx-text-fill: #444444;
@@ -351,3 +361,8 @@
   -fx-translate-y: 1px;
   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
 }
+
+.tile-ladder-start { -fx-background-color: lightgreen; }
+.tile-ladder-end   { -fx-background-color: #28d501; }
+.tile-snake-start  { -fx-background-color: #fa6784; }
+.tile-snake-end    { -fx-background-color: #ff0f3e; }

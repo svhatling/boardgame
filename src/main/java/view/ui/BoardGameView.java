@@ -1,10 +1,13 @@
 package view.ui;
 
+import java.util.Objects;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -74,12 +77,13 @@ public class BoardGameView extends BorderPane {
   public BoardGameView(BoardGame game) {
     this.game = game;
     // Using css styling
-    this.getStyleClass().add("root-boardgame");
-    this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+    this.getStyleClass().add("root");
+    this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     for (int face = 1; face <= 6; face++) {
       diceImages[face] =
-          new Image(getClass().getResourceAsStream("/icons/dice" + face + ".png"));
+          new Image(
+              Objects.requireNonNull(getClass().getResourceAsStream("/icons/dice" + face + ".png")));
     }
     die1View.setFitWidth(64);
     die1View.setFitHeight(64);
@@ -95,7 +99,7 @@ public class BoardGameView extends BorderPane {
     currentPlayerLabel.getStyleClass().add("label-sub");
 
     HBox diceBox = new HBox(10, die1View, die2View);
-    diceBox.setAlignment(Pos.CENTER);
+    diceBox.setAlignment(Pos.CENTER_RIGHT);
 
     Button rollButton = new Button("Roll Dice");
     rollButton.getStyleClass().add("roll-dice-button");
@@ -105,12 +109,16 @@ public class BoardGameView extends BorderPane {
       updateView();
     });
 
-    VBox header = new VBox(5,
-        title,
-        currentPlayerLabel,
+    VBox playerAndDice = new VBox(5,
         diceBox,
         rollButton
     );
+    VBox header = new VBox(5,
+        title,
+        currentPlayerLabel
+    );
+    playerAndDice.setAlignment(Pos.CENTER);
+    playerAndDice.setPadding(new Insets(10));
     header.setAlignment(Pos.CENTER);
     header.setPadding(new Insets(10));
     setTop(header);
@@ -126,7 +134,7 @@ public class BoardGameView extends BorderPane {
     drawLaddersAndSnakes("board_config.json");
 
     boardPane = new StackPane(boardGrid, ladderCanvas);
-    boardPane.setAlignment(Pos.CENTER);
+    boardPane.setAlignment(Pos.CENTER_LEFT);
     boardPane.setPadding(new Insets(10));
     boardPane.setVisible(false);
 
@@ -153,8 +161,20 @@ public class BoardGameView extends BorderPane {
 
     // Player list panel
     playerListBox.setPadding(new Insets(10));
-    playerListBox.setAlignment(Pos.TOP_LEFT);
-    setRight(playerListBox);
+    playerListBox.setAlignment(Pos.TOP_RIGHT);
+
+    // Box for rollButton, to make it more centered in the rightPanel
+    HBox rollBox = new HBox(rollButton);
+    rollBox.setAlignment(Pos.CENTER);
+
+    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox
+    );
+    rightPanel.setAlignment(Pos.TOP_RIGHT);
+    rightPanel.setPadding(new Insets(10));
+
+    setRight(rightPanel);
+
+
 
     updateView();
   }
@@ -230,10 +250,62 @@ public class BoardGameView extends BorderPane {
     }
   }
 
+  /**
+  * Styling tiles where ladders/snakes start and end. Green for ladders, red for snakes.
+  * Light color for start tile, dark color for end tile.
+  */
+  private void styleLaddersAndSnakesTiles() {
+    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
+
+    for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
+      int from = entry.getKey();
+      int to   = entry.getValue().to;
+
+      Label fromCell = tileLabels.get(from);
+      Label toCell   = tileLabels.get(to);
+      if (fromCell == null || toCell == null) continue;
+
+      if (to > from) {
+        fromCell.getStyleClass().add("tile-ladder-start");
+        toCell  .getStyleClass().add("tile-ladder-end");
+      } else {
+        fromCell.getStyleClass().add("tile-snake-start");
+        toCell  .getStyleClass().add("tile-snake-end");
+      }
+    }
+  }
+
+  /**
+   * Method for building playerList with the selected pieces newt to the player name.
+   *
+   * @param player name of the player.
+   * @param isCurrent the player that is currently playing.
+   * @return playerList with piece icons.
+   */
+  private Node makePlayerListOnRight(Player player, boolean isCurrent) {
+    ImageView imageView = new ImageView(PieceImageLoader.get(player.getPiece()));
+    imageView.setFitWidth(24);
+    imageView.setFitHeight(24);
+    imageView.setPreserveRatio(true);
+
+    Label label = new Label(player.getName() + " (tile " + player.getCurrentTile().getTileId() + ")", imageView);
+    label.setContentDisplay(ContentDisplay.LEFT);
+    label.setGraphicTextGap(8);
+    label.getStyleClass().add("label-sub");
+    if (isCurrent) {
+      label.getStyleClass().add("label-bold");
+    }
+    return label;
+  }
+
+
+
   /** Cols X rows grid of tiles. */
   private void buildBoardGrid() {
     boardGrid.setGridLinesVisible(true);
-    boardGrid.setAlignment(Pos.CENTER);
+    boardGrid.setAlignment(Pos.CENTER_LEFT);
+    tileLabels.clear();
+
     for (int id = 1; id <= COLS * ROWS; id++) {
       int[] rc = tileIdToRowCol(id);
       Label cell = new Label(String.valueOf(id));
@@ -242,6 +314,7 @@ public class BoardGameView extends BorderPane {
       boardGrid.add(cell, rc[1], ROWS - 1 - rc[0]);
       tileLabels.put(id, cell);
     }
+    styleLaddersAndSnakesTiles();
   }
 
   /**
@@ -293,35 +366,39 @@ public class BoardGameView extends BorderPane {
     }
 
     // Rebuild player list on the right
-    for (Player p : game.getPlayers()) {
-      int id = p.getCurrentTile().getTileId();
-      Image img = PieceImageLoader.get(p.getPiece());
-      if (img != null) {
-        ImageView imgView = new ImageView(img);
-        imgView.setFitWidth(30);
-        imgView.setFitHeight(30);
-        imgView.setPreserveRatio(true);
+    for (Player player : game.getPlayers()) {
+      int id = player.getCurrentTile().getTileId();
+      Label cell = tileLabels.get(id);
+      if (cell == null) {
+        continue;
+      }
+      Image image = PieceImageLoader.get(player.getPiece());
+      if (image != null) {
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(30);
+        imageView.setFitHeight(30);
+        imageView.setPreserveRatio(true);
         for (javafx.scene.Node node : boardGrid.getChildren()) {
           if (node instanceof Label && ((Label) node).getText().equals(String.valueOf(id))) {
-            ((Label) node).setGraphic(imgView);
+            ((Label) node).setGraphic(imageView);
             break;
           }
         }
       }
     }
 
-    // Player list
+// Player list
     playerListBox.getChildren().clear();
-    Label pplTitle = new Label("Players:");
-    pplTitle.getStyleClass().add("label-sub");
-    playerListBox.getChildren().add(pplTitle);
-    for (Player p : game.getPlayers()) {
-      String text = p.getName() + " -> tile " + p.getCurrentTile().getTileId();
-      Label label = new Label(text);
-      if (p == current) {
-        label.setStyle("-fx-font-weight: bold;");
-      }
-      playerListBox.getChildren().add(label);
+    Label playersTitle = new Label("Players:");
+    playersTitle.getStyleClass().addAll("label-sub","label-list-header");
+    playerListBox.getChildren().add(playersTitle);
+    playerListBox.setAlignment(Pos.TOP_LEFT);
+
+    for (Player player : game.getPlayers()) {
+      boolean isCurrent = player == current;
+      // makePlayerListOnRight makes a label with icon and player name
+      playerListBox.getChildren().add(makePlayerListOnRight(player, isCurrent));
     }
+    styleLaddersAndSnakesTiles();
   }
 }

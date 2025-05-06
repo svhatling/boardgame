@@ -45,16 +45,16 @@ public class MainView extends Application {
       showAmountOfPlayersView("Ladders & Snakes");
     });
 
-    Button ludoButton = new Button("Ludo");
-    ludoButton.getStyleClass().add("button-main");
-    ludoButton.setPrefWidth(200);
-    ludoButton.setOnAction(e -> {
-      controller.selectGame("Ludo");
-      showAmountOfPlayersView("Ludo");
+    Button memoryButton = new Button("Memory");
+    memoryButton.getStyleClass().add("button-main");
+    memoryButton.setPrefWidth(200);
+    memoryButton.setOnAction(e -> {
+      controller.selectGame("Memory");
+      showAmountOfPlayersView("Memory");
     });
 
     // arrange in a vertical box
-    VBox layout = new VBox(20, title, laddersButton, ludoButton);
+    VBox layout = new VBox(20, title, laddersButton, memoryButton);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(300);
 

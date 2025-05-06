@@ -39,8 +39,8 @@ public class AmountOfPlayersView implements BoardGameObserver {
 
     // box for selecting player count
     ComboBox<Integer> comboBox = new ComboBox<>();
-    comboBox.getItems().addAll(2, 3, 4, 5);
-    comboBox.setValue(1);
+    comboBox.getItems().addAll(2, 3, 4, 5, 6);
+    comboBox.setValue(2);
     comboBox.getStyleClass().add("combo-box");
     comboBox.setMaxWidth(150);
 
