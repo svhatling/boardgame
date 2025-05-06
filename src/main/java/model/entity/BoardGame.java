@@ -34,7 +34,8 @@ public class BoardGame {
         for (int i = 1; i <= 90; i++) {
           board.addTile(new Tile(i));
         }
-        Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
+        Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(
+            "config/snakes_and_ladders/sl_hard_config.json");
 
         for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
           int from = entry.getKey();
