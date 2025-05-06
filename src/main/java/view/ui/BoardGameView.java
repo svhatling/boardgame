@@ -43,6 +43,8 @@ public class BoardGameView extends BorderPane {
 
   private static final int COLS = 10;
   private static final int ROWS = 9;
+  private static final String Easy_config = "config/snakes_and_ladders/sl_easy_config.json";
+  private static final String Hard_config = "config/snakes_and_ladders/sl_hard_config.json";
 
   private final BoardGame game;
   private Observer observer;
@@ -131,7 +133,6 @@ public class BoardGameView extends BorderPane {
     double cellW = 50, cellH = 50;
     ladderCanvas.setWidth(COLS * cellW);
     ladderCanvas.setHeight(ROWS * cellH);
-    drawLaddersAndSnakes("board_config.json");
 
     boardPane = new StackPane(boardGrid, ladderCanvas);
     boardPane.setAlignment(Pos.CENTER_LEFT);
@@ -155,9 +156,9 @@ public class BoardGameView extends BorderPane {
 
     //Button actions
     easyButton.setOnAction(e ->
-      loadConfigAndShowBoard("board_config.json"));
+      loadConfigAndShowBoard(Easy_config));
     hardButton.setOnAction(e ->
-      loadConfigAndShowBoard("board_config.json"));
+      loadConfigAndShowBoard(Hard_config));
 
     // Player list panel
     playerListBox.setPadding(new Insets(10));
@@ -173,8 +174,6 @@ public class BoardGameView extends BorderPane {
     rightPanel.setPadding(new Insets(10));
 
     setRight(rightPanel);
-
-
 
     updateView();
   }
@@ -202,6 +201,7 @@ public class BoardGameView extends BorderPane {
     boardGrid.setAlignment(Pos.CENTER);
     buildBoardGrid();
     drawLaddersAndSnakes(configFile);
+    styleLaddersAndSnakesTiles(configFile);
     boardPane.setVisible(true);
     difficultyPane.setVisible(false);
   }
@@ -254,17 +254,14 @@ public class BoardGameView extends BorderPane {
   * Styling tiles where ladders/snakes start and end. Green for ladders, red for snakes.
   * Light color for start tile, dark color for end tile.
   */
-  private void styleLaddersAndSnakesTiles() {
-    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
-
+  private void styleLaddersAndSnakesTiles(String configFile) {
+    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configFile);
     for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
       int from = entry.getKey();
       int to   = entry.getValue().to;
-
       Label fromCell = tileLabels.get(from);
       Label toCell   = tileLabels.get(to);
       if (fromCell == null || toCell == null) continue;
-
       if (to > from) {
         fromCell.getStyleClass().add("tile-ladder-start");
         toCell  .getStyleClass().add("tile-ladder-end");
@@ -314,7 +311,6 @@ public class BoardGameView extends BorderPane {
       boardGrid.add(cell, rc[1], ROWS - 1 - rc[0]);
       tileLabels.put(id, cell);
     }
-    styleLaddersAndSnakesTiles();
   }
 
   /**
@@ -399,6 +395,5 @@ public class BoardGameView extends BorderPane {
       // makePlayerListOnRight makes a label with icon and player name
       playerListBox.getChildren().add(makePlayerListOnRight(player, isCurrent));
     }
-    styleLaddersAndSnakesTiles();
   }
 }
