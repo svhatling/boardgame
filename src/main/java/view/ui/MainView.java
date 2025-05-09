@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.logic.GameType;
 
 /**
  * Main application class that starts the board game selection.
@@ -41,20 +42,20 @@ public class MainView extends Application {
     laddersButton.getStyleClass().add("button-main");
     laddersButton.setPrefWidth(200);
     laddersButton.setOnAction(e -> {
-      controller.selectGame("Ladders & Snakes");
-      showAmountOfPlayersView("Ladders & Snakes");
+      controller.selectGame(GameType.SNAKES_AND_LADDERS);
+      showAmountOfPlayersView(GameType.SNAKES_AND_LADDERS);
     });
 
-    Button memoryButton = new Button("Memory");
-    memoryButton.getStyleClass().add("button-main");
-    memoryButton.setPrefWidth(200);
-    memoryButton.setOnAction(e -> {
-      controller.selectGame("Memory");
-      showAmountOfPlayersView("Memory");
+    Button quizButton = new Button("Quiz");
+    quizButton.getStyleClass().add("button-main");
+    quizButton.setPrefWidth(200);
+    quizButton.setOnAction(e -> {
+      controller.selectGame(GameType.QUIZ);
+      showAmountOfPlayersView(GameType.QUIZ);
     });
 
     // arrange in a vertical box
-    VBox layout = new VBox(20, title, laddersButton, memoryButton);
+    VBox layout = new VBox(20, title, laddersButton, quizButton);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(300);
 
@@ -80,7 +81,7 @@ public class MainView extends Application {
    *
    * @param gameType the selected game type
    */
-  private void showAmountOfPlayersView(String gameType) {
+  private void showAmountOfPlayersView(GameType gameType) {
     new AmountOfPlayersView(primaryStage, gameType);
   }
 

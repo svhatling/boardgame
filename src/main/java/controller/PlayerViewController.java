@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.logic.GameType;
 import view.ui.PlayerView;
 import view.ui.PlayerView.PlayerData;
 
@@ -14,7 +15,8 @@ public class PlayerViewController implements PlayerView.Observer {
   private final Stage primaryStage;
   private final Scene previousScene;
   private final AmountOfPlayersViewController amountController;
-  private PlayerView playerView;
+  private final GameType gameType;
+  private PlayerView playerview;
 
   /**
    * Constructor of the controller.
@@ -25,10 +27,11 @@ public class PlayerViewController implements PlayerView.Observer {
    */
   public PlayerViewController(Stage primaryStage,
       AmountOfPlayersViewController amountController,
-      Scene previousScene) {
+      Scene previousScene, GameType gameType) {
     this.primaryStage     = primaryStage;
     this.amountController = amountController;
     this.previousScene    = previousScene;
+    this.gameType        = gameType;
   }
 
   /**
@@ -51,7 +54,11 @@ public class PlayerViewController implements PlayerView.Observer {
    */
   @Override
   public void onStartGame(List<PlayerData> players) {
-    new BoardGameViewController(primaryStage, players);
+    if (gameType == GameType.SNAKES_AND_LADDERS) {
+      new BoardGameViewController(primaryStage, players, gameType);
+    } else {
+      new QuizGameViewController(primaryStage, players);
+    }
   }
 
   /**
@@ -59,11 +66,15 @@ public class PlayerViewController implements PlayerView.Observer {
    */
   public void showPlayerView() {
     int numPlayers = amountController.getNumberOfPlayers();
-    PlayerView playerview = new PlayerView(numPlayers);
+    PlayerView playerview = new PlayerView(numPlayers, gameType);
     playerview.setObserver(this);
 
     primaryStage.setScene(new Scene(playerview, 700, 500));
-    primaryStage.setTitle("Ladders & Snakes - Player Setup");
+    primaryStage.setTitle(
+        gameType == GameType.SNAKES_AND_LADDERS
+            ? "Ladders & Snakes - Player setup"
+            : "Quiz - Player setup"
+    );
     primaryStage.show();
   }
 }

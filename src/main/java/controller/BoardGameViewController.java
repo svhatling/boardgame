@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.entity.BoardGame;
 import model.entity.Player;
 import model.factory.BoardGameFactory;
+import model.logic.GameType;
 import view.ui.BoardGameApp;
 import view.ui.BoardGameView;
 import view.ui.BoardGameView.Observer;
@@ -25,6 +26,7 @@ import view.ui.PlayerView.PlayerData;
 public class BoardGameViewController implements Observer {
   private final Stage primaryStage;
   private final List<PlayerData> playersData;
+  private final GameType gameType;
   private BoardGame game;
   private BoardGameView view;
 
@@ -34,23 +36,36 @@ public class BoardGameViewController implements Observer {
    * @param primaryStage the main application window
    * @param playersData  the list of players with pieces
    */
-  public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData) {
+  public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData, GameType gameType) {
     this.primaryStage = primaryStage;
     this.playersData  = playersData;
+    this.gameType     = gameType;
 
-    // Initializes the game model
-    game = BoardGameFactory.create("snakesandladders", 2);
+    switch (gameType) {
+      case SNAKES_AND_LADDERS:
+        game = BoardGameFactory.create("snakesandladders", playersData.size());
+        break;
+      case QUIZ:
+        game = BoardGameFactory.create("quiz", playersData.size());
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid game type: " + gameType);
+    }
+
     for (PlayerData pd : playersData) {
       game.addPlayer(new Player(pd.name, game.getBoard(), pd.piece));
     }
     game.setCurrentPlayer(game.getPlayers().get(0));
 
     // Initializes and shows the view
-    view = new BoardGameView(game);
+    view = new BoardGameView(game, gameType);
     view.setObserver(this);
 
     primaryStage.setScene(new Scene(view, 800, 600));
-    primaryStage.setTitle("Ladders & Snakes");
+    primaryStage.setTitle(
+        gameType == GameType.SNAKES_AND_LADDERS
+        ? "Ladders & Snakes"
+        : "Quiz");
     primaryStage.show();
   }
 
@@ -115,7 +130,7 @@ public class BoardGameViewController implements Observer {
    * When the user chooses the "Play again" button. Restarts the game with the same players and pieces.
    */
   private void restartGame() {
-    new BoardGameViewController(primaryStage, playersData);
+    new BoardGameViewController(primaryStage, playersData, gameType);
   }
 
   /**

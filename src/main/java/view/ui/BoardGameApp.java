@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.logic.GameType;
 
 /**
  * Main class for the board game.
@@ -37,19 +38,19 @@ public class BoardGameApp extends Application {
     laddersButton.getStyleClass().add("button-main");
     laddersButton.setPrefWidth(200);
     laddersButton.setOnAction(e -> {
-      controller.selectGame("Ladders & Snakes");
-      new AmountOfPlayersView(primaryStage, "Ladders & Snakes");
+      controller.selectGame(GameType.SNAKES_AND_LADDERS);
+      new AmountOfPlayersView(primaryStage, GameType.SNAKES_AND_LADDERS);
     });
 
-    Button ludoButton = new Button("Memory");
-    ludoButton.getStyleClass().add("button-main");
-    ludoButton.setPrefWidth(200);
-    ludoButton.setOnAction(e -> {
-      controller.selectGame("Memory");
-      new AmountOfPlayersView(primaryStage, "Memory");
+    Button quizButton = new Button("Quiz");
+    quizButton.getStyleClass().add("button-main");
+    quizButton.setPrefWidth(200);
+    quizButton.setOnAction(e -> {
+      controller.selectGame(GameType.QUIZ);
+      new AmountOfPlayersView(primaryStage, GameType.QUIZ);
     });
 
-    VBox layout = new VBox(20, title, laddersButton, ludoButton);
+    VBox layout = new VBox(20, title, laddersButton, quizButton);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(300);
 

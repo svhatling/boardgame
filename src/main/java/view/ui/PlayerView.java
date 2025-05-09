@@ -19,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.logic.GameType;
 
 public class PlayerView extends VBox {
 
@@ -38,7 +39,7 @@ public class PlayerView extends VBox {
   /**
    * @param numPlayers Number of players that was chosen on the previous "page"
    */
-  public PlayerView(int numPlayers) {
+  public PlayerView(int numPlayers, GameType gameType) {
     super(20);
     this.saveToCSV = new SaveToCSV("players.csv");
     ReadFromCSV r = new ReadFromCSV("players.csv");
@@ -50,7 +51,7 @@ public class PlayerView extends VBox {
             .collect(Collectors.toList())
     );
 
-    Label title = new Label("Ladders & Snakes");
+    Label title = new Label(gameType.getDisplayName());
     title.getStyleClass().add("label-title-player");
 
     Label instruction = new Label("Enter player names and choose a piece:");

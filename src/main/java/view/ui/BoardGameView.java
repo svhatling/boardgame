@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import model.entity.BoardGame;
 import model.entity.Player;
+import model.logic.GameType;
 import model.util.BoardConfigLoader;
 import model.util.BoardConfigLoader.TileConfig;
 import java.util.List;
@@ -46,6 +47,7 @@ public class BoardGameView extends BorderPane {
 
   private final BoardGame game;
   private Observer observer;
+  private GameType gameType;
 
   // UI, text showing current player, all players, and dice roll.
   private final Label currentPlayerLabel = new Label("Current: -");
@@ -74,7 +76,7 @@ public class BoardGameView extends BorderPane {
    *
    * @param game the game model with board, players and dice.
    */
-  public BoardGameView(BoardGame game) {
+  public BoardGameView(BoardGame game, GameType gameType) {
     this.game = game;
     // Using css styling
     this.getStyleClass().add("root");
