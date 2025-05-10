@@ -8,7 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -19,6 +21,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import model.entity.Player;
 import model.util.PieceImageLoader;
 
@@ -64,7 +68,7 @@ public class QuizGameView extends BorderPane {
   private final List<Player> players;
 
   // Score‐pane (valgfritt plasseringssted)
-  private final VBox scorePane = new VBox(10);
+  private final VBox playerListBox = new VBox(5);
 
   public QuizGameView(List<Player> players) {
     this.getStylesheets()
@@ -77,10 +81,10 @@ public class QuizGameView extends BorderPane {
           Objects.requireNonNull(getClass().getResourceAsStream("/icons/dice" + f + ".png"))
       );
     }
-    die1.setFitWidth(40);
-    die1.setFitHeight(40);
-    die2.setFitWidth(40);
-    die2.setFitHeight(40);
+    die1.setFitWidth(64);
+    die1.setFitHeight(64);
+    die2.setFitWidth(64);
+    die2.setFitHeight(64);
     die1.setImage(diceImages[1]);
     die2.setImage(diceImages[1]);
 
@@ -92,12 +96,15 @@ public class QuizGameView extends BorderPane {
         observer.onRollDice();
       }
     });
-    HBox diceBox = new HBox(5, die1, die2, rollButton);
-    diceBox.setAlignment(Pos.CENTER_RIGHT);
+    HBox diceBox = new HBox(10, die1, die2);
+    diceBox.setAlignment(Pos.CENTER);
+
+    HBox rollBox = new HBox(rollButton);
+    rollBox.setAlignment(Pos.CENTER);
 
     Label title = new Label("Quiz Board");
     title.getStyleClass().add("label-title");
-    VBox header = new VBox(5, title, currentPlayerLabel, diceBox);
+    VBox header = new VBox(5, title, currentPlayerLabel);
     header.setAlignment(Pos.CENTER);
     header.setPadding(new Insets(10));
     setTop(header);
@@ -135,10 +142,129 @@ public class QuizGameView extends BorderPane {
     quizPane.setPadding(new Insets(20));
     quizPane.setStyle("-fx-background-color: rgba(255,255,255,0.9);");
 
-    // --- Score‐pane til høyre (kan fjerne om uønsket) ---
-    scorePane.setPadding(new Insets(10));
-    scorePane.setAlignment(Pos.TOP_RIGHT);
-    setRight(scorePane);
+    // --- Instruksjons-boks øverst til venstre ---
+    VBox instrBox = createInstructionsBox();
+    instrBox.getStyleClass().add("instr-box");
+    BorderPane.setAlignment(instrBox, Pos.TOP_LEFT);
+    setLeft(instrBox);
+
+    playerListBox.setPadding(new Insets(10));
+    playerListBox.setAlignment(Pos.TOP_RIGHT);
+
+    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox);
+    rightPanel.setAlignment(Pos.TOP_RIGHT);
+    rightPanel.setPadding(new Insets(10));
+    setRight(rightPanel);
+
+    updatePlayerList();
+  }
+
+  private VBox createInstructionsBox() {
+    // Hovedcontainer
+    VBox instructionsBox = new VBox(8);
+    instructionsBox.setPadding(new Insets(10));
+    instructionsBox.getStyleClass().add("instructions-box");
+
+    // Tittel
+    Label title = new Label("This is how you play:");
+    title.getStyleClass().add("instructions-title");
+
+    // Instruksjonspunkter
+    VBox instructionPoints = new VBox(6);
+
+    // Punkt 1
+    HBox point1 = createInstructionPoint("1", "Press \"Roll dice\" to start the game.");
+
+    // Punkt 2
+    HBox point2 = createInstructionPoint("2", "Your piece moves automatically.");
+
+    // Punkt 3
+    HBox point3 = createInstructionPoint("3",
+        "If the piece lands on or passes a blue tile, you get a question to answer.");
+
+    // Punkt 4
+    HBox point4 = createInstructionPoint("4", "Each right answer gives you 1 point.");
+
+    // Punkt 5
+    HBox point5 = createInstructionPoint("5",
+        "The player with the most points when one player reaches the end wins.");
+
+    // Legg til alle instruksjonspunktene
+    instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
+
+    // Legg til alle elementer i hovedcontaineren
+    instructionsBox.getChildren().addAll(title, instructionPoints);
+    instructionsBox.setAlignment(Pos.CENTER);
+
+    return instructionsBox;
+  }
+
+  /**
+   * Oppretter et enkelt instruksjonspunkt med nummerering og tekst
+   */
+  private HBox createInstructionPoint(String number, String text) {
+    HBox pointContainer = new HBox(6);
+    pointContainer.setAlignment(Pos.TOP_LEFT);
+
+    // Nummersirkel
+    Circle numberCircle = new Circle(10);
+    numberCircle.getStyleClass().add("number-circle");
+
+    // Nummertekst
+    Text numberText = new Text(number);
+    numberText.getStyleClass().add("number-text");
+
+    // Instruksjonstekst
+    Text instructionText = new Text(text);
+    instructionText.getStyleClass().add("instruction-text");
+    instructionText.setWrappingWidth(200);
+
+    // Wrapper for sirkel og nummer (for å sentrere nummeret i sirkelen)
+    StackPane numberContainer = new StackPane();
+    numberContainer.getChildren().addAll(numberCircle, numberText);
+
+    pointContainer.getChildren().addAll(numberContainer, instructionText);
+    return pointContainer;
+  }
+
+  /**
+   * Oppretter spillerlisten med ikoner og spillernavn
+   * (Synkronisert med BoardGameView)
+   */
+  private Node makePlayerListItem(Player player, boolean isCurrent) {
+    ImageView imageView = new ImageView(PieceImageLoader.get(player.getPiece()));
+    imageView.setFitWidth(24);
+    imageView.setFitHeight(24);
+    imageView.setPreserveRatio(true);
+
+    Label label = new Label(player.getName() + " (tile " + player.getCurrentTile().getTileId() + ")", imageView);
+    label.setContentDisplay(ContentDisplay.LEFT);
+    label.setGraphicTextGap(8);
+    label.getStyleClass().add("label-sub");
+    if (isCurrent) {
+      label.getStyleClass().add("label-bold");
+    }
+    return label;
+  }
+
+  /**
+   * Oppdaterer spillerlisten på høyre side
+   */
+  private void updatePlayerList() {
+    playerListBox.getChildren().clear();
+    Label playersTitle = new Label("Players:");
+    playersTitle.getStyleClass().addAll("label-sub", "label-list-header");
+    playerListBox.getChildren().add(playersTitle);
+
+    Player current = players.stream()
+        .filter(Player::isCurrent)
+        .findFirst()
+        .orElse(null);
+
+    for (Player player : players) {
+      boolean isCurrent = player == current;
+      playerListBox.getChildren().add(makePlayerListItem(player, isCurrent));
+    }
   }
 
   /**
@@ -204,7 +330,7 @@ public class QuizGameView extends BorderPane {
   /**
    * Oppdaterer scorepane (hvis brukt)
    */
-  public void updateScores(List<?> playersWithScore) {
+  /**public void updateScores(List<?> playersWithScore) {
     scorePane.getChildren().clear();
     Label hdr = new Label("Scores");
     hdr.getStyleClass().addAll("label-sub", "label-list-header");
@@ -220,7 +346,7 @@ public class QuizGameView extends BorderPane {
       } catch (ClassCastException ignored) {
       }
     }
-  }
+  }*/
 
   public void setQuestionTiles(Set<Integer> questionTileIds) {
     this.questionTileIds = questionTileIds;

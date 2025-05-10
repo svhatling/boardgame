@@ -17,6 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import model.entity.BoardGame;
 import model.entity.Player;
 import model.logic.GameType;
@@ -176,9 +178,78 @@ public class BoardGameView extends BorderPane {
 
     setRight(rightPanel);
 
-
+    VBox instrBox = createImprovedInstructionsBox();
+    instrBox.getStyleClass().add("instr-box");
+    BorderPane.setAlignment(instrBox, Pos.TOP_LEFT);
+    setLeft(instrBox);
 
     updateView();
+  }
+
+  /**
+   * Oppretter en forbedret instruksjonsboks med nummererte punkter og sirkeldesign
+   */
+  private VBox createImprovedInstructionsBox() {
+    // Hovedcontainer
+    VBox instructionsBox = new VBox(8);
+    instructionsBox.setPadding(new Insets(10));
+    instructionsBox.getStyleClass().add("instructions-box");
+
+    // Tittel
+    Label title = new Label("Slik spiller du!");
+    title.getStyleClass().add("instructions-title");
+
+    // Instruksjonspunkter
+    VBox instructionPoints = new VBox(6);
+
+    // Punkt 1
+    HBox point1 = createInstructionPoint("1", "Choose difficulty.");
+
+    // Punkt 2
+    HBox point2 = createInstructionPoint("2", "Press \\\"Roll Dice\\\" to start the game");
+
+    // Punkt 3
+    HBox point3 = createInstructionPoint("3", "Your piece will automatically move the amount of spaces from the dice roll.");
+
+    // Punkt 4
+    HBox point4 = createInstructionPoint("4", "Red ladders bring you down and green ladders bring you up.");
+
+    // Punkt 5
+    HBox point5 = createInstructionPoint("5", "The first player to reach the end wins!");
+
+    // Legg til alle instruksjonspunktene
+    instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
+
+    // Legg til alle elementer i hovedcontaineren
+    instructionsBox.getChildren().addAll(title, instructionPoints);
+    instructionsBox.setAlignment(Pos.CENTER);
+
+    return instructionsBox;
+  }
+
+  private HBox createInstructionPoint(String number, String text) {
+    HBox pointContainer = new HBox(10);
+    pointContainer.setAlignment(Pos.TOP_LEFT);
+
+    // Nummersirkel
+    Circle numberCircle = new Circle(8);
+    numberCircle.getStyleClass().add("number-circle");
+
+    // Nummertekst
+    Text numberText = new Text(number);
+    numberText.getStyleClass().add("number-text");
+
+    // Instruksjonstekst
+    Text instructionText = new Text(text);
+    instructionText.getStyleClass().add("instruction-text");
+    instructionText.setWrappingWidth(220);
+
+    // Wrapper for sirkel og nummer (for å sentrere nummeret i sirkelen)
+    StackPane numberContainer = new StackPane();
+    numberContainer.getChildren().addAll(numberCircle, numberText);
+
+    pointContainer.getChildren().addAll(numberContainer, instructionText);
+    return pointContainer;
   }
 
   private void updateDiceImages() {
