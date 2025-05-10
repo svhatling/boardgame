@@ -51,4 +51,8 @@ public class Player {
   }
 
   public void incrementScore() {this.score++;}
+
+  public boolean isCurrent() {
+    return false;
+  }
 }

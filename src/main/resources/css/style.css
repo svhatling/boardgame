@@ -362,6 +362,15 @@
   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
 }
 
+.tile {
+  -fx-border-color: black;
+  -fx-border-width: 1px;
+}
+
+.tile-question {
+  -fx-background-color: lightblue;
+}
+
 .tile-ladder-start { -fx-background-color: lightgreen; }
 .tile-ladder-end   { -fx-background-color: #28d501; }
 .tile-snake-start  { -fx-background-color: #fa6784; }
