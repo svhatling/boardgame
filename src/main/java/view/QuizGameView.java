@@ -32,8 +32,6 @@ public class QuizGameView extends BorderPane {
 
     void onRollDice();
 
-    void onTileClicked(int tileId);
-
     void onAnswerSelected(String answer);
 
     void onSkipQuestion();
@@ -121,7 +119,7 @@ public class QuizGameView extends BorderPane {
     questionLabel.getStyleClass().add("label-sub");
     answersBox.setPadding(new Insets(10));
     submitButton.getStyleClass().add("button-main");
-    skipButton.getStyleClass().add("button-secondary");
+    skipButton.getStyleClass().add("button-main");
 
     submitButton.setOnAction(e -> {
       var toggle = answerGroup.getSelectedToggle();
@@ -134,6 +132,9 @@ public class QuizGameView extends BorderPane {
         observer.onSkipQuestion();
       }
     });
+
+    skipButton.setDisable(true);
+
     quizButtons.getChildren().addAll(submitButton, skipButton);
     quizButtons.setAlignment(Pos.CENTER);
 
@@ -295,7 +296,9 @@ public class QuizGameView extends BorderPane {
    * Kalles for å vise spørsmål‐helt over brettet
    */
   public void showQuestion(String question, List<String> options) {
-    quizPane.setVisible(true);
+    rollButton.setDisable(true);
+    skipButton.setDisable(false);
+
     questionLabel.setText(question);
     answersBox.getChildren().clear();
     answerGroup.getToggles().clear();
@@ -304,6 +307,7 @@ public class QuizGameView extends BorderPane {
       rb.setToggleGroup(answerGroup);
       answersBox.getChildren().add(rb);
     }
+    quizPane.setVisible(true);
   }
 
   /**
@@ -311,20 +315,8 @@ public class QuizGameView extends BorderPane {
    */
   public void hideQuestion() {
     quizPane.setVisible(false);
-  }
-
-  /**
-   * Oppdaterer et spørsmål + alternativer
-   */
-  public void updateQuestion(String question, List<String> options) {
-    questionLabel.setText(question);
-    answersBox.getChildren().clear();
-    answerGroup.getToggles().clear();
-    for (var opt : options) {
-      RadioButton rb = new RadioButton(opt);
-      rb.setToggleGroup(answerGroup);
-      answersBox.getChildren().add(rb);
-    }
+    rollButton.setDisable(false);
+    skipButton.setDisable(true);
   }
 
   /**

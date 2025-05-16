@@ -196,7 +196,7 @@ public class BoardGameView extends BorderPane {
     instructionsBox.getStyleClass().add("instructions-box");
 
     // Tittel
-    Label title = new Label("Slik spiller du!");
+    Label title = new Label("This is how you play:");
     title.getStyleClass().add("instructions-title");
 
     // Instruksjonspunkter

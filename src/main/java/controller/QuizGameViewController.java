@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.application.Platform;
+import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import model.entity.Questions;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -16,6 +19,8 @@ import model.entity.Player;
 import model.factory.BoardGameFactory;
 import view.QuizGameView;
 import view.QuizGameView.Observer;
+import view.ui.BoardGameApp;
+import view.ui.MainView;
 import view.ui.PlayerView.PlayerData;
 
 import java.util.ArrayList;
@@ -29,9 +34,11 @@ public class QuizGameViewController implements Observer {
   private final Stage stage;
   private final BoardGame game;
   private final List<Player> players = new ArrayList<>();
-  private final List<Questions> questions = new ArrayList<>();
   private final QuizGameView view;
   private final Map<Integer, Questions> questionMap = new HashMap<>();
+
+  private boolean questionActive = false;
+  private Questions currentQuestion;
 
   public QuizGameViewController(Stage stage, List<PlayerData> pdList) {
     this.stage = stage;
@@ -67,11 +74,8 @@ public class QuizGameViewController implements Observer {
       ObjectMapper mapper = new ObjectMapper();
       List<Questions> list = mapper.readValue(
           is,
-          new TypeReference<List<Questions>>() {}
+          new TypeReference<>() {}
       );
-      // Legg dem i et map for enkel oppslag
-      questions.clear();
-      questions.addAll(list);
       questionMap.clear();
       for (Questions q : list) {
         questionMap.put(q.getTileId(), q);
@@ -83,6 +87,10 @@ public class QuizGameViewController implements Observer {
 
   @Override
   public void onRollDice() {
+    if (questionActive) {
+      return;
+    }
+
     // 1) Rull én gang – får summen av de to terningene
     int sum = game.getDice().rollDice();
 
@@ -90,40 +98,43 @@ public class QuizGameViewController implements Observer {
     List<Integer> vals = game.getDice().getDiceValues();
     int v1 = vals.get(0), v2 = vals.get(1);
 
-    // 3) Oppdater ternings‐ikonene
-    view.updateDice(v1, v2);
+    moveAndMaybeAsk(sum);
+  }
 
-    // 4) Fortsett å flytte brikken sum steg
-    int steps = sum;
+  private void moveAndMaybeAsk(int steps) {
     Player cur = game.getCurrentplayer();
-
     for (int i = 0; i < steps; i++) {
       cur.move(1);
       view.updatePiecePositions();
-
       int tileId = cur.getCurrentTile().getTileId();
       if (questionMap.containsKey(tileId)) {
-        var q = questionMap.get(tileId);
-        view.showQuestion(q.getQuestion(), q.getOptions());
-        remainingSteps = steps - i - 1;
+        // still inn rest-steg og vis spørsmål
+        remainingSteps   = steps - i - 1;
+        currentQuestion  = questionMap.get(tileId);
+        questionActive   = true;
+        view.showQuestion(currentQuestion.getQuestion(), currentQuestion.getOptions());
         return;
       }
     }
-
     nextTurnOrEnd();
   }
 
   @Override
   public void onAnswerSelected(String answer) {
     view.hideQuestion();
-    Player cur = game.getCurrentplayer();
-    Questions q  = questionMap.get(cur.getCurrentTile().getTileId());
-    if (q.getAnswer().equals(answer)) cur.incrementScore();
+    questionActive = false;
+
+    if (currentQuestion.getAnswer().equals(answer)) {
+      game.getCurrentplayer().incrementScore();
+    }
+
+
+    currentQuestion = null;
 
     if (remainingSteps > 0) {
       int r = remainingSteps;
       remainingSteps = 0;
-      continueMovement(r);
+      moveAndMaybeAsk(r);
     } else {
       // Ingen flere skritt å ta, gå videre til neste spiller
       nextTurnOrEnd();
@@ -133,10 +144,13 @@ public class QuizGameViewController implements Observer {
   @Override
   public void onSkipQuestion() {
     view.hideQuestion();
+    questionActive = false;
+    currentQuestion = null;
+
     if (remainingSteps > 0) {
       int r = remainingSteps;
       remainingSteps = 0;
-      continueMovement(r);
+      moveAndMaybeAsk(r);
     } else {
       // Ingen flere skritt å ta, gå videre til neste spiller
       nextTurnOrEnd();
@@ -166,35 +180,41 @@ public class QuizGameViewController implements Observer {
         .map(p -> p.getName() + " wins with " + p.getScore() + " points!")
         .orElse("No winner");
 
-    Alert alert = new Alert(Alert.AlertType.NONE,
-        message,
-        ButtonType.OK, new ButtonType("Main Menu")
+    Alert alert = new Alert(Alert.AlertType.NONE);
+    alert.setTitle("Game Over");
+    alert.setHeaderText(message);
+
+    ButtonType playAgain = new ButtonType("Play Again");
+    ButtonType mainMenu  = new ButtonType("Main Menu");
+    alert.getButtonTypes().setAll(playAgain, mainMenu);
+
+    DialogPane pane = alert.getDialogPane();
+    pane.getStylesheets().add(
+        getClass().getResource("/css/style.css").toExternalForm()
     );
-    alert.setTitle("Quiz Over");
-    alert.showAndWait().ifPresent(bt -> {
-      new view.ui.BoardGameApp().start(stage);
-    });
-  }
+    pane.getStyleClass().add("root");
 
-  @Override
-  public void onTileClicked(int tileId) {
-  }
-
-  private void continueMovement(int steps) {
-    Player cur = game.getCurrentplayer();
-    for (int i = 0; i < steps; i++) {
-      cur.move(1);
-      view.updatePiecePositions();
-      int landed = cur.getCurrentTile().getTileId();
-      if (questionMap.containsKey(landed)) {
-        remainingSteps = steps - i - 1;
-        Questions q = questionMap.get(landed);
-        view.showQuestion(q.getQuestion(), q.getOptions());
-        return;
-      }
+    var result = alert.showAndWait();
+    if (result.isPresent() && result.get() == playAgain) {
+      restartGame();
+    } else {
+      backToMainMenu();
     }
-    // Når alle steg er brukt uten spørsmål:
-    nextTurnOrEnd();
+  }
+
+  private void restartGame() {
+    new QuizGameViewController(stage, players.stream()
+        .map(p -> new PlayerData(p.getName(), p.getPiece()))
+        .toList());
+  }
+
+  private void backToMainMenu() {
+    try {
+      new BoardGameApp().start(stage);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Platform.exit();
+    }
   }
 }
 
