@@ -1,13 +1,60 @@
 {
-  "ladders": [
-    { "from": 3, "to": 40 },
-    { "from": 10, "to": 30 },
-    { "from": 65, "to": 87 }
-  ],
-
-  "snakes": [
-    { "from": 68, "to": 50 },
-    { "from": 79, "to": 57 },
-    { "from": 15, "to": 5 }
+  "tiles": [
+    {
+      "id": 3,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 40,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 10,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 30,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 65,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 87,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 68,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 50,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 79,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 57,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 15,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 5,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 60,
+      "action": {
+        "type": "BackToStartAction",
+        "destinationTileId": 1,
+        "description": "goes back to start!"
+      }
+    }
   ]
 }
