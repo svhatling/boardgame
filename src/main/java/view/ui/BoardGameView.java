@@ -256,6 +256,9 @@ public class BoardGameView extends BorderPane {
     for (Map.Entry<Integer, TileConfig> e : config.entrySet()) {
       int from = e.getKey();
       int to   = e.getValue().to;
+
+      if (to == 1) continue;
+
       int[] rcFrom = tileIdToRowCol(from);
       int[] rcTo   = tileIdToRowCol(to);
 
@@ -322,13 +325,24 @@ public class BoardGameView extends BorderPane {
     for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
       int from = entry.getKey();
       int to   = entry.getValue().to;
+
+      if (to == 1){
+        Label cell = tileLabels.get(from);
+        if (cell != null) {
+          cell.getStyleClass().add("tile-back-to-start");
+        }
+        continue;
+      }
+
       Label fromCell = tileLabels.get(from);
       Label toCell   = tileLabels.get(to);
       if (fromCell == null || toCell == null) continue;
       if (to > from) {
         fromCell.getStyleClass().add("tile-ladder-start");
         toCell  .getStyleClass().add("tile-ladder-end");
-      } else {
+      } else if (to == 1){
+        fromCell.getStyleClass().add("tile-back-to-start");
+      }else {
         fromCell.getStyleClass().add("tile-snake-start");
         toCell  .getStyleClass().add("tile-snake-end");
       }
