@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.*;
+import model.entity.BackToStartAction;
 
 public class BoardConfigLoader {
 
@@ -12,21 +13,18 @@ public class BoardConfigLoader {
 
     try {
       ObjectMapper mapper = new ObjectMapper();
-      InputStream inputStream = BoardConfigLoader.class.getClassLoader().getResourceAsStream(fileName);
+      InputStream inputStream = BoardConfigLoader.class
+          .getClassLoader()
+          .getResourceAsStream(fileName);
       JsonNode root = mapper.readTree(inputStream);
 
-      // Ladders
-      for (JsonNode ladder : root.get("ladders")) {
-        int from = ladder.get("from").asInt();
-        int to = ladder.get("to").asInt();
-        actions.put(from, new TileConfig(to, "climbs up the ladder!"));
-      }
-
-      // Snakes
-      for (JsonNode snake : root.get("snakes")) {
-        int from = snake.get("from").asInt();
-        int to = snake.get("to").asInt();
-        actions.put(from, new TileConfig(to, "slides down the ladder!"));
+      // All tile-based actions (ladders, snakes, back-to-start)
+      for (JsonNode tileNode : root.path("tiles")) {
+        int from = tileNode.get("id").asInt();
+        JsonNode actionNode = tileNode.get("action");
+        int to = actionNode.get("destinationTileId").asInt();
+        String message = actionNode.get("description").asText();
+        actions.put(from, new TileConfig(to, message));
       }
 
     } catch (Exception e) {
@@ -43,6 +41,9 @@ public class BoardConfigLoader {
     public TileConfig(int to, String message) {
       this.to = to;
       this.message = message;
+    }
+
+    public TileConfig(BackToStartAction backToStartAction) {
     }
   }
 }
