@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
@@ -28,12 +29,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class QuizGameViewController implements Observer {
-  private final static int COLS = 10, ROWS = 9;
+  private static final int COLS = 10, ROWS = 9;
   private int remainingSteps = 0;
 
   private final Stage stage;
   private final BoardGame game;
-  private final List<Player> players = new ArrayList<>();
   private final QuizGameView view;
   private final Map<Integer, Questions> questionMap = new HashMap<>();
 
@@ -45,22 +45,21 @@ public class QuizGameViewController implements Observer {
     this.game = BoardGameFactory.createQuizGame(2);
 
     var board = game.getBoard();
-    for (var pd : pdList) {
+    for (PlayerData pd : pdList) {
       Player p = new Player(pd.name, board, pd.piece);
       p.setScore(0);
       game.addPlayer(p);
-      players.add(p);
     }
 
-    game.setCurrentPlayer(players.get(0));
+    game.setCurrentPlayer(game.getPlayers().get(0));
 
     loadQuestions();
 
     // Lag og vis view
-    this.view = new QuizGameView(players);
+    this.view = new QuizGameView(game);
     view.setObserver(this);
     view.setQuestionTiles(questionMap.keySet());
-    view.updatePiecePositions();
+    view.updateView();
 
     stage.setScene(new Scene(view, 800, 600));
     stage.setTitle("Quiz Game");
@@ -77,9 +76,7 @@ public class QuizGameViewController implements Observer {
           new TypeReference<>() {}
       );
       questionMap.clear();
-      for (Questions q : list) {
-        questionMap.put(q.getTileId(), q);
-      }
+      list.forEach(q -> questionMap.put(q.getTileId(), q));
     } catch (IOException e) {
       throw new RuntimeException("Could not load question", e);
     }
@@ -105,7 +102,7 @@ public class QuizGameViewController implements Observer {
     Player cur = game.getCurrentplayer();
     for (int i = 0; i < steps; i++) {
       cur.move(1);
-      view.updatePiecePositions();
+      view.updateView();
       int tileId = cur.getCurrentTile().getTileId();
       if (questionMap.containsKey(tileId)) {
         // still inn rest-steg og vis spørsmål
@@ -127,8 +124,6 @@ public class QuizGameViewController implements Observer {
     if (currentQuestion.getAnswer().equals(answer)) {
       game.getCurrentplayer().incrementScore();
     }
-
-
     currentQuestion = null;
 
     if (remainingSteps > 0) {
@@ -165,15 +160,16 @@ public class QuizGameViewController implements Observer {
       showEndDialog();
       return;
     }
-    var all = game.getPlayers();
+    List<Player> all = game.getPlayers();
     int index = all.indexOf(cur);
-    game.setCurrentPlayer(all.get((index + 1) % all.size()));
-    view.updatePiecePositions();
+    Player nextPlayer = all.get((index + 1) % all.size());
+    game.setCurrentPlayer(nextPlayer);
+    view.updateView();
   }
 
   /** Når quizen er ferdig */
   private void showEndDialog() {
-    Optional<Player> winner = players.stream()
+    Optional<Player> winner = game.getPlayers().stream()
         .max(Comparator.comparingInt(Player::getScore));
 
     String message = winner
@@ -203,9 +199,10 @@ public class QuizGameViewController implements Observer {
   }
 
   private void restartGame() {
-    new QuizGameViewController(stage, players.stream()
+    List<PlayerData> pdList = game.getPlayers().stream()
         .map(p -> new PlayerData(p.getName(), p.getPiece()))
-        .toList());
+        .collect(Collectors.toList());
+    new QuizGameViewController(stage, pdList);
   }
 
   private void backToMainMenu() {

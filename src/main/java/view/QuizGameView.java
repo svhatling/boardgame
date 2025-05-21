@@ -23,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import model.entity.BoardGame;
 import model.entity.Player;
 import model.util.PieceImageLoader;
 
@@ -38,7 +39,8 @@ public class QuizGameView extends BorderPane {
   }
 
   private Observer observer;
-
+  private final List<Player> players;
+  private final BoardGame game;
   private Set<Integer> questionTileIds = Collections.emptySet();
 
   // Størrelse på grid
@@ -63,15 +65,14 @@ public class QuizGameView extends BorderPane {
   private final Button submitButton = new Button("Submit");
   private final Button skipButton = new Button("Skip");
 
-  private final List<Player> players;
-
   // Score‐pane (valgfritt plasseringssted)
   private final VBox playerListBox = new VBox(5);
 
-  public QuizGameView(List<Player> players) {
+  public QuizGameView(BoardGame game) {
     this.getStylesheets()
         .add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
-    this.players = players;
+    this.players = game.getPlayers();
+    this.game = game;
 
     // --- Last dice‐ikoner ---
     for (int f = 1; f <= 6; f++) {
@@ -157,7 +158,73 @@ public class QuizGameView extends BorderPane {
     rightPanel.setPadding(new Insets(10));
     setRight(rightPanel);
 
-    updatePlayerList();
+    updateView();
+  }
+
+  public void updateView() {
+    // Current player
+    Player current = game.getCurrentplayer();
+    currentPlayerLabel.setText(
+        current != null ? "Current: " + current.getName() : "Current: -"
+    );
+
+    // Dice
+    try {
+      if (game.getDice() != null) {
+        var diceVals = game.getDice().getDiceValues();
+        if (diceVals.size() >= 2) {
+          updateDice(diceVals.get(0), diceVals.get(1));
+        }
+      }
+    } catch (model.exception.InvalidDiceRollException ignored) {
+    }
+
+    // Clear styles and graphics
+    boardGrid.getChildren().forEach(node -> {
+      if (node instanceof Label) {
+        Label lbl = (Label) node;
+        lbl.setStyle("");
+        lbl.setGraphic(null);
+      }
+    });
+
+    // Highlight current tile
+    if (current != null) {
+      String id = String.valueOf(current.getCurrentTile().getTileId());
+      boardGrid.getChildren().stream()
+          .filter(n -> n instanceof Label)
+          .map(n -> (Label) n)
+          .filter(l -> l.getText().equals(id))
+          .findFirst()
+          .ifPresent(l -> l.setStyle("-fx-background-color: white;"));
+    }
+
+    // Place all pieces
+    for (Player p : players) {
+      String id = String.valueOf(p.getCurrentTile().getTileId());
+      boardGrid.getChildren().stream()
+          .filter(n -> n instanceof Label)
+          .map(n -> (Label) n)
+          .filter(l -> l.getText().equals(id))
+          .findFirst()
+          .ifPresent(l -> {
+            ImageView iv = new ImageView(PieceImageLoader.get(p.getPiece()));
+            iv.setFitWidth(24);
+            iv.setFitHeight(24);
+            iv.setPreserveRatio(true);
+            l.setGraphic(iv);
+          });
+    }
+
+    // Update player list
+    playerListBox.getChildren().clear();
+    Label hdr = new Label("Players:");
+    hdr.getStyleClass().addAll("label-sub", "label-list-header");
+    playerListBox.getChildren().add(hdr);
+    for (Player p : players) {
+      boolean isCurr = p == current;
+      playerListBox.getChildren().add(makePlayerListItem(p, isCurr));
+    }
   }
 
   private VBox createInstructionsBox() {
@@ -229,8 +296,7 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Oppretter spillerlisten med ikoner og spillernavn
-   * (Synkronisert med BoardGameView)
+   * Oppretter spillerlisten med ikoner og spillernavn (Synkronisert med BoardGameView)
    */
   private Node makePlayerListItem(Player player, boolean isCurrent) {
     ImageView imageView = new ImageView(PieceImageLoader.get(player.getPiece()));
@@ -238,7 +304,10 @@ public class QuizGameView extends BorderPane {
     imageView.setFitHeight(24);
     imageView.setPreserveRatio(true);
 
-    Label label = new Label(player.getName() + " (tile " + player.getCurrentTile().getTileId() + ")", imageView);
+    int score = player.getScore();
+    String text = player.getName() + ": " + score + (score == 1 ? " point" : " points");
+
+    Label label = new Label(text, imageView);
     label.setContentDisplay(ContentDisplay.LEFT);
     label.setGraphicTextGap(8);
     label.getStyleClass().add("label-sub");
@@ -249,47 +318,10 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Oppdaterer spillerlisten på høyre side
-   */
-  private void updatePlayerList() {
-    playerListBox.getChildren().clear();
-    Label playersTitle = new Label("Players:");
-    playersTitle.getStyleClass().addAll("label-sub", "label-list-header");
-    playerListBox.getChildren().add(playersTitle);
-
-    Player current = players.stream()
-        .filter(Player::isCurrent)
-        .findFirst()
-        .orElse(null);
-
-    for (Player player : players) {
-      boolean isCurrent = player == current;
-      playerListBox.getChildren().add(makePlayerListItem(player, isCurrent));
-    }
-  }
-
-  /**
    * Koble til controller
    */
   public void setObserver(Observer obs) {
     this.observer = obs;
-  }
-
-  public void updatePiecePositions() {
-    // Fjern alle ikoner:
-    tileLabels.values().forEach(cell -> cell.setGraphic(null));
-    // Plasser alle spillernes brikker:
-    for (Player p : players) {
-      int id = p.getCurrentTile().getTileId();
-      ImageView iv = new ImageView(PieceImageLoader.get(p.getPiece()));
-      iv.setFitWidth(24);
-      iv.setFitHeight(24);
-      tileLabels.get(id).setGraphic(iv);
-    }
-    // Oppdater header:
-    currentPlayerLabel.setText("Current: " + players.stream()
-        .filter(pl -> pl.isCurrent())
-        .findFirst().map(Player::getName).orElse("-"));
   }
 
   /**
@@ -319,31 +351,10 @@ public class QuizGameView extends BorderPane {
     skipButton.setDisable(true);
   }
 
-  /**
-   * Oppdaterer scorepane (hvis brukt)
-   */
-  /**public void updateScores(List<?> playersWithScore) {
-    scorePane.getChildren().clear();
-    Label hdr = new Label("Scores");
-    hdr.getStyleClass().addAll("label-sub", "label-list-header");
-    scorePane.getChildren().add(hdr);
-    // forventer at spiller‐objektene har getName() og getScore()
-    for (Object p : playersWithScore) {
-      // kast til korrekt type om nødvendig
-      try {
-        var pl = (model.entity.Player) p;
-        Label l = new Label(pl.getName() + ": " + pl.getScore());
-        l.getStyleClass().add("label-sub");
-        scorePane.getChildren().add(l);
-      } catch (ClassCastException ignored) {
-      }
-    }
-  }*/
-
   public void setQuestionTiles(Set<Integer> questionTileIds) {
     this.questionTileIds = questionTileIds;
     buildBoardGrid();
-    updatePiecePositions();
+    updateView();
   }
 
   /**

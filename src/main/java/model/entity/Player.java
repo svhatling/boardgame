@@ -6,6 +6,7 @@ public class Player {
   private final Board board;
   private String piece;
   private int score;
+  private boolean isCurrent;
 
   // Konstruktør
   public Player(String name, Board board, String piece) {
