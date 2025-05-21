@@ -39,7 +39,7 @@ public class BoardGameViewController implements Observer {
     this.playersData  = playersData;
 
     // Initializes the game model
-    game = BoardGameFactory.create("snakesandladders", 2);
+    game = BoardGameFactory.createSnakesAndLaddersEasy(2);
     for (PlayerData pd : playersData) {
       game.addPlayer(new Player(pd.name, game.getBoard(), pd.piece));
     }
