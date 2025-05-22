@@ -31,6 +31,7 @@ public class BoardGameViewController implements Observer {
   private final Stage primaryStage;
   private final List<PlayerData> playersData;
   private final GameType gameType;
+  private final Scene previousScene;
   private final FullscreenHandler fullscreenHandler;
   private final BoardGame game;
   private final BoardGameView view;
@@ -46,6 +47,7 @@ public class BoardGameViewController implements Observer {
   public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData, GameType gameType,
       FullscreenHandler fullscreenHandler) {
     this.primaryStage = primaryStage;
+    this.previousScene = primaryStage.getScene();
     this.playersData  = playersData;
     this.gameType     = gameType;
     this.fullscreenHandler = fullscreenHandler;
@@ -86,6 +88,15 @@ public class BoardGameViewController implements Observer {
     }
 
     primaryStage.show();
+  }
+
+  @Override
+  public void onBack() {
+    if (previousScene != null) {
+      primaryStage.setScene(previousScene);
+    } else {
+      System.out.println("No previous scene to go back to.");
+    }
   }
 
   /**

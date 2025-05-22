@@ -37,6 +37,7 @@ public class BoardGameView extends BorderPane {
   /** Observer for user actions on the board game screen.*/
   public interface Observer {
     void onRollDice();
+    void onBack();
   }
 
   private static final int COLS = 10;
@@ -187,7 +188,13 @@ public class BoardGameView extends BorderPane {
     HBox rollBox = new HBox(rollButton);
     rollBox.setAlignment(Pos.CENTER);
 
-    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox
+    Button backButton = new Button("Back");
+    backButton.getStyleClass().addAll("button-main-player", "back");
+    backButton.setOnAction(e -> {
+      if (observer != null) observer.onBack();
+    });
+
+    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox, backButton
     );
     rightPanel.setAlignment(Pos.TOP_RIGHT);
     rightPanel.setPadding(new Insets(10));

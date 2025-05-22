@@ -51,7 +51,7 @@ public class AmountOfPlayersView implements BoardGameObserver {
 
     // start button
     Button startButton = new Button("Start");
-    startButton.getStyleClass().add("button-main");
+    startButton.getStyleClass().add("button-main-player");
     startButton.setPrefWidth(100);
     startButton.setOnAction(e -> {
           int selected = comboBox.getValue();
@@ -63,12 +63,12 @@ public class AmountOfPlayersView implements BoardGameObserver {
 
     // back button
     Button backButton = new Button("Back");
-    backButton.getStyleClass().addAll("button-main", "back");
+    backButton.getStyleClass().addAll("button-main-player", "back");
     backButton.setOnAction(e ->
       new BoardGameApp().start(stage));
 
     buttonBox.setAlignment(Pos.CENTER);
-    buttonBox.getChildren().addAll(startButton, backButton);
+    buttonBox.getChildren().addAll(backButton, startButton);
 
     // Arranges everything in a vertical box
     VBox layout = new VBox(20, title, instruction, comboBox, buttonBox);

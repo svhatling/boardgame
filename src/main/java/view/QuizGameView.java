@@ -197,7 +197,7 @@ public class QuizGameView extends BorderPane {
     playerListBox.setAlignment(Pos.TOP_RIGHT);
 
     Button backButton = new Button("Back");
-    backButton.getStyleClass().addAll("button-main", "back");
+    backButton.getStyleClass().addAll("button-main-player", "back");
     backButton.setOnAction(e -> {
       if (observer != null) {
         observer.onBack();
