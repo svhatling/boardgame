@@ -6,6 +6,7 @@ import model.entity.Board;
 import model.entity.Player;
 import model.entity.Tile;
 import model.entity.TileAction;
+import model.entity.BackToStartAction;
 import model.exception.InvalidTileException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,4 +59,14 @@ class TileTest {
     Exception exception = assertThrows(InvalidTileException.class, () -> new Tile(-5));
     assertEquals("Tile ID cannot be negative.", exception.getMessage());
   }
+
+  @Test
+  void testBackToStartActionOnTile60() {
+    Tile tile60 = new Tile(60);
+    board.addTile(tile60);
+    tile60.setTileAction(new BackToStartAction());
+    tile60.landPlayer(player);
+    assertEquals(1, player.getCurrentTile().getTileId());
+  }
+
 }

@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -46,6 +47,9 @@ public class BoardGameView extends BorderPane {
 
   private static final int COLS = 10;
   private static final int ROWS = 9;
+  private static final String Easy_config = "config/snakes_and_ladders/sl_easy_config.json";
+  private static final String Hard_config = "config/snakes_and_ladders/sl_hard_config.json";
+  private String chosenConfigFile = Easy_config;
 
   private final BoardGame game;
   private Observer observer;
@@ -65,12 +69,9 @@ public class BoardGameView extends BorderPane {
   private final VBox difficultyPane;
   private final Button easyButton;
   private final Button hardButton;
-
   private final StackPane boardPane;
   private final StackPane centerStack;
-
   private final VBox playerListBox  = new VBox(5);
-
   private final Map<Integer, Label> tileLabels = new HashMap<>();
 
   /**
@@ -81,7 +82,7 @@ public class BoardGameView extends BorderPane {
   public BoardGameView(BoardGame game, GameType gameType) {
     this.game = game;
     // Using css styling
-    this.getStyleClass().add("root");
+    this.getStyleClass().add("root-boardgame");
     this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     for (int face = 1; face <= 6; face++) {
@@ -130,6 +131,9 @@ public class BoardGameView extends BorderPane {
     // Board area
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER);
+    boardGrid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+    boardGrid.setVgap(1);
+    boardGrid.setHgap(1);
     buildBoardGrid();
 
     double cellW = 50, cellH = 50;
@@ -138,9 +142,19 @@ public class BoardGameView extends BorderPane {
     drawLaddersAndSnakes("board_config.json");
 
     boardPane = new StackPane(boardGrid, ladderCanvas);
-    boardPane.setAlignment(Pos.CENTER_LEFT);
+    boardPane.setAlignment(Pos.CENTER);
     boardPane.setPadding(new Insets(10));
     boardPane.setVisible(false);
+
+    ladderCanvas.widthProperty().bind(boardPane.widthProperty().subtract(20));
+    ladderCanvas.heightProperty().bind(boardPane.heightProperty().subtract(20));
+    ladderCanvas.widthProperty().addListener((obs, oldW, newW) -> {
+      drawLaddersAndSnakes(chosenConfigFile);
+    });
+    ladderCanvas.heightProperty().addListener((obs, oldH, newH) -> {
+      drawLaddersAndSnakes(chosenConfigFile);
+    });
+
 
     //Difficulty buttons
     easyButton = new Button("Easy");
@@ -149,6 +163,9 @@ public class BoardGameView extends BorderPane {
     hardButton.getStyleClass().addAll("difficulty-button", "hard-button");
     easyButton.setPrefWidth(100);
     hardButton.setPrefWidth(100);
+
+
+    //DifficultyPane
     difficultyPane = new VBox(10, easyButton, hardButton);
     difficultyPane.setAlignment(Pos.CENTER);
     difficultyPane.setPadding(new Insets(20));
@@ -158,10 +175,14 @@ public class BoardGameView extends BorderPane {
     setCenter(centerStack);
 
     //Button actions
-    easyButton.setOnAction(e ->
-      loadConfigAndShowBoard("board_config.json"));
-    hardButton.setOnAction(e ->
-      loadConfigAndShowBoard("board_config.json"));
+    easyButton.setOnAction(e -> {
+      chosenConfigFile = Easy_config;
+      loadConfigAndShowBoard(Easy_config);
+    });
+    hardButton.setOnAction(e -> {
+      chosenConfigFile = Hard_config;
+      loadConfigAndShowBoard(Hard_config);
+    });
 
     // Player list panel
     playerListBox.setPadding(new Insets(10));
@@ -274,7 +295,10 @@ public class BoardGameView extends BorderPane {
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER);
     buildBoardGrid();
+
     drawLaddersAndSnakes(configFile);
+    styleLaddersAndSnakesTiles(configFile);
+
     boardPane.setVisible(true);
     difficultyPane.setVisible(false);
   }
@@ -283,43 +307,89 @@ public class BoardGameView extends BorderPane {
    * Draw all ladders and snakes from the JSON config file.
    */
   private void drawLaddersAndSnakes(String configFile) {
-    GraphicsContext gc = ladderCanvas.getGraphicsContext2D();
+    GraphicsContext graphicsContext = ladderCanvas.getGraphicsContext2D();
     double width = ladderCanvas.getWidth();
     double height = ladderCanvas.getHeight();
-
-    // Clear canvas
-    gc.clearRect(0, 0, width, height);
+    graphicsContext.clearRect(0, 0, width, height);
 
     // Draw grid
-    double cellW = width / COLS;
-    double cellH = height / ROWS;
-    gc.setStroke(Color.BLACK);
-    gc.setLineWidth(1);
+    double cellWidth = ladderCanvas.getWidth() / COLS;
+    double cellHeight = ladderCanvas.getHeight() / ROWS;
+
+    graphicsContext.setStroke(Color.BLACK);
+    graphicsContext.setLineWidth(1);
     for (int i = 0; i <= COLS; i++) {
-      double x = i * cellW;
-      gc.strokeLine(x, 0, x, height);
+      double x = i * cellWidth;
+      graphicsContext.strokeLine(x, 0, x, height);
     }
     for (int j = 0; j <= ROWS; j++) {
-      double y = j * cellH;
-      gc.strokeLine(0, y, width, y);
+      double y = j * cellHeight;
+      graphicsContext.strokeLine(0, y, width, y);
     }
 
     // Draw ladders and snakes
-    gc.setLineWidth(4);
+    graphicsContext.setLineWidth(4);
     Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configFile);
     for (Map.Entry<Integer, TileConfig> e : config.entrySet()) {
       int from = e.getKey();
       int to   = e.getValue().to;
+
+      if (to == 1) continue;
+
       int[] rcFrom = tileIdToRowCol(from);
       int[] rcTo   = tileIdToRowCol(to);
 
-      double x1 = rcFrom[1] * cellW + cellW / 2;
-      double y1 = (ROWS - 1 - rcFrom[0]) * cellH + cellH / 2;
-      double x2 = rcTo  [1] * cellW + cellW / 2;
-      double y2 = (ROWS - 1 - rcTo  [0]) * cellH + cellH / 2;
+      double x1 = rcFrom[1] * cellWidth + cellWidth / 2;
+      double x2 = rcTo  [1] * cellWidth + cellWidth / 2;
 
-      gc.setStroke(to > from ? Color.GREEN : Color.RED);
-      gc.strokeLine(x1, y1, x2, y2);
+      double centerY1 = (ROWS - 1 - rcFrom[0]) * cellHeight + cellHeight/2;
+      double centerY2 = (ROWS - 1 - rcTo  [0]) * cellHeight + cellHeight/2;
+      double offsetY  = cellHeight * 0.3;
+
+
+      double y1 = to > from ? centerY1 - offsetY : centerY1 + offsetY;
+      double y2 = to > from ? centerY2 + offsetY : centerY2 - offsetY;
+
+      Color ladderColor = to > from ? Color.GREEN : Color.RED;
+      drawLadder(graphicsContext, x1, y1, x2, y2, cellWidth * 0.1, 5, ladderColor);
+    }
+  }
+
+  /**
+   * Draws a ladder, two poles and N steps.
+   *
+   * @param graphicsContext GraphicsContext
+   * @param x1,y1 start tile
+   * @param x2,y2 end tile
+   * @param offset how far from the middle the poles should be placed
+   * @param steps number of steps
+   * @param color color on the ladders
+   *
+   */
+
+  private void drawLadder(GraphicsContext graphicsContext,
+      double x1, double y1,
+      double x2, double y2,
+      double offset, int steps, Color color) {
+
+    graphicsContext.setStroke(color);
+    graphicsContext.setLineWidth(4);
+
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    double len = Math.hypot(dx, dy);
+
+    double px = -dy / len * offset;
+    double py =  dx / len * offset;
+
+    graphicsContext.strokeLine(x1 + px, y1 + py, x2 + px, y2 + py);
+    graphicsContext.strokeLine(x1 - px, y1 - py, x2 - px, y2 - py);
+
+    for (int i = 1; i <= steps; i++) {
+      double t = i / (double)(steps + 1);
+      double cx = x1 + dx * t;
+      double cy = y1 + dy * t;
+      graphicsContext.strokeLine(cx - px, cy - py, cx + px, cy + py);
     }
   }
 
@@ -327,21 +397,29 @@ public class BoardGameView extends BorderPane {
   * Styling tiles where ladders/snakes start and end. Green for ladders, red for snakes.
   * Light color for start tile, dark color for end tile.
   */
-  private void styleLaddersAndSnakesTiles() {
-    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
-
+  private void styleLaddersAndSnakesTiles(String configFile) {
+    Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configFile);
     for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
       int from = entry.getKey();
       int to   = entry.getValue().to;
 
+      if (to == 1){
+        Label cell = tileLabels.get(from);
+        if (cell != null) {
+          cell.getStyleClass().add("tile-back-to-start");
+        }
+        continue;
+      }
+
       Label fromCell = tileLabels.get(from);
       Label toCell   = tileLabels.get(to);
       if (fromCell == null || toCell == null) continue;
-
       if (to > from) {
         fromCell.getStyleClass().add("tile-ladder-start");
         toCell  .getStyleClass().add("tile-ladder-end");
-      } else {
+      } else if (to == 1){
+        fromCell.getStyleClass().add("tile-back-to-start");
+      }else {
         fromCell.getStyleClass().add("tile-snake-start");
         toCell  .getStyleClass().add("tile-snake-end");
       }
@@ -377,17 +455,31 @@ public class BoardGameView extends BorderPane {
   private void buildBoardGrid() {
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER_LEFT);
+    boardGrid.getChildren().clear();
+    boardGrid.getColumnConstraints().clear();
+    boardGrid.getRowConstraints().clear();
     tileLabels.clear();
+
+    for (int c = 0; c < COLS; c++) {
+      javafx.scene.layout.ColumnConstraints cc = new javafx.scene.layout.ColumnConstraints();
+      cc.setPercentWidth(100.0 / COLS);
+      boardGrid.getColumnConstraints().add(cc);
+    }
+
+    for (int r = 0; r < ROWS; r++) {
+      javafx.scene.layout.RowConstraints rc = new javafx.scene.layout.RowConstraints();
+      rc.setPercentHeight(100.0 / ROWS);
+      boardGrid.getRowConstraints().add(rc);
+    }
 
     for (int id = 1; id <= COLS * ROWS; id++) {
       int[] rc = tileIdToRowCol(id);
       Label cell = new Label(String.valueOf(id));
-      cell.setPrefSize(50, 50);
+      cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
       cell.setAlignment(Pos.CENTER);
       boardGrid.add(cell, rc[1], ROWS - 1 - rc[0]);
       tileLabels.put(id, cell);
     }
-    styleLaddersAndSnakesTiles();
   }
 
   /**
@@ -472,6 +564,5 @@ public class BoardGameView extends BorderPane {
       // makePlayerListOnRight makes a label with icon and player name
       playerListBox.getChildren().add(makePlayerListOnRight(player, isCurrent));
     }
-    styleLaddersAndSnakesTiles();
   }
 }

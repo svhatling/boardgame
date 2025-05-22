@@ -14,9 +14,9 @@ public class BoardGameFactory {
    * @param numberOfDice how many dice the game should use
    * @return a fully initialized BoardGame
    */
-  public static BoardGame create(String gameType, int numberOfDice) {
+  public static BoardGame create(String gameType, String configPath, int numberOfDice) {
     BoardGame game = new BoardGame();
-    game.createBoard(gameType);    // throws IllegalGameTypeException for unknown type
+    game.createBoard(gameType, configPath);
     game.createDice(numberOfDice);
     return game;
   }
@@ -27,10 +27,36 @@ public class BoardGameFactory {
    * @param numberOfDice how many dice the game should use
    * @return a BoardGame set up for Snakes & Ladders
    */
-  public static BoardGame createSnakesAndLadders(int numberOfDice) {
-    return create("snakesandladders", numberOfDice);
+  public static BoardGame createSnakesAndLaddersEasy(int numberOfDice) {
+    return create(
+        "snakesandladders",
+        "config/snakes_and_ladders/sl_easy_config.json",
+        numberOfDice
+    );
   }
 
+  public static BoardGame createSnakesAndLaddersHard(int numberOfDice) {
+    return create(
+        "snakesandladders",
+        "config/snakes_and_ladders/sl_hard_config.json",
+        numberOfDice
+    );
+  }
+
+  public static BoardGame createQuizEasy(int numberOfDice) {
+    return create(
+        "quiz",
+        "config/quiz/quiz_easy_config.json",
+        numberOfDice
+    );
+  }
+
+  public static BoardGame createQuizHard(int numberOfDice) {
+    return create(
+        "quiz",
+        "config/quiz/quiz_hard_config.json",
+        numberOfDice
+    );
   /**
    * Create a Ludo game with the given number of dice.
    *

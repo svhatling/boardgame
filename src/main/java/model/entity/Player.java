@@ -8,7 +8,7 @@ public class Player {
   private int score;
   private boolean isCurrent;
 
-  // Konstruktør
+  // Constructor
   public Player(String name, Board board, String piece) {
     this.name = name;
     this.board = board;
@@ -17,27 +17,30 @@ public class Player {
     this.score = 0;
   }
 
-  // Metode for å hente navn
+  // Method for getting name
   public String getName() {
     return name;
   }
 
+  //Method for getting piece
   public String getPiece() {return piece;}
 
-  // Henter nåværende tile
+  // Method for getting current tile
   public Tile getCurrentTile() {
     return currentTile;
   }
 
-  // Oppdaterer nåværende tile riktig
+  // Method for setting current tile
   public void setCurrentTile(Tile newTile) {
     this.currentTile = newTile;
   }
 
+  // Method for getting board
   public Board getBoard() {
     return board;
   }
 
+  // Method for moving piece to correct tile
   public void move(int roll) {
     int targetTileId = Math.max(1, Math.min(currentTile.getTileId() + roll, 90));
     Tile targetTile = board.getTile(targetTileId);
@@ -55,5 +58,10 @@ public class Player {
 
   public boolean isCurrent() {
     return false;
+  }
+
+  // TileAction sends message to the user
+  public void sendMessage(String message) {
+    System.out.println(message);
   }
 }

@@ -434,3 +434,5 @@
 .tile-ladder-end   { -fx-background-color: #28d501; }
 .tile-snake-start  { -fx-background-color: #fa6784; }
 .tile-snake-end    { -fx-background-color: #ff0f3e; }
+.tile-back-to-start { -fx-background-color: yellow ; }
+

@@ -3,6 +3,8 @@ package model.entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import model.entity.BackToStartAction;
+import model.entity.LadderAction;
 import model.util.BoardConfigLoader;
 import model.util.BoardConfigLoader.TileConfig;
 import model.exception.InvalidGameTypeException;
@@ -27,6 +29,10 @@ public class BoardGame {
   }
 
   public void createBoard(String gameType) {
+    createBoard(gameType, null);
+  }
+
+  public void createBoard(String gameType, String configPath) {
     board = new Board();
 
     switch (gameType.toLowerCase()) {
@@ -34,12 +40,18 @@ public class BoardGame {
         for (int i = 1; i <= 90; i++) {
           board.addTile(new Tile(i));
         }
-        Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig("board_config.json");
-
-        for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
-          int from = entry.getKey();
-          TileConfig cfg = entry.getValue();
-          board.getTile(from).setTileAction(new LadderAction(cfg.to, cfg.message));
+        if (configPath != null) {
+          Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configPath);
+          for (Map.Entry<Integer, TileConfig> entry : config.entrySet()) {
+            int from = entry.getKey();
+            TileConfig cfg = entry.getValue();
+            int to = cfg.to;
+            if (to == 1) {
+              board.getTile(from).setTileAction(new BackToStartAction(to, cfg.message));
+            } else {
+              board.getTile(from).setTileAction(new LadderAction(to, cfg.message));
+            }
+          }
         }
         break;
 
@@ -62,7 +74,6 @@ public class BoardGame {
     if (board == null || board.getTiles() == null || board.getTiles().isEmpty()) {
       throw new BoardNotInitializedException("Board must be created before checking for a winner.");
     }
-
     for (Player player : players) {
       if (player.getCurrentTile().getTileId() == board.getTiles().size()) {
         return player;
@@ -94,9 +105,7 @@ public class BoardGame {
     return this.dice;
   }
 
-
   public void setCurrentPlayer(Player player) {
     this.currentplayer = player;
   }
-
 }

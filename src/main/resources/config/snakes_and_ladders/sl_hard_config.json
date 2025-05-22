@@ -1,0 +1,108 @@
+{
+  "tiles": [
+    {
+      "id": 2,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 45,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 8,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 29,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 34,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 53,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 40,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 58,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 55,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 74,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 65,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 86,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 68,
+      "action": {
+        "type": "LadderAction",
+        "destinationTileId": 89,
+        "description": "climbs up the ladder!"
+      }
+    },
+    {
+      "id": 88,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 46,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 84,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 63,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 82,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 14,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 71,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 31,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 62,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 25,
+        "description": "slides down the ladder!"
+      }
+    },
+    {
+      "id": 27,
+      "action": {
+        "type": "SnakeAction",
+        "destinationTileId": 6,
+        "description": "slides down the ladder!"
+      }
+    }
+  ]
+}
