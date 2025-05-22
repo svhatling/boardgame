@@ -19,9 +19,9 @@ import model.factory.BoardGameFactory;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
 import view.ui.BoardGameApp;
-import view.ui.BoardGameView;
-import view.ui.BoardGameView.Observer;
-import view.ui.PlayerView.PlayerData;
+import view.BoardGameView;
+import view.BoardGameView.Observer;
+import view.PlayerView.PlayerData;
 
 /**
  * Controller for the boardgame screen.
@@ -90,6 +90,10 @@ public class BoardGameViewController implements Observer {
     primaryStage.show();
   }
 
+  /**
+   * Called when the user clicks the "Back" button in BoardGameView.
+   * Returns to the previous scene.
+   */
   @Override
   public void onBack() {
     if (previousScene != null) {

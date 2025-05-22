@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
+import view.AmountOfPlayersView;
 
 /**
  * Main class for the board game.

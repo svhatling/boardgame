@@ -5,8 +5,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
-import view.ui.PlayerView;
-import view.ui.PlayerView.PlayerData;
+import view.PlayerView;
+import view.PlayerView.PlayerData;
 
 /**
  * Controller for the player view screen.

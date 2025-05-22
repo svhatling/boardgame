@@ -1,4 +1,4 @@
-package view.ui;
+package view;
 
 import controller.AmountOfPlayersViewController;
 import controller.PlayerViewController;
@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
-import view.BoardGameObserver;
+import view.ui.BoardGameApp;
 
 /**
  * View for selecting the number of players.

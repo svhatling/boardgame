@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
+import view.AmountOfPlayersView;
 
 /**
  * Main application class that starts the board game selection.

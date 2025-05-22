@@ -1,4 +1,4 @@
-package view.ui;
+package view;
 
 import controller.PlayerRecord;
 import java.util.ArrayList;

@@ -28,7 +28,7 @@ import model.util.FullscreenHandler;
 import view.QuizGameView;
 import view.QuizGameView.Observer;
 import view.ui.BoardGameApp;
-import view.ui.PlayerView.PlayerData;
+import view.PlayerView.PlayerData;
 
 /**
  * Controller for the quiz game view.
@@ -107,6 +107,10 @@ public class QuizGameViewController implements Observer {
     }
   }
 
+  /**
+   * Called when the user clicks the "Back" button in QuizGameView.
+   * Returns to the previous scene.
+   */
   @Override
   public void onBack() {
     if (previousScene != null) {

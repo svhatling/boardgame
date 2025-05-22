@@ -1,5 +1,5 @@
 
-package view.ui;
+package view;
 
 import controller.PlayerRecord;
 import controller.ReadFromCSV;
