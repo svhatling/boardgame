@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
@@ -27,8 +28,8 @@ import model.factory.BoardGameFactory;
 import model.util.FullscreenHandler;
 import view.QuizGameView;
 import view.QuizGameView.Observer;
-import view.ui.BoardGameApp;
-import view.ui.PlayerView.PlayerData;
+import view.PlayerView.PlayerData;
+import view.ui.MainView;
 
 /**
  * Controller for the quiz game view.
@@ -43,6 +44,7 @@ public class QuizGameViewController implements Observer {
       Logger.getLogger(QuizGameViewController.class.getName());
 
   private final Stage stage;
+  private final Scene previousScene;
   private final BoardGame game;
   private final QuizGameView view;
   private final FullscreenHandler fullscreenHandler;
@@ -60,6 +62,7 @@ public class QuizGameViewController implements Observer {
    */
   public QuizGameViewController(Stage stage, List<PlayerData> pdList, FullscreenHandler fullscreenHandler) {
     this.stage = stage;
+    this.previousScene = stage.getScene();
     this.fullscreenHandler = fullscreenHandler;
     this.game = BoardGameFactory.createQuizGame(pdList.size());
 
@@ -74,7 +77,6 @@ public class QuizGameViewController implements Observer {
 
     loadQuestions();
 
-    // Lag og vis view
     this.view = new QuizGameView(game, fullscreenHandler);
     view.setObserver(this);
     view.setQuestionTiles(questionMap.keySet());
@@ -103,6 +105,19 @@ public class QuizGameViewController implements Observer {
       list.forEach(q -> questionMap.put(q.getTileId(), q));
     } catch (IOException e) {
       throw new RuntimeException("Could not load question", e);
+    }
+  }
+
+  /**
+   * Called when the user clicks the "Back" button in QuizGameView.
+   * Returns to the previous scene.
+   */
+  @Override
+  public void onBack() {
+    if (previousScene != null) {
+      stage.setScene(previousScene);
+    } else {
+      System.out.println("No previous scene to go back to.");
     }
   }
 
@@ -221,6 +236,13 @@ public class QuizGameViewController implements Observer {
     );
     pane.getStyleClass().add("root");
 
+    Button buttonMenu = (Button) pane.lookupButton(mainMenu);
+    buttonMenu.getStyleClass().add("button-main");
+
+    Button buttonPlay = (Button) pane.lookupButton(playAgain);
+    buttonPlay.getStyleClass().add("button-main");
+
+
     var result = alert.showAndWait();
     if (result.isPresent() && result.get() == playAgain) {
       List<PlayerData> pdList = game.getPlayers().stream()
@@ -229,7 +251,7 @@ public class QuizGameViewController implements Observer {
       new QuizGameViewController(stage, pdList, fullscreenHandler);
     } else {
       try {
-        new BoardGameApp().start(stage);
+        MainView.getInstance().backToMainMenu();
       } catch (Exception e) {
         logger.log(Level.SEVERE, "Error starting board game app", e);
       }

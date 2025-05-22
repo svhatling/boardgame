@@ -1,5 +1,5 @@
 
-package view.ui;
+package view;
 
 import controller.PlayerRecord;
 import controller.ReadFromCSV;
@@ -94,7 +94,7 @@ public class PlayerView extends VBox {
     buttonBox.getChildren().addAll(backbutton, startButton);
     this.getChildren().add(buttonBox);
 
-    this.getStyleClass().add("root");
+    this.getStyleClass().add("main-root");
     this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     fullscreenHandler.setupFullscreenHandling(this);

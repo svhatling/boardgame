@@ -18,10 +18,10 @@ import model.entity.Player;
 import model.factory.BoardGameFactory;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
-import view.ui.BoardGameApp;
-import view.ui.BoardGameView;
-import view.ui.BoardGameView.Observer;
-import view.ui.PlayerView.PlayerData;
+import view.BoardGameView;
+import view.BoardGameView.Observer;
+import view.PlayerView.PlayerData;
+import view.ui.MainView;
 
 /**
  * Controller for the boardgame screen.
@@ -31,6 +31,7 @@ public class BoardGameViewController implements Observer {
   private final Stage primaryStage;
   private final List<PlayerData> playersData;
   private final GameType gameType;
+  private final Scene previousScene;
   private final FullscreenHandler fullscreenHandler;
   private final BoardGame game;
   private final BoardGameView view;
@@ -46,6 +47,7 @@ public class BoardGameViewController implements Observer {
   public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData, GameType gameType,
       FullscreenHandler fullscreenHandler) {
     this.primaryStage = primaryStage;
+    this.previousScene = primaryStage.getScene();
     this.playersData  = playersData;
     this.gameType     = gameType;
     this.fullscreenHandler = fullscreenHandler;
@@ -89,6 +91,19 @@ public class BoardGameViewController implements Observer {
   }
 
   /**
+   * Called when the user clicks the "Back" button in BoardGameView.
+   * Returns to the previous scene.
+   */
+  @Override
+  public void onBack() {
+    if (previousScene != null) {
+      primaryStage.setScene(previousScene);
+    } else {
+      System.out.println("No previous scene to go back to.");
+    }
+  }
+
+  /**
    * Called when the user clicks the "Roll Dice" button in BoardGameView.
    */
   @Override
@@ -125,7 +140,6 @@ public class BoardGameViewController implements Observer {
     ButtonType mainMenu  = new ButtonType("Main Menu");
     alert.getButtonTypes().setAll(playAgain, mainMenu);
 
-    // Applies CSS styling
     DialogPane pane = alert.getDialogPane();
     pane.getStylesheets().add(
         Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm()
@@ -157,7 +171,7 @@ public class BoardGameViewController implements Observer {
    */
   private void backToMainMenu() {
     try {
-      new BoardGameApp().start(primaryStage);
+      MainView.getInstance().backToMainMenu();
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Error starting main menu", e);
       Platform.exit();

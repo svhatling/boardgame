@@ -1,4 +1,4 @@
-package view.ui;
+package view;
 
 import java.util.Objects;
 import javafx.geometry.Insets;
@@ -37,6 +37,7 @@ public class BoardGameView extends BorderPane {
   /** Observer for user actions on the board game screen.*/
   public interface Observer {
     void onRollDice();
+    void onBack();
   }
 
   private static final int COLS = 10;
@@ -73,7 +74,7 @@ public class BoardGameView extends BorderPane {
   public BoardGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
     this.game = game;
     // Using css styling
-    this.getStyleClass().add("root-boardgame");
+    this.getStyleClass().add("main-root");
     this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     for (int face = 1; face <= 6; face++) {
@@ -187,7 +188,13 @@ public class BoardGameView extends BorderPane {
     HBox rollBox = new HBox(rollButton);
     rollBox.setAlignment(Pos.CENTER);
 
-    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox
+    Button backButton = new Button("Back");
+    backButton.getStyleClass().addAll("button-main-player", "back");
+    backButton.setOnAction(e -> {
+      if (observer != null) observer.onBack();
+    });
+
+    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox, backButton
     );
     rightPanel.setAlignment(Pos.TOP_RIGHT);
     rightPanel.setPadding(new Insets(10));
@@ -528,7 +535,6 @@ public class BoardGameView extends BorderPane {
       }
     }
 
-// Player list
     playerListBox.getChildren().clear();
     Label playersTitle = new Label("Players:");
     playersTitle.getStyleClass().addAll("label-sub","label-list-header");
