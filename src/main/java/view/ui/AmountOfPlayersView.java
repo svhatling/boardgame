@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -46,6 +47,8 @@ public class AmountOfPlayersView implements BoardGameObserver {
     comboBox.getStyleClass().add("combo-box");
     comboBox.setMaxWidth(150);
 
+    HBox buttonBox = new HBox(20);
+
     // start button
     Button startButton = new Button("Start");
     startButton.getStyleClass().add("button-main");
@@ -58,8 +61,17 @@ public class AmountOfPlayersView implements BoardGameObserver {
           pvc.showPlayerView();
         });
 
+    // back button
+    Button backButton = new Button("Back");
+    backButton.getStyleClass().addAll("button-main", "back");
+    backButton.setOnAction(e ->
+      new BoardGameApp().start(stage));
+
+    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.getChildren().addAll(startButton, backButton);
+
     // Arranges everything in a vertical box
-    VBox layout = new VBox(20, title, instruction, comboBox, startButton);
+    VBox layout = new VBox(20, title, instruction, comboBox, buttonBox);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(320);
 

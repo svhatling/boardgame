@@ -43,6 +43,7 @@ public class QuizGameViewController implements Observer {
       Logger.getLogger(QuizGameViewController.class.getName());
 
   private final Stage stage;
+  private final Scene previousScene;
   private final BoardGame game;
   private final QuizGameView view;
   private final FullscreenHandler fullscreenHandler;
@@ -60,6 +61,7 @@ public class QuizGameViewController implements Observer {
    */
   public QuizGameViewController(Stage stage, List<PlayerData> pdList, FullscreenHandler fullscreenHandler) {
     this.stage = stage;
+    this.previousScene = stage.getScene();
     this.fullscreenHandler = fullscreenHandler;
     this.game = BoardGameFactory.createQuizGame(pdList.size());
 
@@ -74,7 +76,6 @@ public class QuizGameViewController implements Observer {
 
     loadQuestions();
 
-    // Lag og vis view
     this.view = new QuizGameView(game, fullscreenHandler);
     view.setObserver(this);
     view.setQuestionTiles(questionMap.keySet());
@@ -103,6 +104,15 @@ public class QuizGameViewController implements Observer {
       list.forEach(q -> questionMap.put(q.getTileId(), q));
     } catch (IOException e) {
       throw new RuntimeException("Could not load question", e);
+    }
+  }
+
+  @Override
+  public void onBack() {
+    if (previousScene != null) {
+      stage.setScene(previousScene);
+    } else {
+      System.out.println("No previous scene to go back to.");
     }
   }
 

@@ -46,6 +46,8 @@ public class QuizGameView extends BorderPane {
     void onSkipQuestion();
 
     void onCategorySelected(String playerName);
+
+    void onBack();
   }
 
   private Observer observer;
@@ -194,7 +196,15 @@ public class QuizGameView extends BorderPane {
     playerListBox.setPadding(new Insets(10));
     playerListBox.setAlignment(Pos.TOP_RIGHT);
 
-    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox);
+    Button backButton = new Button("Back");
+    backButton.getStyleClass().addAll("button-main", "back");
+    backButton.setOnAction(e -> {
+      if (observer != null) {
+        observer.onBack();
+      }
+    });
+
+    VBox rightPanel = new VBox(30, diceBox, rollBox, playerListBox, backButton);
     rightPanel.setAlignment(Pos.TOP_RIGHT);
     rightPanel.setPadding(new Insets(10));
     setRight(rightPanel);
