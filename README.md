@@ -95,7 +95,7 @@ The application follows MVC architecture and utilizes established software devel
 
 ## Documentation
 JavaDoc documentation can be found here:  
-[📘 JavaDoc Documentation](link-to-javadoc)
+[📘 JavaDoc Documentation](file:///C:/Users/tmal3/OneDrive/Skrivebord/Programmering%202/boardgame/index.html)
 
 ---
 
