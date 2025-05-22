@@ -80,6 +80,8 @@ public class QuizGameView extends BorderPane {
     this.players = game.getPlayers();
     this.game = game;
 
+    rollButton.setDisable(true);
+
     // --- Last dice‐ikoner ---
     for (int f = 1; f <= 6; f++) {
       diceImages[f] = new Image(
@@ -148,7 +150,6 @@ public class QuizGameView extends BorderPane {
     quizPane.setPadding(new Insets(20));
     quizPane.setStyle("-fx-background-color: rgba(255,255,255,0.9);");
 
-
     geographyButton.getStyleClass().add("geography-button");
     generalButton.getStyleClass().add("general-button");
     geographyButton.setPrefWidth(150);
@@ -156,11 +157,13 @@ public class QuizGameView extends BorderPane {
 
     geographyButton.setOnAction(e -> {
       if (observer != null) observer.onCategorySelected("Geography");
-      showGame();  // skjul kategori-pane, vis brett/quiz
+      showGame();
+      rollButton.setDisable(false);
     });
     generalButton.setOnAction(e -> {
       if (observer != null) observer.onCategorySelected("General Knowledge");
       showGame();
+      rollButton.setDisable(false);
     });
 
     categoryPane = new VBox(20, geographyButton, generalButton);

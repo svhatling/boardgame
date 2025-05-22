@@ -69,6 +69,7 @@ public class BoardGameView extends BorderPane {
   private final VBox difficultyPane;
   private final Button easyButton;
   private final Button hardButton;
+  private final Button rollButton;
   private final StackPane boardPane;
   private final StackPane centerStack;
   private final VBox playerListBox  = new VBox(5);
@@ -106,13 +107,15 @@ public class BoardGameView extends BorderPane {
     HBox diceBox = new HBox(10, die1View, die2View);
     diceBox.setAlignment(Pos.CENTER_RIGHT);
 
-    Button rollButton = new Button("Roll Dice");
+    this.rollButton = new Button("Roll Dice");
     rollButton.getStyleClass().add("roll-dice-button");
     rollButton.setOnAction(e -> {
       if (observer != null) observer.onRollDice();
       updateDiceImages();
       updateView();
     });
+
+    rollButton.setDisable(true);
 
     VBox playerAndDice = new VBox(5,
         diceBox,
@@ -178,10 +181,12 @@ public class BoardGameView extends BorderPane {
     easyButton.setOnAction(e -> {
       chosenConfigFile = Easy_config;
       loadConfigAndShowBoard(Easy_config);
+      rollButton.setDisable(false);
     });
     hardButton.setOnAction(e -> {
       chosenConfigFile = Hard_config;
       loadConfigAndShowBoard(Hard_config);
+      rollButton.setDisable(false);
     });
 
     // Player list panel
