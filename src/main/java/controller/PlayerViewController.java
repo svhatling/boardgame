@@ -4,6 +4,7 @@ import java.util.List;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.logic.GameType;
+import model.util.FullscreenHandler;
 import view.ui.PlayerView;
 import view.ui.PlayerView.PlayerData;
 
@@ -17,6 +18,7 @@ public class PlayerViewController implements PlayerView.Observer {
   private final AmountOfPlayersViewController amountController;
   private final GameType gameType;
   private PlayerView playerview;
+  private final FullscreenHandler fullscreenHandler;
 
   /**
    * Constructor of the controller.
@@ -27,11 +29,12 @@ public class PlayerViewController implements PlayerView.Observer {
    */
   public PlayerViewController(Stage primaryStage,
       AmountOfPlayersViewController amountController,
-      Scene previousScene, GameType gameType) {
+      Scene previousScene, GameType gameType, FullscreenHandler fullscreenHandler) {
     this.primaryStage     = primaryStage;
     this.amountController = amountController;
     this.previousScene    = previousScene;
     this.gameType        = gameType;
+    this.fullscreenHandler = fullscreenHandler;
   }
 
   /**
@@ -55,9 +58,9 @@ public class PlayerViewController implements PlayerView.Observer {
   @Override
   public void onStartGame(List<PlayerData> players) {
     if (gameType == GameType.SNAKES_AND_LADDERS) {
-      new BoardGameViewController(primaryStage, players, gameType);
+      new BoardGameViewController(primaryStage, players, gameType, fullscreenHandler);
     } else {
-      new QuizGameViewController(primaryStage, players);
+      new QuizGameViewController(primaryStage, players, fullscreenHandler);
     }
   }
 
@@ -66,8 +69,11 @@ public class PlayerViewController implements PlayerView.Observer {
    */
   public void showPlayerView() {
     int numPlayers = amountController.getNumberOfPlayers();
-    PlayerView playerview = new PlayerView(numPlayers, gameType);
+    PlayerView playerview = new PlayerView(numPlayers, gameType, fullscreenHandler);
     playerview.setObserver(this);
+
+    boolean wasFullScreen = primaryStage.isFullScreen();
+    boolean wasMaximized = primaryStage.isMaximized();
 
     primaryStage.setScene(new Scene(playerview, 700, 500));
     primaryStage.setTitle(
@@ -75,6 +81,13 @@ public class PlayerViewController implements PlayerView.Observer {
             ? "Ladders & Snakes - Player setup"
             : "Quiz - Player setup"
     );
+
+    if (wasFullScreen) {
+      primaryStage.setFullScreen(true);
+    } else {
+      primaryStage.setMaximized(wasMaximized);
+    }
+
     primaryStage.show();
   }
 }

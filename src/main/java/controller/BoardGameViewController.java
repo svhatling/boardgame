@@ -14,6 +14,7 @@ import model.entity.BoardGame;
 import model.entity.Player;
 import model.factory.BoardGameFactory;
 import model.logic.GameType;
+import model.util.FullscreenHandler;
 import view.ui.BoardGameApp;
 import view.ui.BoardGameView;
 import view.ui.BoardGameView.Observer;
@@ -27,6 +28,7 @@ public class BoardGameViewController implements Observer {
   private final Stage primaryStage;
   private final List<PlayerData> playersData;
   private final GameType gameType;
+  private final FullscreenHandler fullscreenHandler;
   private BoardGame game;
   private BoardGameView view;
 
@@ -36,10 +38,12 @@ public class BoardGameViewController implements Observer {
    * @param primaryStage the main application window
    * @param playersData  the list of players with pieces
    */
-  public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData, GameType gameType) {
+  public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData, GameType gameType,
+      FullscreenHandler fullscreenHandler) {
     this.primaryStage = primaryStage;
     this.playersData  = playersData;
     this.gameType     = gameType;
+    this.fullscreenHandler = fullscreenHandler;
 
     switch (gameType) {
       case SNAKES_AND_LADDERS:
@@ -58,14 +62,24 @@ public class BoardGameViewController implements Observer {
     game.setCurrentPlayer(game.getPlayers().get(0));
 
     // Initializes and shows the view
-    view = new BoardGameView(game, gameType);
+    view = new BoardGameView(game, gameType, fullscreenHandler);
     view.setObserver(this);
+
+    boolean wasFullScreen = primaryStage.isFullScreen();
+    boolean wasMaximized = primaryStage.isMaximized();
 
     primaryStage.setScene(new Scene(view, 800, 600));
     primaryStage.setTitle(
         gameType == GameType.SNAKES_AND_LADDERS
         ? "Ladders & Snakes"
         : "Quiz");
+
+    if (wasFullScreen) {
+      primaryStage.setFullScreen(true);
+    } else {
+      primaryStage.setMaximized(wasMaximized);
+    }
+
     primaryStage.show();
   }
 
@@ -130,7 +144,7 @@ public class BoardGameViewController implements Observer {
    * When the user chooses the "Play again" button. Restarts the game with the same players and pieces.
    */
   private void restartGame() {
-    new BoardGameViewController(primaryStage, playersData, gameType);
+    new BoardGameViewController(primaryStage, playersData, gameType, fullscreenHandler);
   }
 
   /**

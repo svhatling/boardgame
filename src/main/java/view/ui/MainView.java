@@ -10,6 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.logic.GameType;
+import model.util.FullscreenHandler;
 
 /**
  * Main application class that starts the board game selection.
@@ -17,11 +18,13 @@ import model.logic.GameType;
 public class MainView extends Application {
   private Stage primaryStage;
   private MainViewController controller;
+  private FullscreenHandler fullscreenHandler;
 
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
     this.controller = new MainViewController();
+    this.fullscreenHandler = new FullscreenHandler(primaryStage);
 
     // Set up the game selection screen
     showGameSelection();
@@ -74,6 +77,8 @@ public class MainView extends Application {
 
     primaryStage.setScene(scene);
     primaryStage.setTitle("Choose Game");
+
+    fullscreenHandler.setupFullscreenHandling(root);
   }
 
   /**
@@ -82,7 +87,7 @@ public class MainView extends Application {
    * @param gameType the selected game type
    */
   private void showAmountOfPlayersView(GameType gameType) {
-    new AmountOfPlayersView(primaryStage, gameType);
+    new AmountOfPlayersView(primaryStage, gameType, fullscreenHandler);
   }
 
   /**

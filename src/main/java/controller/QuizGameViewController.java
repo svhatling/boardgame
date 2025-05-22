@@ -21,6 +21,7 @@ import model.entity.BoardGame;
 import model.entity.Player;
 import model.entity.Questions;
 import model.factory.BoardGameFactory;
+import model.util.FullscreenHandler;
 import view.QuizGameView;
 import view.QuizGameView.Observer;
 import view.ui.BoardGameApp;
@@ -34,13 +35,15 @@ public class QuizGameViewController implements Observer {
   private final Stage stage;
   private final BoardGame game;
   private final QuizGameView view;
+  private final FullscreenHandler fullscreenHandler;
   private final Map<Integer, Questions> questionMap = new HashMap<>();
 
   private boolean questionActive = false;
   private Questions currentQuestion;
 
-  public QuizGameViewController(Stage stage, List<PlayerData> pdList) {
+  public QuizGameViewController(Stage stage, List<PlayerData> pdList, FullscreenHandler fullscreenHandler) {
     this.stage = stage;
+    this.fullscreenHandler = fullscreenHandler;
     this.game = BoardGameFactory.createQuizGame(pdList.size());
 
     var board = game.getBoard();
@@ -55,7 +58,7 @@ public class QuizGameViewController implements Observer {
     loadQuestions();
 
     // Lag og vis view
-    this.view = new QuizGameView(game);
+    this.view = new QuizGameView(game, fullscreenHandler);
     view.setObserver(this);
     view.setQuestionTiles(questionMap.keySet());
     view.updateView();
@@ -201,7 +204,7 @@ public class QuizGameViewController implements Observer {
       List<PlayerData> pdList = game.getPlayers().stream()
           .map(p -> new PlayerData(p.getName(), p.getPiece()))
           .collect(Collectors.toList());
-      new QuizGameViewController(stage, pdList);
+      new QuizGameViewController(stage, pdList, fullscreenHandler);
     } else {
       try {
         new BoardGameApp().start(stage);

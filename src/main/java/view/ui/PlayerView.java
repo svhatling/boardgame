@@ -20,6 +20,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.logic.GameType;
+import model.util.FullscreenHandler;
 
 public class PlayerView extends VBox {
 
@@ -27,6 +28,7 @@ public class PlayerView extends VBox {
   private final List<PlayerRecord> savedRecords;
   private final ObservableList<String> savedPlayers;
   private final List<PlayerInputRow> rows = new ArrayList<>();
+  private final FullscreenHandler fullscreenHandler;
   private Observer observer;
 
   public interface Observer {
@@ -39,8 +41,9 @@ public class PlayerView extends VBox {
   /**
    * @param numPlayers Number of players that was chosen on the previous "page"
    */
-  public PlayerView(int numPlayers, GameType gameType) {
+  public PlayerView(int numPlayers, GameType gameType, FullscreenHandler fullscreenHandler) {
     super(20);
+    this.fullscreenHandler = fullscreenHandler;
     this.saveToCSV = new SaveToCSV("players.csv");
     ReadFromCSV r = new ReadFromCSV("players.csv");
     this.savedRecords = FXCollections.observableArrayList(r.readPlayers());
@@ -90,6 +93,8 @@ public class PlayerView extends VBox {
 
     this.getStyleClass().add("root");
     this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+    fullscreenHandler.setupFullscreenHandling(this);
   }
 
   private void updateAvailablePieces() {

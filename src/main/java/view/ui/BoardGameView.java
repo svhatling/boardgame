@@ -28,6 +28,7 @@ import model.util.BoardConfigLoader.TileConfig;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import model.util.FullscreenHandler;
 import model.util.PieceImageLoader;
 
 /**
@@ -52,6 +53,7 @@ public class BoardGameView extends BorderPane {
   private String chosenConfigFile = Easy_config;
 
   private final BoardGame game;
+  private final FullscreenHandler fullscreenHandler;
   private Observer observer;
   private GameType gameType;
 
@@ -80,7 +82,8 @@ public class BoardGameView extends BorderPane {
    *
    * @param game the game model with board, players and dice.
    */
-  public BoardGameView(BoardGame game, GameType gameType) {
+  public BoardGameView(BoardGame game, GameType gameType, FullscreenHandler fullscreenHandler) {
+    this.fullscreenHandler = fullscreenHandler;
     this.game = game;
     // Using css styling
     this.getStyleClass().add("root-boardgame");
@@ -208,6 +211,8 @@ public class BoardGameView extends BorderPane {
     instrBox.getStyleClass().add("instr-box");
     BorderPane.setAlignment(instrBox, Pos.TOP_LEFT);
     setLeft(instrBox);
+
+    fullscreenHandler.setupFullscreenHandling(this);
 
     updateView();
   }

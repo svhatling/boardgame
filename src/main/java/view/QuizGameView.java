@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -23,8 +25,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import model.entity.BoardGame;
 import model.entity.Player;
+import model.util.FullscreenHandler;
 import model.util.PieceImageLoader;
 
 public class QuizGameView extends BorderPane {
@@ -43,6 +47,7 @@ public class QuizGameView extends BorderPane {
   private Observer observer;
   private final List<Player> players;
   private final BoardGame game;
+  private final FullscreenHandler fullscreenHandler;
   private Set<Integer> questionTileIds = Collections.emptySet();
 
   // Størrelse på grid
@@ -74,11 +79,12 @@ public class QuizGameView extends BorderPane {
   private final Button geographyButton = new Button("Geography");
   private final Button generalButton = new Button("General Knowledge");
 
-  public QuizGameView(BoardGame game) {
+  public QuizGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
     this.getStylesheets()
         .add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
     this.players = game.getPlayers();
     this.game = game;
+    this.fullscreenHandler = fullscreenHandler;
 
     rollButton.setDisable(true);
 
@@ -156,12 +162,16 @@ public class QuizGameView extends BorderPane {
     generalButton.setPrefWidth(150);
 
     geographyButton.setOnAction(e -> {
-      if (observer != null) observer.onCategorySelected("Geography");
+      if (observer != null) {
+        observer.onCategorySelected("Geography");
+      }
       showGame();
       rollButton.setDisable(false);
     });
     generalButton.setOnAction(e -> {
-      if (observer != null) observer.onCategorySelected("General Knowledge");
+      if (observer != null) {
+        observer.onCategorySelected("General Knowledge");
+      }
       showGame();
       rollButton.setDisable(false);
     });
@@ -191,6 +201,8 @@ public class QuizGameView extends BorderPane {
     rightPanel.setAlignment(Pos.TOP_RIGHT);
     rightPanel.setPadding(new Insets(10));
     setRight(rightPanel);
+
+    fullscreenHandler.setupFullscreenHandling(this);
 
     updateView();
   }

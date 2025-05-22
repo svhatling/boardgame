@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.logic.GameType;
+import model.util.FullscreenHandler;
 
 /**
  * Main class for the board game.
@@ -23,6 +24,7 @@ import model.logic.GameType;
  */
 public class BoardGameApp extends Application {
   private final MainViewController controller = new MainViewController();
+  private FullscreenHandler fullscreenHandler;
 
   /**
    * Starting the JavaFX application.
@@ -31,6 +33,7 @@ public class BoardGameApp extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
+    this.fullscreenHandler = new FullscreenHandler(primaryStage);
     Label title = new Label("Boardgame");
     title.getStyleClass().add("label-title");
 
@@ -39,7 +42,7 @@ public class BoardGameApp extends Application {
     laddersButton.setPrefWidth(200);
     laddersButton.setOnAction(e -> {
       controller.selectGame(GameType.SNAKES_AND_LADDERS);
-      new AmountOfPlayersView(primaryStage, GameType.SNAKES_AND_LADDERS);
+      new AmountOfPlayersView(primaryStage, GameType.SNAKES_AND_LADDERS, fullscreenHandler);
     });
 
     Button quizButton = new Button("Quiz");
@@ -47,7 +50,7 @@ public class BoardGameApp extends Application {
     quizButton.setPrefWidth(200);
     quizButton.setOnAction(e -> {
       controller.selectGame(GameType.QUIZ);
-      new AmountOfPlayersView(primaryStage, GameType.QUIZ);
+      new AmountOfPlayersView(primaryStage, GameType.QUIZ, fullscreenHandler);
     });
 
     VBox layout = new VBox(20, title, laddersButton, quizButton);
@@ -68,6 +71,8 @@ public class BoardGameApp extends Application {
 
     primaryStage.setTitle("Choose Game");
     primaryStage.setScene(scene);
+
+    fullscreenHandler.setupFullscreenHandling(root);
     primaryStage.show();
   }
 
