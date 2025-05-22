@@ -18,10 +18,10 @@ import model.entity.Player;
 import model.factory.BoardGameFactory;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
-import view.ui.BoardGameApp;
 import view.BoardGameView;
 import view.BoardGameView.Observer;
 import view.PlayerView.PlayerData;
+import view.ui.MainView;
 
 /**
  * Controller for the boardgame screen.
@@ -140,7 +140,6 @@ public class BoardGameViewController implements Observer {
     ButtonType mainMenu  = new ButtonType("Main Menu");
     alert.getButtonTypes().setAll(playAgain, mainMenu);
 
-    // Applies CSS styling
     DialogPane pane = alert.getDialogPane();
     pane.getStylesheets().add(
         Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm()
@@ -172,7 +171,7 @@ public class BoardGameViewController implements Observer {
    */
   private void backToMainMenu() {
     try {
-      new BoardGameApp().start(primaryStage);
+      MainView.getInstance().backToMainMenu();
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Error starting main menu", e);
       Platform.exit();

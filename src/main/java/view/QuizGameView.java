@@ -27,15 +27,14 @@ import model.util.FullscreenHandler;
 import model.util.PieceImageLoader;
 
 /**
- * QuizGameView class represents the graphical user interface for a quiz game.
- * It displays the game board, player information, and quiz questions.
+ * QuizGameView class represents the graphical user interface for a quiz game. It displays the game
+ * board, player information, and quiz questions.
  */
 public class QuizGameView extends BorderPane {
 
   /**
-   * Observer interface for handling game events.
-   * It defines methods for rolling dice, selecting answers, skipping questions,
-   * and selecting categories.
+   * Observer interface for handling game events. It defines methods for rolling dice, selecting
+   * answers, skipping questions, and selecting categories.
    */
   public interface Observer {
 
@@ -76,10 +75,10 @@ public class QuizGameView extends BorderPane {
   private final VBox categoryPane;
 
   /**
-   * Constructor for QuizGameView.
-   * Initializes the view with the game, fullscreen handler, and styles.
+   * Constructor for QuizGameView. Initializes the view with the game, fullscreen handler, and
+   * styles.
    *
-   * @param game             the BoardGame instance
+   * @param game              the BoardGame instance
    * @param fullscreenHandler the FullscreenHandler instance
    */
   public QuizGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
@@ -87,6 +86,8 @@ public class QuizGameView extends BorderPane {
         .add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
     this.players = game.getPlayers();
     this.game = game;
+
+    this.getStyleClass().add("main-root");
 
     rollButton.setDisable(true);
 
@@ -215,17 +216,15 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Updates the view with the current game state.
-   * This includes updating the current player, dice values, and player pieces on the board.
+   * Updates the view with the current game state. This includes updating the current player, dice
+   * values, and player pieces on the board.
    */
   public void updateView() {
-    // Current player
     Player current = game.getCurrentplayer();
     currentPlayerLabel.setText(
         current != null ? "Current: " + current.getName() : "Current: -"
     );
 
-    // Dice
     try {
       if (game.getDice() != null) {
         var diceVals = game.getDice().getDiceValues();
@@ -236,7 +235,6 @@ public class QuizGameView extends BorderPane {
     } catch (model.exception.InvalidDiceRollException ignored) {
     }
 
-    // Clears styles and graphics
     boardGrid.getChildren().forEach(node -> {
       if (node instanceof Label lbl) {
         lbl.setStyle("");
@@ -244,7 +242,6 @@ public class QuizGameView extends BorderPane {
       }
     });
 
-    // Highlights current tile
     if (current != null) {
       String id = String.valueOf(current.getCurrentTile().getTileId());
       boardGrid.getChildren().stream()
@@ -252,10 +249,10 @@ public class QuizGameView extends BorderPane {
           .map(n -> (Label) n)
           .filter(l -> l.getText().equals(id))
           .findFirst()
-          .ifPresent(l -> l.setStyle("-fx-background-color: white;"));
+          .ifPresent(l -> l.setStyle(
+              "-fx-background-color: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%);"));
     }
 
-    // Places all pieces
     for (Player p : players) {
       String id = String.valueOf(p.getCurrentTile().getTileId());
       boardGrid.getChildren().stream()
@@ -272,7 +269,6 @@ public class QuizGameView extends BorderPane {
           });
     }
 
-    // Updates the player list
     playerListBox.getChildren().clear();
     Label hdr = new Label("Players:");
     hdr.getStyleClass().addAll("label-sub", "label-list-header");
@@ -284,8 +280,8 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Shows the game where the categories are invisible and the grid is visible.
-   * The questions are hidden until a player lands on a question tile.
+   * Shows the game where the categories are invisible and the grid is visible. The questions are
+   * hidden until a player lands on a question tile.
    */
   public void showGame() {
     categoryPane.setVisible(false);
@@ -294,16 +290,13 @@ public class QuizGameView extends BorderPane {
   }
 
   private VBox createInstructionsBox() {
-    // Main container
     VBox instructionsBox = new VBox(8);
     instructionsBox.setPadding(new Insets(10));
     instructionsBox.getStyleClass().add("instructions-box");
 
-    // Title
     Label title = new Label("This is how you play:");
     title.getStyleClass().add("instructions-title");
 
-    // Instruction points
     VBox instructionPoints = new VBox(6);
     HBox point1 = createInstructionPoint("1", "Press \"Roll dice\" to start the game.");
     HBox point2 = createInstructionPoint("2", "Your piece moves automatically.");
@@ -315,7 +308,6 @@ public class QuizGameView extends BorderPane {
 
     instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
 
-    // Adds all the elements to the main container
     instructionsBox.getChildren().addAll(title, instructionPoints);
     instructionsBox.setAlignment(Pos.CENTER);
 

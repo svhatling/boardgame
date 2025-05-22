@@ -74,7 +74,7 @@ public class BoardGameView extends BorderPane {
   public BoardGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
     this.game = game;
     // Using css styling
-    this.getStyleClass().add("root-boardgame");
+    this.getStyleClass().add("main-root");
     this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     for (int face = 1; face <= 6; face++) {
@@ -535,7 +535,6 @@ public class BoardGameView extends BorderPane {
       }
     }
 
-// Player list
     playerListBox.getChildren().clear();
     Label playersTitle = new Label("Players:");
     playersTitle.getStyleClass().addAll("label-sub","label-list-header");
