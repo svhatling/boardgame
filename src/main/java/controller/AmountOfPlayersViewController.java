@@ -3,7 +3,7 @@ package controller;
 import view.BoardGameObserver;
 
 /**
- * Controller for dealing with amount of players selection.
+ * Controller for dealing with number of player selections.
  */
 public class AmountOfPlayersViewController {
 
@@ -19,22 +19,25 @@ public class AmountOfPlayersViewController {
     this.observer = observer;
   }
 
+  /**
+   * Setter for the number of Players.
+   * Sets the number of players for the game.
+   *
+   * @param number the number of players to set
+   */
   public void setNumberOfPlayers(int number) {
     this.numberOfPlayers = number;
     System.out.println("Number of players set to: " + number);
   }
 
+  /**
+   * Getter for number of players.
+   * Returns the number of players selected.
+   *
+   * @return the number of players
+   */
   public int getNumberOfPlayers() {
     return numberOfPlayers;
-  }
-
-  /**
-   * Notifies the observer that the game should start with the selected number of players.
-   *
-   * @param numberOfPlayers the number of players selected to start the game
-   */
-  public void startGame(int numberOfPlayers) {
-    observer.onPlayerCountChosen(numberOfPlayers);
   }
 }
 

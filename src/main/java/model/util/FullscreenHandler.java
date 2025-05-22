@@ -5,6 +5,11 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
+/**
+ * Handles fullscreen mode for the application.
+ * This class manages the transition to and from fullscreen mode,
+ * preserving the window's position and size.
+ */
 public class FullscreenHandler {
 
   private final Stage stage;
@@ -24,10 +29,9 @@ public class FullscreenHandler {
       return;
     }
 
-    // Listen to fullscreen changes
+    // Listens to the fullscreen changes
     stage.fullScreenProperty().addListener((obs, wasFullScreen, isNowFullScreen) -> {
       if (!isNowFullScreen && wasFullScreen) {
-        // When exiting fullscreen, restore position
         Platform.runLater(() -> {
           stage.setX(savedX);
           stage.setY(savedY);
@@ -37,14 +41,14 @@ public class FullscreenHandler {
       }
     });
 
-    // Add F11 keyboard shortcut
+    // Adds F11 keyboard shortcut
     rootNode.setOnKeyPressed(e -> {
       if (e.getCode() == KeyCode.F11) {
         toggleFullscreen();
       }
     });
 
-    // Make sure the node can receive key events
+    // Makes sure the node can receive key events
     rootNode.setFocusTraversable(true);
     Platform.runLater(() -> rootNode.requestFocus());
 
@@ -52,11 +56,11 @@ public class FullscreenHandler {
   }
 
   /**
-   * Toggles fullscreen mode while preserving window position.
+   * Toggles fullscreen mode while preserving the window position.
    */
   public void toggleFullscreen() {
     if (!stage.isFullScreen()) {
-      // Save current position before entering fullscreen
+      // Saves current position before entering fullscreen
       savedX = stage.getX();
       savedY = stage.getY();
       savedWidth = stage.getWidth();
@@ -67,35 +71,6 @@ public class FullscreenHandler {
       stage.setFullScreen(false);
       // Position is restored automatically by the listener
     }
-  }
-
-  /**
-   * Enters fullscreen mode.
-   */
-  public void enterFullscreen() {
-    if (!stage.isFullScreen()) {
-      savedX = stage.getX();
-      savedY = stage.getY();
-      savedWidth = stage.getWidth();
-      savedHeight = stage.getHeight();
-      stage.setFullScreen(true);
-    }
-  }
-
-  /**
-   * Exits fullscreen mode.
-   */
-  public void exitFullscreen() {
-    if (stage.isFullScreen()) {
-      stage.setFullScreen(false);
-    }
-  }
-
-  /**
-   * Returns whether the stage is currently in fullscreen mode.
-   */
-  public boolean isFullScreen() {
-    return stage.isFullScreen();
   }
 }
 

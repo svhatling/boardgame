@@ -32,16 +32,11 @@ import model.util.FullscreenHandler;
 import model.util.PieceImageLoader;
 
 /**
- * INITIAL DRAFT.
- *
- * This view displays:
- *  - A top header with title, current player and dice roll
- *  - A center board grid plus with a canvas layer for ladders and snakes
- *  - A right panel showing all players and what tile they are currently on
+ * This view displays the board game with a grid of tiles, ladders, and snakes.
  */
 public class BoardGameView extends BorderPane {
 
-  /** Observer for user actions on the boardgame screen. */
+  /** Observer for user actions on the board game screen.*/
   public interface Observer {
     void onRollDice();
   }
@@ -78,7 +73,7 @@ public class BoardGameView extends BorderPane {
   private final Map<Integer, Label> tileLabels = new HashMap<>();
 
   /**
-   * Constructor of view, with header on top, board in center, and player list on the right.
+   * Constructor of view, with header on top, board in the center, and player list on the right.
    *
    * @param game the game model with board, players and dice.
    */
@@ -218,40 +213,29 @@ public class BoardGameView extends BorderPane {
   }
 
   /**
-   * Oppretter en forbedret instruksjonsboks med nummererte punkter og sirkeldesign
+   * Creates an instruction box with a title and numbered points.
    */
   private VBox createImprovedInstructionsBox() {
-    // Hovedcontainer
+    // Main container
     VBox instructionsBox = new VBox(8);
     instructionsBox.setPadding(new Insets(10));
     instructionsBox.getStyleClass().add("instructions-box");
 
-    // Tittel
+    // Title
     Label title = new Label("This is how you play:");
     title.getStyleClass().add("instructions-title");
 
-    // Instruksjonspunkter
+    // Instruction points
     VBox instructionPoints = new VBox(6);
-
-    // Punkt 1
     HBox point1 = createInstructionPoint("1", "Choose difficulty.");
-
-    // Punkt 2
     HBox point2 = createInstructionPoint("2", "Press \\\"Roll Dice\\\" to start the game");
-
-    // Punkt 3
     HBox point3 = createInstructionPoint("3", "Your piece will automatically move the amount of spaces from the dice roll.");
-
-    // Punkt 4
     HBox point4 = createInstructionPoint("4", "Red ladders bring you down and green ladders bring you up.");
-
-    // Punkt 5
     HBox point5 = createInstructionPoint("5", "The first player to reach the end wins!");
 
-    // Legg til alle instruksjonspunktene
     instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
 
-    // Legg til alle elementer i hovedcontaineren
+    // Adds all the elements to the main container
     instructionsBox.getChildren().addAll(title, instructionPoints);
     instructionsBox.setAlignment(Pos.CENTER);
 
@@ -262,20 +246,19 @@ public class BoardGameView extends BorderPane {
     HBox pointContainer = new HBox(10);
     pointContainer.setAlignment(Pos.TOP_LEFT);
 
-    // Nummersirkel
+    // Number circle
     Circle numberCircle = new Circle(8);
     numberCircle.getStyleClass().add("number-circle");
 
-    // Nummertekst
+    // Number text
     Text numberText = new Text(number);
     numberText.getStyleClass().add("number-text");
 
-    // Instruksjonstekst
+    // Instruction text
     Text instructionText = new Text(text);
     instructionText.getStyleClass().add("instruction-text");
     instructionText.setWrappingWidth(220);
 
-    // Wrapper for sirkel og nummer (for å sentrere nummeret i sirkelen)
     StackPane numberContainer = new StackPane();
     numberContainer.getChildren().addAll(numberCircle, numberText);
 
@@ -366,7 +349,7 @@ public class BoardGameView extends BorderPane {
   }
 
   /**
-   * Draws a ladder, two poles and N steps.
+   * Draws a ladder.
    *
    * @param graphicsContext GraphicsContext
    * @param x1,y1 start tile
@@ -405,7 +388,7 @@ public class BoardGameView extends BorderPane {
 
   /**
   * Styling tiles where ladders/snakes start and end. Green for ladders, red for snakes.
-  * Light color for start tile, dark color for end tile.
+  * Light color for the start tile, dark color for the end tile.
   */
   private void styleLaddersAndSnakesTiles(String configFile) {
     Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configFile);
@@ -506,7 +489,7 @@ public class BoardGameView extends BorderPane {
 
   /**
    * Refreshing header labels, board highlight, and player list.
-   * Call after change in the game model.
+   * Called after the change in the game model.
    */
   public void updateView() {
     // Header
@@ -540,7 +523,7 @@ public class BoardGameView extends BorderPane {
       }
     }
 
-    // Rebuild player list on the right
+    // Rebuilds the player list on the right
     for (Player player : game.getPlayers()) {
       int id = player.getCurrentTile().getTileId();
       Label cell = tileLabels.get(id);

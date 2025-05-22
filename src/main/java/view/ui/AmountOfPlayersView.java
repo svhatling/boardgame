@@ -15,7 +15,7 @@ import model.util.FullscreenHandler;
 import view.BoardGameObserver;
 
 /**
- * View for selecting amount of players.
+ * View for selecting the number of players.
  * <p>The view reuses the primary stage and binds the layout to fill the whole window.
  */
 public class AmountOfPlayersView implements BoardGameObserver {
@@ -60,7 +60,7 @@ public class AmountOfPlayersView implements BoardGameObserver {
           pvc.showPlayerView();
         });
 
-    // Arranges in a vertical box
+    // Arranges everything in a vertical box
     VBox layout = new VBox(20, title, instruction, comboBox, startButton);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(320);
@@ -69,17 +69,17 @@ public class AmountOfPlayersView implements BoardGameObserver {
     StackPane root = new StackPane(layout);
     root.getStyleClass().add("root");
 
-    // Bind new scenes to stage size. So that new scene always fills the window
+    // Binds new scenes to stage size so that the new scene always fills the window
     root.prefWidthProperty().bind(stage.widthProperty());
     root.prefHeightProperty().bind(stage.heightProperty());
 
-    // create scene with css style
+    // create the scene with styling
     Scene scene = new Scene(root);
     scene.getStylesheets().add(getClass()
         .getResource("/css/style.css")
         .toExternalForm());
 
-    // change scene and keep screen size
+    // changes the scene and keeps the screen size
     boolean wasFullScreen = stage.isFullScreen();
     boolean wasMaximized = stage.isMaximized();
     stage.setScene(scene);

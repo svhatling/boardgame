@@ -17,7 +17,6 @@ public class PlayerViewController implements PlayerView.Observer {
   private final Scene previousScene;
   private final AmountOfPlayersViewController amountController;
   private final GameType gameType;
-  private PlayerView playerview;
   private final FullscreenHandler fullscreenHandler;
 
   /**

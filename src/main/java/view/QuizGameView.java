@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,7 +16,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -25,14 +23,22 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import model.entity.BoardGame;
 import model.entity.Player;
 import model.util.FullscreenHandler;
 import model.util.PieceImageLoader;
 
+/**
+ * QuizGameView class represents the graphical user interface for a quiz game.
+ * It displays the game board, player information, and quiz questions.
+ */
 public class QuizGameView extends BorderPane {
 
+  /**
+   * Observer interface for handling game events.
+   * It defines methods for rolling dice, selecting answers, skipping questions,
+   * and selecting categories.
+   */
   public interface Observer {
 
     void onRollDice();
@@ -50,14 +56,11 @@ public class QuizGameView extends BorderPane {
   private final FullscreenHandler fullscreenHandler;
   private Set<Integer> questionTileIds = Collections.emptySet();
 
-  // Størrelse på grid
   private static final int COLS = 10, ROWS = 9;
 
-  // Grid for brettet
   private final GridPane boardGrid = new GridPane();
   private final Map<Integer, Label> tileLabels = new HashMap<>();
 
-  // UI‐elementer for quiz
   private final Label currentPlayerLabel = new Label("Current player");
   private final ImageView die1 = new ImageView();
   private final ImageView die2 = new ImageView();
@@ -72,13 +75,19 @@ public class QuizGameView extends BorderPane {
   private final Button submitButton = new Button("Submit");
   private final Button skipButton = new Button("Skip");
 
-  // Score‐pane (valgfritt plasseringssted)
   private final VBox playerListBox = new VBox(5);
 
   private final VBox categoryPane;
   private final Button geographyButton = new Button("Geography");
   private final Button generalButton = new Button("General Knowledge");
 
+  /**
+   * Constructor for QuizGameView.
+   * Initializes the view with the game, fullscreen handler, and styles.
+   *
+   * @param game             the BoardGame instance
+   * @param fullscreenHandler the FullscreenHandler instance
+   */
   public QuizGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
     this.getStylesheets()
         .add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
@@ -88,7 +97,6 @@ public class QuizGameView extends BorderPane {
 
     rollButton.setDisable(true);
 
-    // --- Last dice‐ikoner ---
     for (int f = 1; f <= 6; f++) {
       diceImages[f] = new Image(
           Objects.requireNonNull(getClass().getResourceAsStream("/icons/dice" + f + ".png"))
@@ -101,7 +109,6 @@ public class QuizGameView extends BorderPane {
     die1.setImage(diceImages[1]);
     die2.setImage(diceImages[1]);
 
-    // --- Bygg header ---
     currentPlayerLabel.getStyleClass().add("label-sub");
     rollButton.getStyleClass().add("roll-dice-button");
     rollButton.setOnAction(e -> {
@@ -122,12 +129,10 @@ public class QuizGameView extends BorderPane {
     header.setPadding(new Insets(10));
     setTop(header);
 
-    // --- Bygg brett‐grid ---
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER);
     buildBoardGrid();
 
-    // --- Bygg quiz‐pane (skjult i starten) ---
     quizPane.setVisible(false);
     questionLabel.getStyleClass().add("label-sub");
     answersBox.setPadding(new Insets(10));
@@ -180,15 +185,12 @@ public class QuizGameView extends BorderPane {
     categoryPane.setAlignment(Pos.CENTER);
     categoryPane.setPadding(new Insets(50));
 
-    // --- Bygg center med kategori, brett og quiz ---
     StackPane centerStack = new StackPane(categoryPane, boardGrid, quizPane);
     setCenter(centerStack);
 
-    // Skjul brett og quiz inntil kategori valgt
     boardGrid.setVisible(false);
     quizPane.setVisible(false);
 
-    // --- Instruksjons-boks øverst til venstre ---
     VBox instrBox = createInstructionsBox();
     instrBox.getStyleClass().add("instr-box");
     BorderPane.setAlignment(instrBox, Pos.TOP_LEFT);
@@ -207,6 +209,10 @@ public class QuizGameView extends BorderPane {
     updateView();
   }
 
+  /**
+   * Updates the view with the current game state.
+   * This includes updating the current player, dice values, and player pieces on the board.
+   */
   public void updateView() {
     // Current player
     Player current = game.getCurrentplayer();
@@ -225,7 +231,7 @@ public class QuizGameView extends BorderPane {
     } catch (model.exception.InvalidDiceRollException ignored) {
     }
 
-    // Clear styles and graphics
+    // Clears styles and graphics
     boardGrid.getChildren().forEach(node -> {
       if (node instanceof Label) {
         Label lbl = (Label) node;
@@ -234,7 +240,7 @@ public class QuizGameView extends BorderPane {
       }
     });
 
-    // Highlight current tile
+    // Highlights current tile
     if (current != null) {
       String id = String.valueOf(current.getCurrentTile().getTileId());
       boardGrid.getChildren().stream()
@@ -245,7 +251,7 @@ public class QuizGameView extends BorderPane {
           .ifPresent(l -> l.setStyle("-fx-background-color: white;"));
     }
 
-    // Place all pieces
+    // Places all pieces
     for (Player p : players) {
       String id = String.valueOf(p.getCurrentTile().getTileId());
       boardGrid.getChildren().stream()
@@ -262,7 +268,7 @@ public class QuizGameView extends BorderPane {
           });
     }
 
-    // Update player list
+    // Updates the player list
     playerListBox.getChildren().clear();
     Label hdr = new Label("Players:");
     hdr.getStyleClass().addAll("label-sub", "label-list-header");
@@ -273,6 +279,10 @@ public class QuizGameView extends BorderPane {
     }
   }
 
+  /**
+   * Shows the game where the categories are invisible and the grid is visible.
+   * The questions are hidden until a player lands on a question tile.
+   */
   public void showGame() {
     categoryPane.setVisible(false);
     boardGrid.setVisible(true);
@@ -280,39 +290,28 @@ public class QuizGameView extends BorderPane {
   }
 
   private VBox createInstructionsBox() {
-    // Hovedcontainer
+    // Main container
     VBox instructionsBox = new VBox(8);
     instructionsBox.setPadding(new Insets(10));
     instructionsBox.getStyleClass().add("instructions-box");
 
-    // Tittel
+    // Title
     Label title = new Label("This is how you play:");
     title.getStyleClass().add("instructions-title");
 
-    // Instruksjonspunkter
+    // Instruction points
     VBox instructionPoints = new VBox(6);
-
-    // Punkt 1
     HBox point1 = createInstructionPoint("1", "Press \"Roll dice\" to start the game.");
-
-    // Punkt 2
     HBox point2 = createInstructionPoint("2", "Your piece moves automatically.");
-
-    // Punkt 3
     HBox point3 = createInstructionPoint("3",
         "If the piece lands on or passes a blue tile, you get a question to answer.");
-
-    // Punkt 4
     HBox point4 = createInstructionPoint("4", "Each right answer gives you 1 point.");
-
-    // Punkt 5
     HBox point5 = createInstructionPoint("5",
         "The player with the most points when one player reaches the end wins.");
 
-    // Legg til alle instruksjonspunktene
     instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
 
-    // Legg til alle elementer i hovedcontaineren
+    // Adds all the elements to the main container
     instructionsBox.getChildren().addAll(title, instructionPoints);
     instructionsBox.setAlignment(Pos.CENTER);
 
@@ -320,26 +319,22 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Oppretter et enkelt instruksjonspunkt med nummerering og tekst
+   * Creates an instruction point with a number and text.
    */
   private HBox createInstructionPoint(String number, String text) {
     HBox pointContainer = new HBox(6);
     pointContainer.setAlignment(Pos.TOP_LEFT);
 
-    // Nummersirkel
     Circle numberCircle = new Circle(10);
     numberCircle.getStyleClass().add("number-circle");
 
-    // Nummertekst
     Text numberText = new Text(number);
     numberText.getStyleClass().add("number-text");
 
-    // Instruksjonstekst
     Text instructionText = new Text(text);
     instructionText.getStyleClass().add("instruction-text");
     instructionText.setWrappingWidth(200);
 
-    // Wrapper for sirkel og nummer (for å sentrere nummeret i sirkelen)
     StackPane numberContainer = new StackPane();
     numberContainer.getChildren().addAll(numberCircle, numberText);
 
@@ -347,9 +342,6 @@ public class QuizGameView extends BorderPane {
     return pointContainer;
   }
 
-  /**
-   * Oppretter spillerlisten med ikoner og spillernavn (Synkronisert med BoardGameView)
-   */
   private Node makePlayerListItem(Player player, boolean isCurrent) {
     ImageView imageView = new ImageView(PieceImageLoader.get(player.getPiece()));
     imageView.setFitWidth(24);
@@ -370,14 +362,14 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Koble til controller
+   * Setter for the observer.
    */
   public void setObserver(Observer obs) {
     this.observer = obs;
   }
 
   /**
-   * Kalles for å vise spørsmål‐helt over brettet
+   * Called when a player lands on a question tile.
    */
   public void showQuestion(String question, List<String> options) {
     rollButton.setDisable(true);
@@ -395,7 +387,7 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Skjuler spørsmåls‐panelet igjen
+   * Hides the question pane and shows the game board.
    */
   public void hideQuestion() {
     quizPane.setVisible(false);
@@ -403,6 +395,11 @@ public class QuizGameView extends BorderPane {
     skipButton.setDisable(true);
   }
 
+  /**
+   * Sets the question tile IDs and builds the board grid.
+   *
+   * @param questionTileIds the set of question tile IDs
+   */
   public void setQuestionTiles(Set<Integer> questionTileIds) {
     this.questionTileIds = questionTileIds;
     buildBoardGrid();
@@ -410,7 +407,7 @@ public class QuizGameView extends BorderPane {
   }
 
   /**
-   * Lager en 10×9 Grid med tile‐id og border
+   * Builds the board grid with tiles and their styles.
    */
   private void buildBoardGrid() {
     boardGrid.getChildren().clear();
@@ -431,12 +428,17 @@ public class QuizGameView extends BorderPane {
         cell.getStyleClass().add("tile-question");
       }
 
-      // Marker klikk bare om du vil – ikke nødvendig for landing
       boardGrid.add(cell, col, ROWS - 1 - row);
       tileLabels.put(id, cell);
     }
   }
 
+  /**
+   * Updates the dice images based on the rolled values.
+   *
+   * @param die1Value the value of the first die
+   * @param die2Value the value of the second die
+   */
   public void updateDice(int die1Value, int die2Value) {
     die1.setImage(diceImages[die1Value]);
     die2.setImage(diceImages[die2Value]);

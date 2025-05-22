@@ -23,11 +23,12 @@ public class BoardGameFactory {
 
   /**
    * Create a Snakes & Ladders game with the given number of dice.
+   * Default easy configuration is used.
    *
    * @param numberOfDice how many dice the game should use
    * @return a BoardGame set up for Snakes & Ladders
    */
-  public static BoardGame createSnakesAndLaddersEasy(int numberOfDice) {
+  public static BoardGame createSnakesAndLadders(int numberOfDice) {
     return create(
         "snakesandladders",
         "config/snakes_and_ladders/sl_easy_config.json",
@@ -35,18 +36,12 @@ public class BoardGameFactory {
     );
   }
 
-  public static BoardGame createSnakesAndLaddersHard(int numberOfDice) {
-    return create(
-        "snakesandladders",
-        "config/snakes_and_ladders/sl_hard_config.json",
-        numberOfDice
-    );
-  }
   /**
-   * Create a Ludo game with the given number of dice.
+   * Create a quiz game with the given number of dice.
+   * Default general knowledge configuration is used.
    *
    * @param numberOfDice how many dice the game should use
-   * @return a BoardGame set up for Ludo
+   * @return a BoardGame set up for quiz
    */
   public static BoardGame createQuizGame(int numberOfDice) {
     return create("quiz", "config/quiz/questions.json", numberOfDice);

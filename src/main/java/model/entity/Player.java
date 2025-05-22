@@ -1,14 +1,22 @@
 package model.entity;
 
+/**
+ * This class represents a player in the game.
+ */
 public class Player {
   private String name;
   private Tile currentTile;
   private final Board board;
   private String piece;
   private int score;
-  private boolean isCurrent;
 
-  // Constructor
+  /**
+   * Constructor for Player.
+   *
+   * @param name  the name of the player
+   * @param board the board on which the player is playing
+   * @param piece the piece representing the player
+   */
   public Player(String name, Board board, String piece) {
     this.name = name;
     this.board = board;
@@ -17,30 +25,46 @@ public class Player {
     this.score = 0;
   }
 
-  // Method for getting name
+  /**
+   * Getter for the player's name.
+   */
   public String getName() {
     return name;
   }
 
-  //Method for getting piece
+  /**
+   * Getter for the player's piece.
+   */
   public String getPiece() {return piece;}
 
-  // Method for getting current tile
+  /**
+   * Getter for the player's current tile.
+   */
   public Tile getCurrentTile() {
     return currentTile;
   }
 
-  // Method for setting current tile
+  /**
+   * Setter for the player's current tile.
+   *
+   * @param newTile the new tile to set as the current tile
+   */
   public void setCurrentTile(Tile newTile) {
     this.currentTile = newTile;
   }
 
-  // Method for getting board
+  /**
+   * Getter for the board.
+   */
   public Board getBoard() {
     return board;
   }
 
-  // Method for moving piece to correct tile
+  /**
+   * Moves the player to a new tile based on the roll of a die.
+   *
+   * @param roll the number rolled on the die
+   */
   public void move(int roll) {
     int targetTileId = Math.max(1, Math.min(currentTile.getTileId() + roll, 90));
     Tile targetTile = board.getTile(targetTileId);
@@ -48,19 +72,28 @@ public class Player {
     targetTile.landPlayer(this);
   }
 
+  /**
+   * Getter for the player's score.
+   */
   public int getScore() {return score;}
 
+  /**
+   * Setter for the player's score.
+   *
+   * @param score the new score to set
+   */
   public void setScore(int score) {
     this.score = score;
   }
 
+  /**
+   * Increments the player's score by 1.
+   */
   public void incrementScore() {this.score++;}
 
-  public boolean isCurrent() {
-    return false;
-  }
-
-  // TileAction sends message to the user
+  /**
+   * Prints a message to the console.
+   */
   public void sendMessage(String message) {
     System.out.println(message);
   }

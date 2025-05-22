@@ -2,44 +2,42 @@ package model.entity;
 
 import java.util.List;
 
+/**
+ * Represents a question in the game.
+ * Each question has an ID, a question text, a list of options, and the correct answer.
+ */
 public class Questions {
   private int tileId;
   private String question;
   private List<String> options;
   private String answer;
 
-  public Questions() {}
-
+  /**
+   * Getter for the tile ID.
+   */
   public int getTileId() {
     return tileId;
   }
 
-  public void setTileId(int tileId) {
-    this.tileId = tileId;
-  }
-
+  /**
+   * Getter for the question text.
+   */
   public String getQuestion() {
     return question;
   }
 
-  public void setQuestion(String question) {
-    this.question = question;
-  }
-
+  /**
+   * Getter for the list of options.
+   */
   public List<String> getOptions() {
     return options;
   }
 
-  public void setOptions(List<String> options) {
-    this.options = options;
-  }
-
+  /**
+   * Getter for the correct answer.
+   */
   public String getAnswer() {
     return answer;
-  }
-
-  public void setAnswer(String answer) {
-    this.answer = answer;
   }
 
 }

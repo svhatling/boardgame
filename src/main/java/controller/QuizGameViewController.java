@@ -27,6 +27,10 @@ import view.QuizGameView.Observer;
 import view.ui.BoardGameApp;
 import view.ui.PlayerView.PlayerData;
 
+/**
+ * Controller for the quiz game view.
+ * Handles events from the view and updates the game state.
+ */
 public class QuizGameViewController implements Observer {
 
   private static final int COLS = 10, ROWS = 9;
@@ -41,6 +45,13 @@ public class QuizGameViewController implements Observer {
   private boolean questionActive = false;
   private Questions currentQuestion;
 
+  /**
+   * Constructor for the QuizGameViewController.
+   *
+   * @param stage            the main application window
+   * @param pdList           list of player data
+   * @param fullscreenHandler handler for fullscreen mode
+   */
   public QuizGameViewController(Stage stage, List<PlayerData> pdList, FullscreenHandler fullscreenHandler) {
     this.stage = stage;
     this.fullscreenHandler = fullscreenHandler;
@@ -69,7 +80,7 @@ public class QuizGameViewController implements Observer {
   }
 
   /**
-   * Fyller questions‐listen
+   * Loads the list of questions with the questions from a JSON file.
    */
   private void loadQuestions() {
     try (var is = getClass().getResourceAsStream("/config/quiz/questions.json")) {
@@ -89,16 +100,17 @@ public class QuizGameViewController implements Observer {
     }
   }
 
+  /**
+   * Called when the user clicks the "Roll Dice" button.
+   * Rolls the dice and moves the player.
+   */
   @Override
   public void onRollDice() {
     if (questionActive) {
       return;
     }
-
-    // 1) Rull én gang – får summen av de to terningene
     int sum = game.getDice().rollDice();
 
-    // 2) Hent de to verdiene som ble rullet
     List<Integer> vals = game.getDice().getDiceValues();
     int v1 = vals.get(0), v2 = vals.get(1);
 
@@ -112,7 +124,6 @@ public class QuizGameViewController implements Observer {
       view.updateView();
       int tileId = cur.getCurrentTile().getTileId();
       if (questionMap.containsKey(tileId)) {
-        // still inn rest-steg og vis spørsmål
         remainingSteps = steps - i - 1;
         currentQuestion = questionMap.get(tileId);
         questionActive = true;
@@ -123,6 +134,11 @@ public class QuizGameViewController implements Observer {
     nextTurnOrEnd();
   }
 
+  /**
+   * Called when the user selects an answer to the question.
+   *
+   * @param answer the selected answer
+   */
   @Override
   public void onAnswerSelected(String answer) {
     view.hideQuestion();
@@ -138,11 +154,13 @@ public class QuizGameViewController implements Observer {
       remainingSteps = 0;
       moveAndMaybeAsk(r);
     } else {
-      // Ingen flere skritt å ta, gå videre til neste spiller
       nextTurnOrEnd();
     }
   }
 
+  /**
+   * Called when the user skips the question.
+   */
   @Override
   public void onSkipQuestion() {
     view.hideQuestion();
@@ -154,16 +172,16 @@ public class QuizGameViewController implements Observer {
       remainingSteps = 0;
       moveAndMaybeAsk(r);
     } else {
-      // Ingen flere skritt å ta, gå videre til neste spiller
       nextTurnOrEnd();
     }
   }
 
+  /**
+   * Called when the user is done with a question.
+   */
   private void nextTurnOrEnd() {
-    // Sjekk om noen har vunnet (har nådd siste rute)
     Player cur = game.getCurrentplayer();
     if (cur.getCurrentTile().getTileId() == COLS * ROWS) {
-      // Vis slutt‐dialog basert på høyest score
       showEndDialog();
       return;
     }
@@ -175,7 +193,7 @@ public class QuizGameViewController implements Observer {
   }
 
   /**
-   * Når quizen er ferdig
+   * A dialog that shows up when the game is over.
    */
   private void showEndDialog() {
     Optional<Player> winner = game.getPlayers().stream()
@@ -214,6 +232,11 @@ public class QuizGameViewController implements Observer {
     }
   }
 
+  /**
+   * Called when the user selects a category.
+   *
+   * @param category the selected category
+   */
   @Override
   public void onCategorySelected(String category) {
     String filename = category.equals("Geography")
@@ -226,9 +249,8 @@ public class QuizGameViewController implements Observer {
     ObjectMapper mapper = new ObjectMapper();
     try (InputStream is = getClass().getResourceAsStream(filename)) {
       if (is == null) {
-        throw new RuntimeException("Kunne ikke finne fil: " + filename);
+        throw new RuntimeException("Could not find file: " + filename);
       }
-      // Deserialiser JSON-array til List<Questions>
       List<Questions> list = mapper.readValue(is, new TypeReference<>() {});
       for (Questions q : list) {
         questionMap.put(q.getTileId(), q);
@@ -236,13 +258,10 @@ public class QuizGameViewController implements Observer {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      // Her kan du eventuelt vise en feilmelding i GUI-en
     }
 
-    // Fortell view hvilke ruter som gir spørsmål
     view.setQuestionTiles(tileIds);
 
-    // Skjul kategori-pane og vis brett
     view.showGame();
     view.updateView();
   }

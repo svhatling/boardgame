@@ -11,6 +11,11 @@ import model.exception.InvalidGameTypeException;
 import model.exception.BoardNotInitializedException;
 
 
+/**
+ * The BoardGame class represents a board game with a board, players, and dice.
+ * It allows for the creation of different gametypes (e.g., Snakes and Ladders, Quiz),
+ * adding players, rolling dice, and checking for a winner.
+ */
 public class BoardGame {
 
   private Board board;
@@ -18,20 +23,38 @@ public class BoardGame {
   private Dice dice;
   private Player currentplayer;
 
+  /**
+   * Constructor for the BoardGame class.
+   * Initializes the board and players list.
+   */
   public BoardGame() {
     this.board = new Board();
     this.players = new ArrayList<>();
     this.currentplayer = null;
   }
 
+  /**
+   * Adds a player to the game.
+   *
+   * @param player the player to be added
+   */
   public void addPlayer(Player player) {
     players.add(player);
   }
 
+  /**
+   * Creates the board for the game based on the specified game type.
+   */
   public void createBoard(String gameType) {
     createBoard(gameType, null);
   }
 
+  /**
+   * Creates the board for the game based on the specified game type and configuration path.
+   *
+   * @param gameType  the type of game (e.g., "snakesandladders", "quiz")
+   * @param configPath the path to the configuration file
+   */
   public void createBoard(String gameType, String configPath) {
     board = new Board();
 
@@ -66,10 +89,20 @@ public class BoardGame {
     }
   }
 
+  /**
+   * Creates the dice based on the dice class.
+   *
+   * @param numDice number of dice
+   */
   public void createDice(int numDice) {
     dice = new Dice(numDice, 6);
   }
 
+  /**
+   * Returns the winner of the game.
+   *
+   * @return the winning player, or null if no winner yet
+   */
   public Player getWinner() {
     if (board == null || board.getTiles() == null || board.getTiles().isEmpty()) {
       throw new BoardNotInitializedException("Board must be created before checking for a winner.");
@@ -82,29 +115,47 @@ public class BoardGame {
     return null;
   }
 
+  /**
+   * Getter method for the board.
+   *
+   * @return the board of the game
+   */
   public Board getBoard() {
     return board;
   }
 
-  public void showPlayerStatus() {
-    for (Player player : players) {
-      System.out.println(player.getName() + " is on tile " + player.getCurrentTile().getTileId());
-    }
-    System.out.println();
-  }
-
+  /**
+   * Getter method for the current player.
+   *
+   * @return the current player
+   */
   public Player getCurrentplayer() {
     return currentplayer;
   }
 
+  /**
+   * Getter method for the players.
+   *
+   * @return the list of players
+   */
   public List<Player> getPlayers() {
     return players;
   }
 
+  /**
+   * Getter method for the dice.
+   *
+   * @return the dice
+   */
   public Dice getDice() {
     return this.dice;
   }
 
+  /**
+   * Setter method for the current player.
+   *
+   * @param player the player to set as current
+   */
   public void setCurrentPlayer(Player player) {
     this.currentplayer = player;
   }

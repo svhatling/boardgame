@@ -47,7 +47,7 @@ public class BoardGameViewController implements Observer {
 
     switch (gameType) {
       case SNAKES_AND_LADDERS:
-        game = BoardGameFactory.createSnakesAndLaddersEasy(playersData.size());
+        game = BoardGameFactory.createSnakesAndLadders(playersData.size());
         break;
       case QUIZ:
         game = BoardGameFactory.createQuizGame(playersData.size());

@@ -1,4 +1,3 @@
-package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,7 +63,7 @@ class TileTest {
   void testBackToStartActionOnTile60() {
     Tile tile60 = new Tile(60);
     board.addTile(tile60);
-    tile60.setTileAction(new BackToStartAction());
+    tile60.setTileAction(new BackToStartAction(98, "TestPlayer"));
     tile60.landPlayer(player);
     assertEquals(1, player.getCurrentTile().getTileId());
   }

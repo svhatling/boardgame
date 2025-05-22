@@ -1,14 +1,25 @@
 package model.entity;
 
-import model.exception.InvalidDiceRollException;
 import java.util.ArrayList;
 import java.util.List;
+import model.exception.InvalidDiceRollException;
 
+/**
+ * The Dice class represents a collection of dice. It allows rolling multiple dice and keeps track
+ * of their values.
+ */
 public class Dice extends Die {
 
   private List<Die> dice;
   private int sum;
 
+  /**
+   * Constructs a Dice object with the specified number of dice and sides.
+   *
+   * @param numberOfDice the number of dice to create
+   * @param sides the number of sides on each die
+   * @throws InvalidDiceRollException if the number of dice is less than or equal to 0
+   */
   public Dice(int numberOfDice, int sides) {
     super(sides);
     if (numberOfDice <= 0) {
@@ -21,6 +32,11 @@ public class Dice extends Die {
     this.sum = 0;
   }
 
+  /**
+   * Rolls the dice.
+   *
+   * @return the sum of the values of the rolled dice
+   */
   public int rollDice() {
     sum = 0;
     for (Die die : dice) {
@@ -29,10 +45,16 @@ public class Dice extends Die {
     return sum;
   }
 
+  /**
+   * Getter for the sum of the dice
+   */
   public int getSum() {
     return sum;
   }
 
+  /**
+   * Getter for the values of the dice
+   */
   public List<Integer> getDiceValues() {
     List<Integer> values = new ArrayList<>();
     for (Die die : dice) {
@@ -44,6 +66,9 @@ public class Dice extends Die {
     return values;
   }
 
+  /**
+   * Setter for the number of sides on each die.
+   */
   @Override
   public void setSides(int sides) {
     super.setSides(sides);

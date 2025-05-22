@@ -26,7 +26,7 @@ public class MainView extends Application {
     this.controller = new MainViewController();
     this.fullscreenHandler = new FullscreenHandler(primaryStage);
 
-    // Set up the game selection screen
+    // Sets up the game selection screen
     showGameSelection();
 
     primaryStage.show();
@@ -57,7 +57,7 @@ public class MainView extends Application {
       showAmountOfPlayersView(GameType.QUIZ);
     });
 
-    // arrange in a vertical box
+    // arranges everything in a vertical box
     VBox layout = new VBox(20, title, laddersButton, quizButton);
     layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(300);
@@ -66,7 +66,7 @@ public class MainView extends Application {
     StackPane root = new StackPane(layout);
     root.getStyleClass().add("root");
 
-    // bind to stage size
+    // binds to stage size
     root.prefWidthProperty().bind(primaryStage.widthProperty());
     root.prefHeightProperty().bind(primaryStage.heightProperty());
 
@@ -82,7 +82,7 @@ public class MainView extends Application {
   }
 
   /**
-   * Shows the amount of players selection view.
+   * Shows the number of players selection views.
    *
    * @param gameType the selected game type
    */

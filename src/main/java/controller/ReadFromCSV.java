@@ -6,13 +6,26 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Class that reads player records from a CSV file.
+ */
 public class ReadFromCSV {
   private final String filename;
 
+  /**
+   * Constructor for ReadFromCSV.
+   *
+   * @param filename the name of the CSV file
+   */
   public ReadFromCSV(String filename) {
     this.filename = filename;
   }
 
+  /**
+   * Reads player records from the CSV file.
+   *
+   * @return a list of PlayerRecord objects
+   */
   public List <PlayerRecord> readPlayers() {
     List<PlayerRecord> list = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new FileReader(filename))) {

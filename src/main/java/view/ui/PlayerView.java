@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,12 +15,15 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
 
+/**
+ * PlayerView class allows users to enter player names and select game pieces.
+ * It also provides functionality to save player records to a CSV file.
+ */
 public class PlayerView extends VBox {
 
   private final SaveToCSV saveToCSV;
@@ -31,6 +33,9 @@ public class PlayerView extends VBox {
   private final FullscreenHandler fullscreenHandler;
   private Observer observer;
 
+  /**
+   * Observer interface for handling events in the PlayerView.
+   */
   public interface Observer {
 
     void onBack();
@@ -98,16 +103,13 @@ public class PlayerView extends VBox {
   }
 
   private void updateAvailablePieces() {
-    // 1) Tell opp hvilke brikker som allerede er valgt
     Map<String, Long> used = rows.stream()
         .map(PlayerInputRow::getSelectedPiece)
         .filter(Objects::nonNull)
         .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
 
-    // 2) Alle mulige brikker
     List<String> all = List.of("Car", "Hat", "Dog", "Ship", "Plane", "Crown");
 
-    // 3) For hver rad, regn ut hvilke brikker som fortsatt er tilgjengelige
     for (PlayerInputRow row : rows) {
       String current = row.getSelectedPiece();
       List<String> opts = all.stream()
@@ -116,7 +118,6 @@ public class PlayerView extends VBox {
       row.setPieceOptions(opts);
     }
 
-    // 4) Dersom samme brikke er valgt i flere rader, tving de nederste over på en ledig brikke
     Map<String, List<PlayerInputRow>> byPiece = rows.stream()
         .filter(r -> r.getSelectedPiece() != null)
         .collect(Collectors.groupingBy(PlayerInputRow::getSelectedPiece));
@@ -128,21 +129,16 @@ public class PlayerView extends VBox {
         for (int i = 1; i < dupped.size(); i++) {
           PlayerInputRow row = dupped.get(i);
 
-          // Regn ut hvilke som er ledige *etter* å ha tatt høyde for duplikatet
-          // (samme logikk som over, men ekskluder duplicatedPiece)
           List<String> opts = all.stream()
               .filter(p -> !p.equals(duplicatedPiece))
               .filter(p -> {
-                // også sjekk at vi ikke forsøker å gi en brikke som allerede er brukt fullt opp
                 long count = used.getOrDefault(p, 0L);
                 return count == 0 || p.equals(row.getSelectedPiece());
               })
               .collect(Collectors.toList());
 
-          // Om vi har noe ledig, velg første
           if (!opts.isEmpty()) {
             row.setSelectedPiece(opts.get(0));
-            // Oppdater tilgjengeligheten for knapper igjen
             row.setPieceOptions(opts);
           } else {
             row.setSelectedPiece(null);
@@ -154,7 +150,7 @@ public class PlayerView extends VBox {
 
 
   /**
-   * Gets data from the rows and saves new playernames before starting the game
+   * Gets data from the rows and saves new player names before starting the game
    */
   private void handleStart() {
     for (PlayerInputRow row : rows) {
@@ -190,17 +186,31 @@ public class PlayerView extends VBox {
     }
   }
 
+  /**
+   * Static class for the data of the players that is used in the playerview class.
+   */
   public static class PlayerData {
 
     public final String name;
     public final String piece;
 
+    /**
+     * Constructor for PlayerData.
+     *
+     * @param name  the name of the player
+     * @param piece the piece representing the player
+     */
     public PlayerData(String name, String piece) {
       this.name = name;
       this.piece = piece;
     }
   }
 
+  /**
+   * Sets the observer for this PlayerView.
+   *
+   * @param observer the observer to set
+   */
   public void setObserver(Observer observer) {
     this.observer = observer;
   }

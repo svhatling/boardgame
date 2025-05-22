@@ -6,8 +6,18 @@ import java.io.InputStream;
 import java.util.*;
 import model.entity.BackToStartAction;
 
+/**
+ * This class is responsible for loading the board configuration from a JSON file.
+ * It reads the file and creates a map of tile IDs with their corresponding actions.
+ */
 public class BoardConfigLoader {
 
+  /**
+   * Loads the board configuration from a JSON file.
+   *
+   * @param fileName the name of the JSON file
+   * @return a map of tile IDs with their corresponding actions
+   */
   public static Map<Integer, TileConfig> loadConfig(String fileName) {
     Map<Integer, TileConfig> actions = new HashMap<>();
 
@@ -34,6 +44,9 @@ public class BoardConfigLoader {
     return actions;
   }
 
+  /**
+   * Static inner class to represent the configuration of a tile.
+   */
   public static class TileConfig {
     public int to;
     public String message;
@@ -41,9 +54,6 @@ public class BoardConfigLoader {
     public TileConfig(int to, String message) {
       this.to = to;
       this.message = message;
-    }
-
-    public TileConfig(BackToStartAction backToStartAction) {
     }
   }
 }

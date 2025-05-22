@@ -18,7 +18,7 @@ import model.util.FullscreenHandler;
 /**
  * Main class for the board game.
  * <p>
- * Shows a menu for choosing game variant and user action
+ * Shows a menu for choosing a game variant, and user action
  * tasks are given to the relevant view classes.
  * </p>
  */
@@ -78,8 +78,8 @@ public class BoardGameApp extends Application {
 
   /**
    * Application entry point.
-   * Exception handling before launching JavaFX, is practical
-   * for seeing whether the program can launch or has errors.
+   * Exception handling before launching the application. It is practical
+   *  to see whether the program can launch or has errors.
    *
    * @param args command-line arguments
    */
@@ -89,7 +89,7 @@ public class BoardGameApp extends Application {
       // Print to console
       throwable.printStackTrace();
 
-      // Show an error dialog in UI
+      // Show an error dialog in the user interface
       Platform.runLater(() -> {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Unexpected Error");
@@ -99,12 +99,6 @@ public class BoardGameApp extends Application {
       });
     });
 
-
-    /**
-     * Starts the JavaFX application.
-     *
-     * @param args command-line arguments
-     */
-      launch(args);
+    launch(args);
     }
   }
