@@ -43,8 +43,8 @@ public class BoardGame {
         }
         break;
 
-      case "ludo":
-        for (int i = 1; i <= 40; i++) {
+      case "quiz":
+        for (int i = 1; i <= 90; i++) {
           board.addTile(new Tile(i));
         }
         break;

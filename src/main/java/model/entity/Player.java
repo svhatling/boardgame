@@ -5,6 +5,8 @@ public class Player {
   private Tile currentTile;
   private final Board board;
   private String piece;
+  private int score;
+  private boolean isCurrent;
 
   // Konstruktør
   public Player(String name, Board board, String piece) {
@@ -12,6 +14,7 @@ public class Player {
     this.board = board;
     this.piece = piece;
     this.currentTile = board.getTile(1);
+    this.score = 0;
   }
 
   // Metode for å hente navn
@@ -40,5 +43,17 @@ public class Player {
     Tile targetTile = board.getTile(targetTileId);
     setCurrentTile(targetTile);
     targetTile.landPlayer(this);
+  }
+
+  public int getScore() {return score;}
+
+  public void setScore(int score) {
+    this.score = score;
+  }
+
+  public void incrementScore() {this.score++;}
+
+  public boolean isCurrent() {
+    return false;
   }
 }

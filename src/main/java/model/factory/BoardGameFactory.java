@@ -37,7 +37,7 @@ public class BoardGameFactory {
    * @param numberOfDice how many dice the game should use
    * @return a BoardGame set up for Ludo
    */
-  public static BoardGame createLudoGame(int numberOfDice) {
-    return create("ludo", numberOfDice);
+  public static BoardGame createQuizGame(int numberOfDice) {
+    return create("quiz", numberOfDice);
   }
 }

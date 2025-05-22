@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.logic.GameType;
 import view.BoardGameObserver;
 
 /**
@@ -19,18 +20,17 @@ import view.BoardGameObserver;
 public class AmountOfPlayersView implements BoardGameObserver {
 
   /**
-   * Constructs player selection view. The layout resizes with
-   * the stage.
+   * Constructs player selection view. The layout resizes with the stage.
    *
    * @param stage    the primary stage to display the scene on
    * @param gameType the name of the game variant ("Ladders & Snakes" or "Ludo")
    */
-  public AmountOfPlayersView(Stage stage, String gameType) {
+  public AmountOfPlayersView(Stage stage, GameType gameType) {
     // creates controller and registers this view as observer
     AmountOfPlayersViewController controller = new AmountOfPlayersViewController(this);
 
     // header label
-    Label title = new Label(gameType);
+    Label title = new Label(gameType.getDisplayName());
     title.getStyleClass().add("label-title");
 
     // instruction label
@@ -48,14 +48,13 @@ public class AmountOfPlayersView implements BoardGameObserver {
     Button startButton = new Button("Start");
     startButton.getStyleClass().add("button-main");
     startButton.setPrefWidth(100);
-    startButton.setOnAction(e -> controller.startGame(comboBox.getValue()));
-    startButton.setOnAction(e -> { int selected = comboBox.getValue();
-      controller.setNumberOfPlayers(selected);
-
-      // Change scene to PlayerView
-      PlayerViewController pvc = new PlayerViewController(stage, controller, stage.getScene());
-      pvc.showPlayerView();
-    });
+    startButton.setOnAction(e -> {
+          int selected = comboBox.getValue();
+          controller.setNumberOfPlayers(selected);
+          PlayerViewController pvc = new PlayerViewController(stage, controller, stage.getScene(),
+              gameType);
+          pvc.showPlayerView();
+        });
 
     // Arranges in a vertical box
     VBox layout = new VBox(20, title, instruction, comboBox, startButton);
@@ -86,6 +85,7 @@ public class AmountOfPlayersView implements BoardGameObserver {
       stage.setMaximized(wasMaximized);
     }
     stage.setTitle("Choose Number of Players");
+    stage.show();
   }
 
   /**

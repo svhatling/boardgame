@@ -1,14 +1,16 @@
 package controller;
 
-public class MainViewController {
-  private String selectedGameType;
+import model.logic.GameType;
 
-  public void selectGame(String gameType) {
+public class MainViewController {
+  private GameType selectedGameType;
+
+  public void selectGame(GameType gameType) {
     this.selectedGameType = gameType;
     System.out.println("Game selected: " + gameType);
   }
 
-  public String getSelectedGameType() {
+  public GameType getSelectedGameType() {
     return selectedGameType;
   }
 }

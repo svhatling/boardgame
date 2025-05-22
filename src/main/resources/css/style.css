@@ -362,6 +362,74 @@
   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
 }
 
+.tile {
+  -fx-border-color: black;
+  -fx-border-width: 1px;
+}
+
+.tile-question {
+  -fx-background-color: lightblue;
+}
+
+.instructions-box {
+  -fx-background-color: #d9d4ff;
+  -fx-background-radius: 8; /* Mindre avrunding */
+  -fx-border-color: #9f8cff;
+  -fx-border-width: 1.5; /* Tynnere kant */
+  -fx-border-radius: 8;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3); /* Mindre skygge */
+  -fx-max-width: 280; /* Litt mindre bredde */
+}
+
+.instructions-title {
+  -fx-font-size: 16; /* Mindre font */
+  -fx-font-weight: bold;
+  -fx-text-fill: #5a3b96;
+  -fx-padding: 0 0 5 0; /* Mindre padding under tittel */
+  -fx-alignment: center;
+}
+
+.number-circle {
+  -fx-fill: #6f42c1;
+  -fx-stroke: transparent;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1); /* Mindre skygge */
+}
+
+.number-text {
+  -fx-fill: white;
+  -fx-font-size: 11; /* Mindre tekst */
+  -fx-font-weight: bold;
+}
+
+.instruction-text {
+  -fx-fill: #442475;
+  -fx-font-size: 12; /* Mindre tekststr */
+  -fx-line-spacing: -0.5; /* Litt mindre linjeavstand */
+}
+
+/* Oppdatert instr-box stil for kompatibilitet */
+.instr-box {
+  -fx-background-color: #d9d4ff;
+  -fx-background-radius: 8;
+  -fx-border-color: #9f8cff;
+  -fx-border-width: 1.5;
+  -fx-border-radius: 8;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
+  -fx-max-width: 280;
+}
+
+/* Tittel i instruksjons-boksen */
+.instr-title {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+}
+
+/* Sørg for at Label i instruksjonsboks har naturlig linjebryt */
+.instr-box Label {
+  -fx-wrap-text: true;
+}
+
+
 .tile-ladder-start { -fx-background-color: lightgreen; }
 .tile-ladder-end   { -fx-background-color: #28d501; }
 .tile-snake-start  { -fx-background-color: #fa6784; }
