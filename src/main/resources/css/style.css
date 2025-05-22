@@ -2,6 +2,9 @@
   -fx-background-color: #c1c4f7;
 }
 
+.label {
+  -fx-text-fill: #333333;}
+
 .root-player {
   -fx-font-family: 'Segoe UI', Arial, sans-serif;
   -fx-background: linear-gradient(to bottom right, #a0b8ff, #c9a0ff);

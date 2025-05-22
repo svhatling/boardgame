@@ -43,10 +43,10 @@ public class BoardGameViewController implements Observer {
 
     switch (gameType) {
       case SNAKES_AND_LADDERS:
-        game = BoardGameFactory.create("snakesandladders", playersData.size());
+        game = BoardGameFactory.createSnakesAndLaddersEasy(playersData.size());
         break;
       case QUIZ:
-        game = BoardGameFactory.create("quiz", playersData.size());
+        game = BoardGameFactory.createQuizGame(playersData.size());
         break;
       default:
         throw new IllegalArgumentException("Invalid game type: " + gameType);

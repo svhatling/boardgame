@@ -42,21 +42,6 @@ public class BoardGameFactory {
         numberOfDice
     );
   }
-
-  public static BoardGame createQuizEasy(int numberOfDice) {
-    return create(
-        "quiz",
-        "config/quiz/quiz_easy_config.json",
-        numberOfDice
-    );
-  }
-
-  public static BoardGame createQuizHard(int numberOfDice) {
-    return create(
-        "quiz",
-        "config/quiz/quiz_hard_config.json",
-        numberOfDice
-    );
   /**
    * Create a Ludo game with the given number of dice.
    *
@@ -64,6 +49,6 @@ public class BoardGameFactory {
    * @return a BoardGame set up for Ludo
    */
   public static BoardGame createQuizGame(int numberOfDice) {
-    return create("quiz", numberOfDice);
+    return create("quiz", "config/quiz/questions.json", numberOfDice);
   }
 }

@@ -5,30 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
-import javafx.scene.control.Button;
-import javafx.scene.control.DialogPane;
-import model.entity.Questions;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 import model.entity.BoardGame;
 import model.entity.Player;
+import model.entity.Questions;
 import model.factory.BoardGameFactory;
 import view.QuizGameView;
 import view.QuizGameView.Observer;
 import view.ui.BoardGameApp;
-import view.ui.MainView;
 import view.ui.PlayerView.PlayerData;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public class QuizGameViewController implements Observer {
+
   private static final int COLS = 10, ROWS = 9;
   private int remainingSteps = 0;
 
@@ -42,7 +39,7 @@ public class QuizGameViewController implements Observer {
 
   public QuizGameViewController(Stage stage, List<PlayerData> pdList) {
     this.stage = stage;
-    this.game = BoardGameFactory.createQuizGame(2);
+    this.game = BoardGameFactory.createQuizGame(pdList.size());
 
     var board = game.getBoard();
     for (PlayerData pd : pdList) {
@@ -66,14 +63,19 @@ public class QuizGameViewController implements Observer {
     stage.show();
   }
 
-  /** Fyller questions‐listen */
+  /**
+   * Fyller questions‐listen
+   */
   private void loadQuestions() {
     try (var is = getClass().getResourceAsStream("/questions.json")) {
-      if (is == null) throw new RuntimeException("Could not find questions.json");
+      if (is == null) {
+        throw new RuntimeException("Could not find questions.json");
+      }
       ObjectMapper mapper = new ObjectMapper();
       List<Questions> list = mapper.readValue(
           is,
-          new TypeReference<>() {}
+          new TypeReference<>() {
+          }
       );
       questionMap.clear();
       list.forEach(q -> questionMap.put(q.getTileId(), q));
@@ -106,9 +108,9 @@ public class QuizGameViewController implements Observer {
       int tileId = cur.getCurrentTile().getTileId();
       if (questionMap.containsKey(tileId)) {
         // still inn rest-steg og vis spørsmål
-        remainingSteps   = steps - i - 1;
-        currentQuestion  = questionMap.get(tileId);
-        questionActive   = true;
+        remainingSteps = steps - i - 1;
+        currentQuestion = questionMap.get(tileId);
+        questionActive = true;
         view.showQuestion(currentQuestion.getQuestion(), currentQuestion.getOptions());
         return;
       }
@@ -155,7 +157,7 @@ public class QuizGameViewController implements Observer {
   private void nextTurnOrEnd() {
     // Sjekk om noen har vunnet (har nådd siste rute)
     Player cur = game.getCurrentplayer();
-    if (cur.getCurrentTile().getTileId() == COLS*ROWS) {
+    if (cur.getCurrentTile().getTileId() == COLS * ROWS) {
       // Vis slutt‐dialog basert på høyest score
       showEndDialog();
       return;
@@ -167,7 +169,9 @@ public class QuizGameViewController implements Observer {
     view.updateView();
   }
 
-  /** Når quizen er ferdig */
+  /**
+   * Når quizen er ferdig
+   */
   private void showEndDialog() {
     Optional<Player> winner = game.getPlayers().stream()
         .max(Comparator.comparingInt(Player::getScore));
@@ -181,7 +185,7 @@ public class QuizGameViewController implements Observer {
     alert.setHeaderText(message);
 
     ButtonType playAgain = new ButtonType("Play Again");
-    ButtonType mainMenu  = new ButtonType("Main Menu");
+    ButtonType mainMenu = new ButtonType("Main Menu");
     alert.getButtonTypes().setAll(playAgain, mainMenu);
 
     DialogPane pane = alert.getDialogPane();
@@ -192,26 +196,16 @@ public class QuizGameViewController implements Observer {
 
     var result = alert.showAndWait();
     if (result.isPresent() && result.get() == playAgain) {
-      restartGame();
+      List<PlayerData> pdList = game.getPlayers().stream()
+          .map(p -> new PlayerData(p.getName(), p.getPiece()))
+          .collect(Collectors.toList());
+      new QuizGameViewController(stage, pdList);
     } else {
-      backToMainMenu();
+      try {
+        new BoardGameApp().start(stage);
+      } catch (Exception e) {
+        e.printStackTrace();}
+      }
     }
   }
-
-  private void restartGame() {
-    List<PlayerData> pdList = game.getPlayers().stream()
-        .map(p -> new PlayerData(p.getName(), p.getPiece()))
-        .collect(Collectors.toList());
-    new QuizGameViewController(stage, pdList);
-  }
-
-  private void backToMainMenu() {
-    try {
-      new BoardGameApp().start(stage);
-    } catch (Exception e) {
-      e.printStackTrace();
-      Platform.exit();
-    }
-  }
-}
 
