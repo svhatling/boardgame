@@ -25,6 +25,8 @@ public class PlayerViewController implements PlayerView.Observer {
    * @param primaryStage     the main application window
    * @param amountController controller for selection of number of players
    * @param previousScene    the scene to return to if the user chooses the "Back" button
+   * @param gameType        the type of game to be played
+   * @param fullscreenHandler the handler for fullscreen mode
    */
   public PlayerViewController(Stage primaryStage,
       AmountOfPlayersViewController amountController,

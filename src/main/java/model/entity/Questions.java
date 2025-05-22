@@ -14,6 +14,8 @@ public class Questions {
 
   /**
    * Getter for the tile ID.
+   *
+   * @return the tile ID
    */
   public int getTileId() {
     return tileId;
@@ -21,6 +23,8 @@ public class Questions {
 
   /**
    * Getter for the question text.
+   *
+   * @return the question text
    */
   public String getQuestion() {
     return question;
@@ -28,6 +32,8 @@ public class Questions {
 
   /**
    * Getter for the list of options.
+   *
+   * @return the list of options
    */
   public List<String> getOptions() {
     return options;
@@ -35,6 +41,8 @@ public class Questions {
 
   /**
    * Getter for the correct answer.
+   *
+   * @return the correct answer
    */
   public String getAnswer() {
     return answer;

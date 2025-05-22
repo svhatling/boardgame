@@ -26,6 +26,8 @@ public class LadderAction implements TileAction {
   /**
    * Performs the ladder action by sending the player to the specified tile.
    * The player is limited to a maximum tile ID of 90.
+   *
+   * @param player the player who is landing on the tile
    */
   @Override
   public void perform(Player player) {

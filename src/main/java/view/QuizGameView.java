@@ -316,6 +316,9 @@ public class QuizGameView extends BorderPane {
 
   /**
    * Creates an instruction point with a number and text.
+   *
+   * @param number the number of the instruction
+   * @param text   the instruction text
    */
   private HBox createInstructionPoint(String number, String text) {
     HBox pointContainer = new HBox(6);
@@ -359,6 +362,8 @@ public class QuizGameView extends BorderPane {
 
   /**
    * Setter for the observer.
+   *
+   * @param obs the observer to set
    */
   public void setObserver(Observer obs) {
     this.observer = obs;
@@ -366,6 +371,9 @@ public class QuizGameView extends BorderPane {
 
   /**
    * Called when a player lands on a question tile.
+   *
+   * @param question the question to display
+   * @param options  the list of answer options
    */
   public void showQuestion(String question, List<String> options) {
     rollButton.setDisable(true);

@@ -70,6 +70,7 @@ public class BoardGameView extends BorderPane {
    * Constructor of view, with header on top, board in the center, and player list on the right.
    *
    * @param game the game model with board, players, and dice.
+   * @param fullscreenHandler the handler for fullscreen mode.
    */
   public BoardGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
     this.game = game;
@@ -293,6 +294,8 @@ public class BoardGameView extends BorderPane {
 
   /**
    * Draw all ladders and snakes from the JSON config file.
+   *
+   * @param configFile the path to the configuration file
    */
   private void drawLaddersAndSnakes(String configFile) {
     GraphicsContext graphicsContext = ladderCanvas.getGraphicsContext2D();
@@ -382,6 +385,8 @@ public class BoardGameView extends BorderPane {
   /**
   * Styling tiles where ladders/snakes start and end. Green for ladders, red for snakes.
   * Light color for the start tile, dark color for the end tile.
+   *
+   * @param configFile the path to the configuration file
   */
   private void styleLaddersAndSnakesTiles(String configFile) {
     Map<Integer, TileConfig> config = BoardConfigLoader.loadConfig(configFile);
@@ -469,6 +474,8 @@ public class BoardGameView extends BorderPane {
   /**
    * Convert a tile ID into row X col coordinates.
    * Row 0 is bottom, col 0 is left.
+   *
+   * @param tileId the tile ID
    */
   private int[] tileIdToRowCol(int tileId) {
     int idx = tileId - 1;
@@ -483,7 +490,6 @@ public class BoardGameView extends BorderPane {
    * Called after the change in the game model.
    */
   public void updateView() {
-    // Header
     Player current = game.getCurrentplayer();
     currentPlayerLabel.setText(
         current != null ? "Current: " + current.getName() : "Current: -"
@@ -494,7 +500,6 @@ public class BoardGameView extends BorderPane {
             : "Last roll: -"
     );
 
-    // Removes the old highlights
     boardGrid.getChildren().forEach(node -> {
       if (node instanceof Label cell) {
         cell.setStyle("");
@@ -502,7 +507,6 @@ public class BoardGameView extends BorderPane {
       }
     });
 
-    // Highlight current tile
     if (current != null) {
       int id = current.getCurrentTile().getTileId();
       for (javafx.scene.Node node : boardGrid.getChildren()) {
@@ -513,7 +517,6 @@ public class BoardGameView extends BorderPane {
       }
     }
 
-    // Rebuilds the player list on the right
     for (Player player : game.getPlayers()) {
       int id = player.getCurrentTile().getTileId();
       Label cell = tileLabels.get(id);
@@ -543,7 +546,6 @@ public class BoardGameView extends BorderPane {
 
     for (Player player : game.getPlayers()) {
       boolean isCurrent = player == current;
-      // makePlayerListOnRight makes a label with icon and player name
       playerListBox.getChildren().add(makePlayerListOnRight(player, isCurrent));
     }
   }

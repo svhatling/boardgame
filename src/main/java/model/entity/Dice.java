@@ -68,6 +68,8 @@ public class Dice extends Die {
 
   /**
    * Setter for the number of sides on each die.
+   *
+   * @param sides the number of sides to set
    */
   @Override
   public void setSides(int sides) {

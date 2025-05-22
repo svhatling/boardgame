@@ -27,6 +27,8 @@ public class Player {
 
   /**
    * Getter for the player's name.
+   *
+   * @return the name of the player
    */
   public String getName() {
     return name;
@@ -34,11 +36,15 @@ public class Player {
 
   /**
    * Getter for the player's piece.
+   *
+   * @return the piece representing the player
    */
   public String getPiece() {return piece;}
 
   /**
    * Getter for the player's current tile.
+   *
+   * @return the current tile of the player
    */
   public Tile getCurrentTile() {
     return currentTile;
@@ -55,6 +61,8 @@ public class Player {
 
   /**
    * Getter for the board.
+   *
+   * @return the board on which the player is playing
    */
   public Board getBoard() {
     return board;
@@ -74,6 +82,8 @@ public class Player {
 
   /**
    * Getter for the player's score.
+   *
+   * @return the score of the player
    */
   public int getScore() {return score;}
 
@@ -93,6 +103,8 @@ public class Player {
 
   /**
    * Prints a message to the console.
+   *
+   * @param message the message to print
    */
   public void sendMessage(String message) {
     System.out.println(message);
