@@ -36,6 +36,8 @@ public class QuizGameView extends BorderPane {
     void onAnswerSelected(String answer);
 
     void onSkipQuestion();
+
+    void onCategorySelected(String playerName);
   }
 
   private Observer observer;
@@ -67,6 +69,10 @@ public class QuizGameView extends BorderPane {
 
   // Score‐pane (valgfritt plasseringssted)
   private final VBox playerListBox = new VBox(5);
+
+  private final VBox categoryPane;
+  private final Button geographyButton = new Button("Geography");
+  private final Button generalButton = new Button("General Knowledge");
 
   public QuizGameView(BoardGame game) {
     this.getStylesheets()
@@ -112,8 +118,6 @@ public class QuizGameView extends BorderPane {
     boardGrid.setGridLinesVisible(true);
     boardGrid.setAlignment(Pos.CENTER);
     buildBoardGrid();
-    StackPane centerStack = new StackPane(boardGrid, quizPane);
-    setCenter(centerStack);
 
     // --- Bygg quiz‐pane (skjult i starten) ---
     quizPane.setVisible(false);
@@ -143,6 +147,33 @@ public class QuizGameView extends BorderPane {
     quizPane.setAlignment(Pos.CENTER);
     quizPane.setPadding(new Insets(20));
     quizPane.setStyle("-fx-background-color: rgba(255,255,255,0.9);");
+
+
+    geographyButton.getStyleClass().add("geography-button");
+    generalButton.getStyleClass().add("general-button");
+    geographyButton.setPrefWidth(150);
+    generalButton.setPrefWidth(150);
+
+    geographyButton.setOnAction(e -> {
+      if (observer != null) observer.onCategorySelected("Geography");
+      showGame();  // skjul kategori-pane, vis brett/quiz
+    });
+    generalButton.setOnAction(e -> {
+      if (observer != null) observer.onCategorySelected("General Knowledge");
+      showGame();
+    });
+
+    categoryPane = new VBox(20, geographyButton, generalButton);
+    categoryPane.setAlignment(Pos.CENTER);
+    categoryPane.setPadding(new Insets(50));
+
+    // --- Bygg center med kategori, brett og quiz ---
+    StackPane centerStack = new StackPane(categoryPane, boardGrid, quizPane);
+    setCenter(centerStack);
+
+    // Skjul brett og quiz inntil kategori valgt
+    boardGrid.setVisible(false);
+    quizPane.setVisible(false);
 
     // --- Instruksjons-boks øverst til venstre ---
     VBox instrBox = createInstructionsBox();
@@ -225,6 +256,12 @@ public class QuizGameView extends BorderPane {
       boolean isCurr = p == current;
       playerListBox.getChildren().add(makePlayerListItem(p, isCurr));
     }
+  }
+
+  public void showGame() {
+    categoryPane.setVisible(false);
+    boardGrid.setVisible(true);
+    quizPane.setVisible(false);
   }
 
   private VBox createInstructionsBox() {

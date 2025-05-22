@@ -342,6 +342,32 @@
   -fx-background-color: linear-gradient(to right, #ff8a8a, #f052a0);
 }
 
+.geography-button {
+  -fx-background-color: linear-gradient(to right, #74b9ff, #0984e3);
+  -fx-text-fill: #ffffff;
+  -fx-border-width: 0;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+}
+
+.geography-button:hover {
+  -fx-background-color: linear-gradient(to right, #81c6ff, #0a74e1);
+  -fx-cursor: hand;
+}
+
+.general-button {
+  -fx-background-color: linear-gradient(to right, #ffeaa7, #fdcb6e);
+  -fx-text-fill: #2d3436;
+  -fx-border-width: 0;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+}
+
+.general-button:hover {
+  -fx-background-color: linear-gradient(to right, #ffec8b, #f1c40f);
+  -fx-cursor: hand;
+}
+
 /* Styles for the roll dice button */
 .roll-dice-button {
   -fx-background-color: #7b68ee;

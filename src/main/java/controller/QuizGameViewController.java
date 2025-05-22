@@ -3,13 +3,15 @@ package controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -67,7 +69,7 @@ public class QuizGameViewController implements Observer {
    * Fyller questions‐listen
    */
   private void loadQuestions() {
-    try (var is = getClass().getResourceAsStream("/questions.json")) {
+    try (var is = getClass().getResourceAsStream("/config/quiz/questions.json")) {
       if (is == null) {
         throw new RuntimeException("Could not find questions.json");
       }
@@ -204,8 +206,42 @@ public class QuizGameViewController implements Observer {
       try {
         new BoardGameApp().start(stage);
       } catch (Exception e) {
-        e.printStackTrace();}
+        e.printStackTrace();
       }
     }
   }
+
+  @Override
+  public void onCategorySelected(String category) {
+    String filename = category.equals("Geography")
+        ? "/config/quiz/geography_questions.json"
+        : "/config/quiz/questions.json";
+
+    questionMap.clear();
+    Set<Integer> tileIds = new HashSet<>();
+
+    ObjectMapper mapper = new ObjectMapper();
+    try (InputStream is = getClass().getResourceAsStream(filename)) {
+      if (is == null) {
+        throw new RuntimeException("Kunne ikke finne fil: " + filename);
+      }
+      // Deserialiser JSON-array til List<Questions>
+      List<Questions> list = mapper.readValue(is, new TypeReference<>() {});
+      for (Questions q : list) {
+        questionMap.put(q.getTileId(), q);
+        tileIds.add(q.getTileId());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      // Her kan du eventuelt vise en feilmelding i GUI-en
+    }
+
+    // Fortell view hvilke ruter som gir spørsmål
+    view.setQuestionTiles(tileIds);
+
+    // Skjul kategori-pane og vis brett
+    view.showGame();
+    view.updateView();
+  }
+}
 
