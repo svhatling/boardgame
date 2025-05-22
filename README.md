@@ -1,11 +1,11 @@
 # Board Game Application – Digital Snakes & Ladders and Quiz
-## 📚 Project: IDATx2003 – Group 002
+## Project: IDATx2003 – Group 002
 This project is developed as part of the course **IDATT2003 – Programming 2** at **NTNU** (Norwegian University of Science and Technology).  
 It is a two-person project with the goal of building a Java application for digital board games with a graphical user interface.
 
 ---
 
-## 🧾 Project Description
+## Project Description
 **Board Game Application** is a desktop application built to provide players with a digital experience of classic board games. 
 The system allows users to:
 - Choose between different game variants (snakes & ladders and quiz)
@@ -18,15 +18,7 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## 👤 Who is it for?
-- Families wanting digital board games
-- Friend groups looking for fun together
-- Schools and educational institutions
-- Anyone who enjoys classic board games in modern format
-
----
-
-## 🚀 How to Use the App
+## How to Use the App
 
 ### 1. **Choose Game Variant**
 - Start the application and select from available game variants
@@ -50,23 +42,23 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## 🧠 Smart Features
-- ✅ **Flexible Game Boards**  
+## Smart Features
+- **Flexible Game Boards**  
   Different board layouts can be loaded from JSON configuration files
-- 🎲 **Realistic Dice Rolling**  
+- **Realistic Dice Rolling**  
   Two dice with random generation
-- 🎯 **Special Fields**  
+- **Special Fields**  
   Ladders, snakes and other interactive elements
-- 🎨 **Graphical Interface**  
+- **Graphical Interface**  
   Intuitive and colorful user interface
-- 📊 **Quiz Mode**  
+- **Quiz Mode**  
   Combination of knowledge and luck
-- 💾 **Player Storage**  
+- **Player Storage**  
   Player data saved in CSV format
 
 ---
 
-## 🏗️ Technical Architecture
+## Technical Architecture
 - **Design Pattern**: Model-View-Controller (MVC)
 - **Data Storage**: JSON (game boards/questions) and CSV (player data)
 - **User Interface**: JavaFX 
@@ -75,7 +67,7 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## 📄 Notes for Developers (IDATT2003)
+## Notes for Developers (IDATT2003)
 - Built using Java and JavaFX
 - Data stored in JSON and CSV files for flexibility
 - Follows MVC architecture for good code structure
@@ -84,7 +76,7 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## 🎮 Game Rules
+## Game Rules
 
 ### Snakes & Ladders
 1. Each player starts at field 1
@@ -101,7 +93,7 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## 📄 Documentation
+## Documentation
 JavaDoc documentation can be found here:  
 [📘 JavaDoc Documentation](link-to-javadoc)
 
