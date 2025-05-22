@@ -93,10 +93,4 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## Documentation
-JavaDoc documentation can be found here:  
-[📘 JavaDoc Documentation](file:///C:/Users/tmal3/OneDrive/Skrivebord/Programmering%202/boardgame/index.html)
-
----
-
 Thank you for using **Board Game Application** – where classic games meet modern technology for maximum fun!
