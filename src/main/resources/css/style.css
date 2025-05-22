@@ -1,0 +1,632 @@
+.root {
+  -fx-background-color: #c1c4f7;
+}
+
+.label {
+  -fx-text-fill: #333333;}
+
+.label-title {
+  -fx-font-size: 36px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #000000;
+}
+
+.label-title-player{
+  -fx-font-size: 32px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2a2a72;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
+  -fx-padding: 0 0 15px 0;
+}
+
+.label-sub {
+  -fx-font-size: 16px;
+  -fx-text-fill: #333333;
+  -fx-padding: 0 0 10 0;
+}
+
+.label-bold {
+  -fx-font-weight: bold;
+}
+
+.label-list-header {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+}
+
+
+.label-sub-player{
+  -fx-font-size: 16px;
+  -fx-text-fill: black;
+  -fx-padding: 0 0 20px 0;
+}
+
+.player-input-row {
+  -fx-background-color: rgba(255, 255, 255, 0.8);
+  -fx-background-radius: 15px;
+  -fx-padding: 15px;
+  -fx-spacing: 10px;
+  -fx-alignment: center-left;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+/* Player Label (Player 1, Player 2, etc.) */
+.player-input-row > .label {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2a2a72;
+  -fx-min-width: 80px;
+}
+
+/* Radio Buttons */
+.radio-button {
+  -fx-padding: 5px;
+  -fx-font-size: 14px;
+}
+
+.radio-button .radio {
+  -fx-background-color: white;
+  -fx-border-color: #7b68ee;
+  -fx-border-width: 2px;
+  -fx-border-radius: 100%;
+  -fx-padding: 3px;
+}
+
+.radio-button:selected .radio .dot {
+  -fx-background-color: #7b68ee;
+  -fx-background-insets: 0;
+}
+
+/* Name Box and Controls */
+.name-box {
+  -fx-spacing: 10px;
+  -fx-alignment: center-left;
+}
+
+.combo-box-player{
+  -fx-background-color: white;
+  -fx-background-radius: 8px;
+  -fx-border-color: #d8dbe0;
+  -fx-border-radius: 8px;
+  -fx-border-width: 2px;
+  -fx-padding: 5px;
+  -fx-min-width: 150px;
+}
+
+.combo-box-player:focused {
+  -fx-border-color: #7b68ee;
+  -fx-effect: dropshadow(three-pass-box, rgba(123, 104, 238, 0.2), 10, 0, 0, 0);
+}
+
+.combo-box-player .list-cell {
+  -fx-text-fill: #333333;
+  -fx-padding: 5px 10px;
+}
+
+.combo-box-player .arrow {
+  -fx-background-color: #7b68ee;
+}
+
+.player-input-name-playerview {
+  -fx-background-color: white;
+  -fx-background-radius: 8px;
+  -fx-border-color: #d8dbe0;
+  -fx-border-radius: 8px;
+  -fx-border-width: 2px;
+  -fx-padding: 8px 10px;
+  -fx-min-width: 150px;
+  -fx-font-size: 14px;
+}
+
+.player-input-name-playerview:focused {
+  -fx-border-color: #7b68ee;
+  -fx-effect: dropshadow(three-pass-box, rgba(123, 104, 238, 0.2), 10, 0, 0, 0);
+}
+
+.check-box-player {
+  -fx-padding: 5px;
+  -fx-font-size: 14px;
+}
+
+.check-box-player .box {
+  -fx-background-color: white;
+  -fx-border-color: #7b68ee;
+  -fx-border-width: 2px;
+  -fx-border-radius: 4px;
+}
+
+.check-box-player:selected .mark {
+  -fx-background-color: white;
+}
+
+.check-box-player:selected .box {
+  -fx-background-color: #7b68ee;
+}
+
+.piece-box {
+  -fx-spacing: 5px;
+  -fx-alignment: center;
+}
+
+/* Toggle Buttons for Pieces */
+.toggle-button {
+  -fx-background-color: white;
+  -fx-text-fill: #333333;
+  -fx-background-radius: 8px;
+  -fx-border-color: #d8dbe0;
+  -fx-border-radius: 8px;
+  -fx-border-width: 2px;
+  -fx-padding: 8px 12px;
+  -fx-cursor: hand;
+  -fx-font-size: 13px;
+}
+
+.toggle-button:hover {
+  -fx-border-color: #7b68ee;
+  -fx-background-color: #f9f7ff;
+}
+
+.toggle-button:selected {
+  -fx-background-color: #7b68ee;
+  -fx-text-fill: white;
+  -fx-border-color: #7b68ee;
+}
+
+.toggle-button:disabled {
+  -fx-opacity: 0.5;
+}
+
+/* Piece Preview */
+.image-view {
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.button-main-player {
+  -fx-background-color: #7b68ee;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 10px 25px;
+  -fx-background-radius: 25px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.button-main-player:hover {
+  -fx-background-color: #6a5acd;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
+  -fx-translate-y: -1px;
+}
+
+/* Back Button Specific */
+.button-main-player.back {
+  -fx-background-color: #e0e0e0;
+  -fx-text-fill: #444444;
+}
+
+.button-main-player.back:hover {
+  -fx-background-color: #d0d0d0;
+}
+
+/* Button Box */
+.button-box-player {
+  -fx-spacing: 15px;
+  -fx-padding: 15px 0 0 0;
+  -fx-alignment: center;
+}
+
+.button-main {
+  -fx-background-color: #a271f8;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+  -fx-cursor: hand;
+  -fx-min-width: 100px;
+}
+
+.button-main:hover {
+  -fx-background-color: #9260e8;
+}
+
+.button-main:pressed {
+  -fx-background-color: #8450d8;
+}
+
+.combo-box {
+  -fx-background-color: #fce4ec;
+  -fx-background-radius: 20;
+  -fx-padding: 5px;
+  -fx-min-width: 120px;
+}
+
+.combo-box .list-cell {
+  -fx-text-fill: #333333;
+  -fx-padding: 4 8;
+}
+
+.combo-box .arrow-button {
+  -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+  -fx-background-color: #a271f8;
+}
+
+.back-button {
+  -fx-background-color: #a271f8;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-background-radius: 20;
+  -fx-padding: 6 12;
+  -fx-cursor: hand;
+}
+
+.player-input-name {
+  -fx-background-color: #fce4ec;
+  -fx-background-radius: 20;
+  -fx-padding: 5px;
+  -fx-pref-width: 150px;
+  -fx-pref-height: 35px;
+}
+
+.checkbox-save {
+  -fx-font-size: 12px;
+  -fx-text-fill: #333333;
+}
+
+.checkbox-save .box {
+  -fx-background-color: #fce4ec;
+  -fx-background-radius: 20;
+  -fx-padding: 5px;
+}
+
+.checkbox-save:selected .mark {
+  -fx-background-color: #a271f8;
+  -fx-background-radius: 20;
+}
+
+.difficulty-button {
+  -fx-background-color: #ffffff;
+  -fx-background-radius: 20px;
+  -fx-padding: 8px 25px;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
+  -fx-cursor: hand;
+  -fx-border-width: 0;
+  -fx-min-width: 120px;
+  -fx-transition: all 0.3s ease;
+}
+
+.difficulty-button:hover {
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0, 0, 2);
+}
+
+.difficulty-button:pressed {
+  -fx-translate-y: 1px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
+}
+
+/* Easy button specific styling */
+.easy-button {
+  -fx-background-color: linear-gradient(to right, #7bed9f, #2ed573);
+  -fx-text-fill: #1e3a29;
+  -fx-border-width: 0;
+}
+
+.easy-button:hover {
+  -fx-background-color: linear-gradient(to right, #87f7a8, #3ae87e);
+}
+
+/* Hard button specific styling */
+.hard-button {
+  -fx-background-color: linear-gradient(to right, #ff7675, #e84393);
+  -fx-text-fill: #ffffff;
+  -fx-border-width: 0;
+}
+
+.hard-button:hover {
+  -fx-background-color: linear-gradient(to right, #ff8a8a, #f052a0);
+}
+
+.geography-button {
+  -fx-background-color: linear-gradient(to right, #74b9ff, #0984e3);
+  -fx-text-fill: #ffffff;
+  -fx-border-width: 0;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+  -fx-font: bold 14px "Arial";
+}
+
+.geography-button:hover {
+  -fx-background-color: linear-gradient(to right, #81c6ff, #0a74e1);
+  -fx-cursor: hand;
+}
+
+.general-button {
+  -fx-background-color: linear-gradient(to right, #ffeaa7, #fdcb6e);
+  -fx-text-fill: #2d3436;
+  -fx-border-width: 0;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+  -fx-font: bold 11px "Arial";
+}
+
+.general-button:hover {
+  -fx-background-color: linear-gradient(to right, #ffec8b, #f1c40f);
+  -fx-cursor: hand;
+}
+
+/* Styles for the roll dice button */
+.roll-dice-button {
+  -fx-background-color: #7b68ee;
+  -fx-background-radius: 25px;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 10px 30px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0, 0, 1);
+  -fx-cursor: hand;
+}
+
+.roll-dice-button:hover {
+  -fx-background-color: #6a5acd;
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0, 0, 2);
+}
+
+.roll-dice-button:pressed {
+  -fx-translate-y: 1px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 0);
+}
+
+.tile {
+  -fx-border-color: black;
+  -fx-border-width: 1px;
+}
+
+.tile-question {
+  -fx-background-color: lightblue;
+}
+
+.instructions-box {
+  -fx-background-color: #d9d4ff;
+  -fx-background-radius: 8;
+  -fx-border-color: #9f8cff;
+  -fx-border-width: 1.5;
+  -fx-border-radius: 8;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
+  -fx-max-width: 280;
+}
+
+.instructions-title {
+  -fx-font-size: 16;
+  -fx-font-weight: bold;
+  -fx-text-fill: #5a3b96;
+  -fx-padding: 0 0 5 0;
+  -fx-alignment: center;
+}
+
+.number-circle {
+  -fx-fill: #6f42c1;
+  -fx-stroke: transparent;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.number-text {
+  -fx-fill: white;
+  -fx-font-size: 11;
+  -fx-font-weight: bold;
+}
+
+.instruction-text {
+  -fx-fill: #442475;
+  -fx-font-size: 12;
+  -fx-line-spacing: -0.5;
+}
+
+/* Updated instr-box style for compatability */
+.instr-box {
+  -fx-background-color: #d9d4ff;
+  -fx-background-radius: 8;
+  -fx-border-color: #9f8cff;
+  -fx-border-width: 1.5;
+  -fx-border-radius: 8;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
+  -fx-max-width: 280;
+}
+
+.instr-title {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+}
+
+.instr-box Label {
+  -fx-wrap-text: true;
+}
+
+
+.tile-ladder-start { -fx-background-color: lightgreen; }
+.tile-ladder-end   { -fx-background-color: #28d501; }
+.tile-snake-start  { -fx-background-color: #fa6784; }
+.tile-snake-end    { -fx-background-color: #ff0f3e; }
+.tile-back-to-start { -fx-background-color: yellow ; }
+
+.main-root {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #667eea, #764ba2);
+  -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.content-box {
+  -fx-background-color: rgba(255, 255, 255, 0.95);
+  -fx-background-radius: 20;
+  -fx-padding: 40;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
+  -fx-max-width: 400;
+  -fx-max-height: 500;
+  -fx-pref-width: 400;
+}
+
+.content-box-amount {
+  -fx-background-color: rgba(255, 255, 255, 0.95);
+  -fx-background-radius: 20;
+  -fx-padding: 40;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
+  -fx-max-width: 600;
+  -fx-max-height: 500;
+  -fx-pref-width: 600;
+}
+
+/* Animation layer for floating shapes */
+.animation-layer {
+  -fx-background-color: transparent;
+}
+
+.floating-shape {
+  -fx-fill: rgba(255, 255, 255, 0.1);
+  -fx-stroke: rgba(255, 255, 255, 0.2);
+  -fx-stroke-width: 1;
+}
+
+
+.main-title {
+  -fx-font-size: 48px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2d3748;
+  -fx-padding: 0 0 20 0;
+  /* Text shadow for depth */
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 2);
+}
+
+
+.game-button {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #667eea, #764ba2);
+  -fx-text-fill: white;
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 50;
+  -fx-cursor: hand;
+  -fx-padding: 15 30;
+
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 15, 0, 0, 5);
+
+  -fx-background-insets: 0;
+  -fx-border-width: 0;
+}
+
+.game-button:hover {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7986ec, #8759c4);
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 20, 0, 0, 8);
+}
+
+.game-button:pressed {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #5a67d8, #6b46a3);
+  -fx-translate-y: 0;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 10, 0, 0, 3);
+}
+
+
+.dialog-pane {
+  -fx-background-color: white;
+  -fx-background-radius: 15;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
+}
+
+.dialog-pane .header-panel {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #667eea, #764ba2);
+  -fx-padding: 20;
+}
+
+.dialog-pane .header-panel .label {
+  -fx-text-fill: white;
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+}
+
+.dialog-pane .button-bar .button {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #667eea, #764ba2);
+  -fx-text-fill: white;
+  -fx-background-radius: 50;
+  -fx-padding: 10 20;
+}
+
+
+.fade-in {
+  -fx-opacity: 0;
+}
+
+.fade-in-active {
+  -fx-opacity: 1;
+}
+
+.button-main:hover {
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(162, 113, 248, 0.4), 10, 0, 0, 5);
+}
+
+.button-main:pressed {
+  -fx-translate-y: 0;
+  -fx-effect: dropshadow(gaussian, rgba(162, 113, 248, 0.2), 5, 0, 0, 2);
+}
+
+.game-button.secondary {
+  -fx-background-color: #e2e8f0;
+  -fx-text-fill: #2d3748;
+}
+
+.game-button.secondary:hover {
+  -fx-background-color: #cbd5e0;
+  -fx-translate-y: -2px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 15, 0, 0, 5);
+}
+
+.game-button.secondary:pressed {
+  -fx-background-color: #a0aec0;
+  -fx-translate-y: 0;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 3);
+}
+
+.label-sub-enhanced {
+  -fx-font-size: 18px;
+  -fx-text-fill: #4a5568;
+  -fx-padding: 0 0 10 0;
+}
+
+.combo-box-enhanced {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 2;
+  -fx-border-radius: 10;
+  -fx-padding: 8;
+  -fx-font-size: 16px;
+  -fx-min-height: 40;
+}
+
+.combo-box-enhanced:hover {
+  -fx-border-color: #667eea;
+}
+
+.combo-box-enhanced:focused {
+  -fx-border-color: #667eea;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 10, 0, 0, 0);
+}
+
+.combo-box-enhanced .list-cell {
+  -fx-text-fill: #333333;
+  -fx-padding: 8 12;
+  -fx-font-size: 16px;
+}
+
+.combo-box-enhanced .arrow-button {
+  -fx-background-color: transparent;
+  -fx-background-radius: 0 10 10 0;
+}
+
+.combo-box-enhanced .arrow {
+  -fx-background-color: #667eea;
+}
+
