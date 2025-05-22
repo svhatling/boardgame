@@ -93,10 +93,4 @@ The application follows MVC architecture and utilizes established software devel
 
 ---
 
-## Documentation
-JavaDoc documentation can be found here:  
-[📘 JavaDoc Documentation](link-to-javadoc)
-
----
-
 Thank you for using **Board Game Application** – where classic games meet modern technology for maximum fun!
