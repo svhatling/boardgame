@@ -4,13 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.*;
-import model.entity.BackToStartAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for loading the board configuration from a JSON file.
  * It reads the file and creates a map of tile IDs with their corresponding actions.
  */
 public class BoardConfigLoader {
+
+  private static final Logger logger =
+      Logger.getLogger(BoardConfigLoader.class.getName());
 
   /**
    * Loads the board configuration from a JSON file.
@@ -38,7 +42,7 @@ public class BoardConfigLoader {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error loading board configuration", e);
     }
 
     return actions;

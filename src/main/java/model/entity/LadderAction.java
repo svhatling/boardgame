@@ -6,8 +6,8 @@ package model.entity;
  */
 public class LadderAction implements TileAction {
 
-  private int destinationTileId;
-  private String message;
+  private final int destinationTileId;
+  private final String message;
 
   /**
    * Constructor for LadderAction.

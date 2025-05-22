@@ -40,7 +40,7 @@ public class Tile {
   }
 
   /**
-   * Uses the tileaction interface to perform the action associated with the tile.
+   * Uses the tile action interface to perform the action associated with the tile.
    *
    * @param player the player that is landing on the tile
    */

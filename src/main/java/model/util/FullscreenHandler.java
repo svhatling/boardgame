@@ -50,7 +50,7 @@ public class FullscreenHandler {
 
     // Makes sure the node can receive key events
     rootNode.setFocusTraversable(true);
-    Platform.runLater(() -> rootNode.requestFocus());
+    Platform.runLater(rootNode::requestFocus);
 
     isSetup = true;
   }

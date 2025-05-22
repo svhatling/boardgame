@@ -1,7 +1,10 @@
 package controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -29,8 +32,10 @@ public class BoardGameViewController implements Observer {
   private final List<PlayerData> playersData;
   private final GameType gameType;
   private final FullscreenHandler fullscreenHandler;
-  private BoardGame game;
-  private BoardGameView view;
+  private final BoardGame game;
+  private final BoardGameView view;
+  private static final Logger logger =
+      Logger.getLogger(BoardGameViewController.class.getName());
 
   /**
    * Builds controller, model, view, and displays the boardgame.
@@ -57,12 +62,12 @@ public class BoardGameViewController implements Observer {
     }
 
     for (PlayerData pd : playersData) {
-      game.addPlayer(new Player(pd.name, game.getBoard(), pd.piece));
+      game.addPlayer(new Player(pd.name(), game.getBoard(), pd.piece()));
     }
-    game.setCurrentPlayer(game.getPlayers().get(0));
+    game.setCurrentPlayer(game.getPlayers().getFirst());
 
     // Initializes and shows the view
-    view = new BoardGameView(game, gameType, fullscreenHandler);
+    view = new BoardGameView(game, fullscreenHandler);
     view.setObserver(this);
 
     boolean wasFullScreen = primaryStage.isFullScreen();
@@ -123,7 +128,7 @@ public class BoardGameViewController implements Observer {
     // Applies CSS styling
     DialogPane pane = alert.getDialogPane();
     pane.getStylesheets().add(
-        getClass().getResource("/css/style.css").toExternalForm()
+        Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm()
     );
     pane.getStyleClass().add("root");
 
@@ -154,7 +159,7 @@ public class BoardGameViewController implements Observer {
     try {
       new BoardGameApp().start(primaryStage);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error starting main menu", e);
       Platform.exit();
     }
   }

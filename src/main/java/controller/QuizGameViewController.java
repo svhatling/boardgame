@@ -9,8 +9,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -36,6 +39,9 @@ public class QuizGameViewController implements Observer {
   private static final int COLS = 10, ROWS = 9;
   private int remainingSteps = 0;
 
+  private static final Logger logger =
+      Logger.getLogger(QuizGameViewController.class.getName());
+
   private final Stage stage;
   private final BoardGame game;
   private final QuizGameView view;
@@ -59,12 +65,12 @@ public class QuizGameViewController implements Observer {
 
     var board = game.getBoard();
     for (PlayerData pd : pdList) {
-      Player p = new Player(pd.name, board, pd.piece);
+      Player p = new Player(pd.name(), board, pd.piece());
       p.setScore(0);
       game.addPlayer(p);
     }
 
-    game.setCurrentPlayer(game.getPlayers().get(0));
+    game.setCurrentPlayer(game.getPlayers().getFirst());
 
     loadQuestions();
 
@@ -110,9 +116,6 @@ public class QuizGameViewController implements Observer {
       return;
     }
     int sum = game.getDice().rollDice();
-
-    List<Integer> vals = game.getDice().getDiceValues();
-    int v1 = vals.get(0), v2 = vals.get(1);
 
     moveAndMaybeAsk(sum);
   }
@@ -207,13 +210,14 @@ public class QuizGameViewController implements Observer {
     alert.setTitle("Game Over");
     alert.setHeaderText(message);
 
-    ButtonType playAgain = new ButtonType("Play Again");
     ButtonType mainMenu = new ButtonType("Main Menu");
+    ButtonType playAgain = new ButtonType("Play Again");
+
     alert.getButtonTypes().setAll(playAgain, mainMenu);
 
     DialogPane pane = alert.getDialogPane();
     pane.getStylesheets().add(
-        getClass().getResource("/css/style.css").toExternalForm()
+        Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm()
     );
     pane.getStyleClass().add("root");
 
@@ -227,7 +231,7 @@ public class QuizGameViewController implements Observer {
       try {
         new BoardGameApp().start(stage);
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.log(Level.SEVERE, "Error starting board game app", e);
       }
     }
   }
@@ -257,7 +261,7 @@ public class QuizGameViewController implements Observer {
         tileIds.add(q.getTileId());
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "Error loading questions", e);
     }
 
     view.setQuestionTiles(tileIds);

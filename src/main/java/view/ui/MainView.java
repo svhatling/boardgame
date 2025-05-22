@@ -1,6 +1,7 @@
 package view.ui;
 
 import controller.MainViewController;
+import java.util.Objects;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -71,8 +72,8 @@ public class MainView extends Application {
     root.prefHeightProperty().bind(primaryStage.heightProperty());
 
     Scene scene = new Scene(root, 800, 600);
-    scene.getStylesheets().add(getClass()
-        .getResource("/css/style.css")
+    scene.getStylesheets().add(Objects.requireNonNull(getClass()
+            .getResource("/css/style.css"))
         .toExternalForm());
 
     primaryStage.setScene(scene);

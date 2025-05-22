@@ -10,7 +10,7 @@ import model.exception.BoardNotInitializedException;
  */
 public class Board {
 
-  private Map<Integer, Tile> tiles;
+  private final Map<Integer, Tile> tiles;
 
   /**
    * Initializes a new Board instance with an empty set of tiles.

@@ -30,7 +30,6 @@ public class PlayerView extends VBox {
   private final List<PlayerRecord> savedRecords;
   private final ObservableList<String> savedPlayers;
   private final List<PlayerInputRow> rows = new ArrayList<>();
-  private final FullscreenHandler fullscreenHandler;
   private Observer observer;
 
   /**
@@ -48,14 +47,13 @@ public class PlayerView extends VBox {
    */
   public PlayerView(int numPlayers, GameType gameType, FullscreenHandler fullscreenHandler) {
     super(20);
-    this.fullscreenHandler = fullscreenHandler;
     this.saveToCSV = new SaveToCSV("players.csv");
     ReadFromCSV r = new ReadFromCSV("players.csv");
     this.savedRecords = FXCollections.observableArrayList(r.readPlayers());
 
     this.savedPlayers = FXCollections.observableArrayList(
         savedRecords.stream()
-            .map(pr -> pr.name)
+            .map(PlayerRecord::name)
             .collect(Collectors.toList())
     );
 
@@ -97,7 +95,7 @@ public class PlayerView extends VBox {
     this.getChildren().add(buttonBox);
 
     this.getStyleClass().add("root");
-    this.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+    this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     fullscreenHandler.setupFullscreenHandling(this);
   }
@@ -138,7 +136,7 @@ public class PlayerView extends VBox {
               .collect(Collectors.toList());
 
           if (!opts.isEmpty()) {
-            row.setSelectedPiece(opts.get(0));
+            row.setSelectedPiece(opts.getFirst());
             row.setPieceOptions(opts);
           } else {
             row.setSelectedPiece(null);
@@ -172,7 +170,7 @@ public class PlayerView extends VBox {
       String name = row.getPlayerName();
       String piece = row.getSelectedPiece();
       boolean isNewPlayer = row.shouldSaveNewPlayer() && savedRecords.stream()
-          .noneMatch(rec -> rec.name.equals(name));
+          .noneMatch(rec -> rec.name().equals(name));
       if (isNewPlayer) {
         PlayerRecord newRecord = new PlayerRecord(name, piece);
         savedRecords.add(newRecord);
@@ -187,12 +185,9 @@ public class PlayerView extends VBox {
   }
 
   /**
-   * Static class for the data of the players that is used in the playerview class.
-   */
-  public static class PlayerData {
-
-    public final String name;
-    public final String piece;
+     * Static class for the data of the players that is used in the playerview class.
+     */
+    public record PlayerData(String name, String piece) {
 
     /**
      * Constructor for PlayerData.
@@ -200,11 +195,9 @@ public class PlayerView extends VBox {
      * @param name  the name of the player
      * @param piece the piece representing the player
      */
-    public PlayerData(String name, String piece) {
-      this.name = name;
-      this.piece = piece;
+    public PlayerData {
     }
-  }
+    }
 
   /**
    * Sets the observer for this PlayerView.

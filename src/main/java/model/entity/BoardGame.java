@@ -3,8 +3,6 @@ package model.entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import model.entity.BackToStartAction;
-import model.entity.LadderAction;
 import model.util.BoardConfigLoader;
 import model.util.BoardConfigLoader.TileConfig;
 import model.exception.InvalidGameTypeException;
@@ -19,7 +17,7 @@ import model.exception.BoardNotInitializedException;
 public class BoardGame {
 
   private Board board;
-  private List<Player> players;
+  private final List<Player> players;
   private Dice dice;
   private Player currentplayer;
 

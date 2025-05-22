@@ -1,9 +1,7 @@
 package view;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javafx.geometry.Insets;
@@ -53,13 +51,11 @@ public class QuizGameView extends BorderPane {
   private Observer observer;
   private final List<Player> players;
   private final BoardGame game;
-  private final FullscreenHandler fullscreenHandler;
   private Set<Integer> questionTileIds = Collections.emptySet();
 
   private static final int COLS = 10, ROWS = 9;
 
   private final GridPane boardGrid = new GridPane();
-  private final Map<Integer, Label> tileLabels = new HashMap<>();
 
   private final Label currentPlayerLabel = new Label("Current player");
   private final ImageView die1 = new ImageView();
@@ -71,15 +67,11 @@ public class QuizGameView extends BorderPane {
   private final Label questionLabel = new Label();
   private final ToggleGroup answerGroup = new ToggleGroup();
   private final VBox answersBox = new VBox(10);
-  private final HBox quizButtons = new HBox(10);
-  private final Button submitButton = new Button("Submit");
   private final Button skipButton = new Button("Skip");
 
   private final VBox playerListBox = new VBox(5);
 
   private final VBox categoryPane;
-  private final Button geographyButton = new Button("Geography");
-  private final Button generalButton = new Button("General Knowledge");
 
   /**
    * Constructor for QuizGameView.
@@ -93,7 +85,6 @@ public class QuizGameView extends BorderPane {
         .add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
     this.players = game.getPlayers();
     this.game = game;
-    this.fullscreenHandler = fullscreenHandler;
 
     rollButton.setDisable(true);
 
@@ -136,6 +127,7 @@ public class QuizGameView extends BorderPane {
     quizPane.setVisible(false);
     questionLabel.getStyleClass().add("label-sub");
     answersBox.setPadding(new Insets(10));
+    Button submitButton = new Button("Submit");
     submitButton.getStyleClass().add("button-main");
     skipButton.getStyleClass().add("button-main");
 
@@ -153,6 +145,7 @@ public class QuizGameView extends BorderPane {
 
     skipButton.setDisable(true);
 
+    HBox quizButtons = new HBox(10);
     quizButtons.getChildren().addAll(submitButton, skipButton);
     quizButtons.setAlignment(Pos.CENTER);
 
@@ -161,7 +154,9 @@ public class QuizGameView extends BorderPane {
     quizPane.setPadding(new Insets(20));
     quizPane.setStyle("-fx-background-color: rgba(255,255,255,0.9);");
 
+    Button geographyButton = new Button("Geography");
     geographyButton.getStyleClass().add("geography-button");
+    Button generalButton = new Button("General Knowledge");
     generalButton.getStyleClass().add("general-button");
     geographyButton.setPrefWidth(150);
     generalButton.setPrefWidth(150);
@@ -233,8 +228,7 @@ public class QuizGameView extends BorderPane {
 
     // Clears styles and graphics
     boardGrid.getChildren().forEach(node -> {
-      if (node instanceof Label) {
-        Label lbl = (Label) node;
+      if (node instanceof Label lbl) {
         lbl.setStyle("");
         lbl.setGraphic(null);
       }
@@ -411,7 +405,6 @@ public class QuizGameView extends BorderPane {
    */
   private void buildBoardGrid() {
     boardGrid.getChildren().clear();
-    tileLabels.clear();
     boardGrid.setGridLinesVisible(false);
     boardGrid.setAlignment(Pos.CENTER);
 
@@ -429,7 +422,6 @@ public class QuizGameView extends BorderPane {
       }
 
       boardGrid.add(cell, col, ROWS - 1 - row);
-      tileLabels.put(id, cell);
     }
   }
 

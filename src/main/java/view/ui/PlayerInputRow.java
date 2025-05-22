@@ -24,7 +24,6 @@ import model.util.PieceImageLoader;
  */
 public class PlayerInputRow extends HBox {
 
-  private final ToggleGroup nameGroup = new ToggleGroup();
   private final RadioButton newRadio     = new RadioButton("New player");
   private final RadioButton savedRadio   = new RadioButton("Saved player");
   private final ComboBox<String> savedCombo;
@@ -38,7 +37,6 @@ public class PlayerInputRow extends HBox {
 
   private final ImageView piecePreview   = new ImageView();
 
-  private final List<PlayerRecord> savedRecords;
   private Consumer<Void> onPieceChanged;
 
   /**
@@ -53,7 +51,6 @@ public class PlayerInputRow extends HBox {
       List<String> pieceOptions,
       List<PlayerRecord> savedRecords) {
     super(10);
-    this.savedRecords = savedRecords;
     setAlignment(Pos.CENTER);
     this.setSpacing(10);
     this.getStyleClass().add("player-row");
@@ -61,6 +58,7 @@ public class PlayerInputRow extends HBox {
     Label lbl = new Label(label);
     lbl.getStyleClass().add("player-label");
 
+    ToggleGroup nameGroup = new ToggleGroup();
     newRadio.setToggleGroup(nameGroup);
     savedRadio.setToggleGroup(nameGroup);
     newRadio.setSelected(true);
@@ -82,9 +80,9 @@ public class PlayerInputRow extends HBox {
         if (sel != null) {
           nameField.setText(sel);
           savedRecords.stream()
-              .filter(r -> r.name.equals(sel))
+              .filter(r -> r.name().equals(sel))
               .findFirst()
-              .ifPresent(r -> setSelectedPiece(r.piece));
+              .ifPresent(r -> setSelectedPiece(r.piece()));
         }
       } else {
         nameField.clear();
@@ -100,9 +98,9 @@ public class PlayerInputRow extends HBox {
         if (sel != null) {
           nameField.setText(sel);
           savedRecords.stream()
-              .filter(r -> r.name.equals(sel))
+              .filter(r -> r.name().equals(sel))
               .findFirst()
-              .ifPresent(r -> setSelectedPiece(r.piece));
+              .ifPresent(r -> setSelectedPiece(r.piece()));
           notifyPieceChanged();
           updatePreview(getSelectedPiece());
         }

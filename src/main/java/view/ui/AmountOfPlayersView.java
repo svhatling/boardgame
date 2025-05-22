@@ -2,6 +2,7 @@ package view.ui;
 
 import controller.AmountOfPlayersViewController;
 import controller.PlayerViewController;
+import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,8 +21,6 @@ import view.BoardGameObserver;
  */
 public class AmountOfPlayersView implements BoardGameObserver {
 
-  private final FullscreenHandler fullscreenHandler;
-
   /**
    * Constructs player selection view. The layout resizes with the stage.
    *
@@ -29,9 +28,8 @@ public class AmountOfPlayersView implements BoardGameObserver {
    * @param gameType the name of the game variant ("Ladders & Snakes" or "Ludo")
    */
   public AmountOfPlayersView(Stage stage, GameType gameType, FullscreenHandler fullscreenHandler) {
-    this.fullscreenHandler = fullscreenHandler;
-    // creates controller and registers this view as observer
-    AmountOfPlayersViewController controller = new AmountOfPlayersViewController(this);
+    // creates the controller and registers this view as observer
+    AmountOfPlayersViewController controller = new AmountOfPlayersViewController();
 
     // header label
     Label title = new Label(gameType.getDisplayName());
@@ -75,8 +73,8 @@ public class AmountOfPlayersView implements BoardGameObserver {
 
     // create the scene with styling
     Scene scene = new Scene(root);
-    scene.getStylesheets().add(getClass()
-        .getResource("/css/style.css")
+    scene.getStylesheets().add(Objects.requireNonNull(getClass()
+            .getResource("/css/style.css"))
         .toExternalForm());
 
     // changes the scene and keeps the screen size
@@ -94,14 +92,8 @@ public class AmountOfPlayersView implements BoardGameObserver {
     fullscreenHandler.setupFullscreenHandling(root);
   }
 
-  /**
-   * Called when the player count is chosen.
-   *
-   * @param count the number of players selected
-   */
   @Override
-  public void onPlayerCountChosen(int count) {
-    // TODO: Go to the PlayerView using count
-    System.out.println("Starting game with " + count + " players");
+  public void onBoardReady() {
+    // No action needed
   }
 }

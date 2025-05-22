@@ -3,7 +3,6 @@ package controller;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Class that saves player records to a CSV file.
@@ -27,7 +26,7 @@ public class SaveToCSV {
    */
   public void addPlayer(PlayerRecord player) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-      writer.write(player.name + "," + player.piece);
+      writer.write(player.name() + "," + player.piece());
       writer.newLine();
       System.out.println("Added player to: " + filename);
     } catch (IOException e) {

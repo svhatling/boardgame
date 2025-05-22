@@ -4,10 +4,10 @@ package model.entity;
  * This class represents a player in the game.
  */
 public class Player {
-  private String name;
+  private final String name;
   private Tile currentTile;
   private final Board board;
-  private String piece;
+  private final String piece;
   private int score;
 
   /**

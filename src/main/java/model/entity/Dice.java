@@ -10,11 +10,11 @@ import model.exception.InvalidDiceRollException;
  */
 public class Dice extends Die {
 
-  private List<Die> dice;
+  private final List<Die> dice;
   private int sum;
 
   /**
-   * Constructs a Dice object with the specified number of dice and sides.
+   * Constructs dice objects with the specified number of dice and sides.
    *
    * @param numberOfDice the number of dice to create
    * @param sides the number of sides on each die
@@ -35,7 +35,7 @@ public class Dice extends Die {
   /**
    * Rolls the dice.
    *
-   * @return the sum of the values of the rolled dice
+   * @return the sum of the values from the rolled dice
    */
   public int rollDice() {
     sum = 0;

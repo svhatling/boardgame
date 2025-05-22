@@ -1,6 +1,9 @@
 package view.ui;
 
 import controller.MainViewController;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -18,11 +21,14 @@ import model.util.FullscreenHandler;
 /**
  * Main class for the board game.
  * <p>
- * Shows a menu for choosing a game variant, and user action
- * tasks are given to the relevant view classes.
+ * Shows a menu for choosing a game variant, and user action tasks are given to the relevant view
+ * classes.
  * </p>
  */
 public class BoardGameApp extends Application {
+
+  private static final Logger logger =
+      Logger.getLogger(BoardGameApp.class.getName());
   private final MainViewController controller = new MainViewController();
   private FullscreenHandler fullscreenHandler;
 
@@ -34,7 +40,7 @@ public class BoardGameApp extends Application {
   @Override
   public void start(Stage primaryStage) {
     this.fullscreenHandler = new FullscreenHandler(primaryStage);
-    Label title = new Label("Boardgame");
+    Label title = new Label("Board game");
     title.getStyleClass().add("label-title");
 
     Button laddersButton = new Button("Ladders & Snakes");
@@ -54,8 +60,8 @@ public class BoardGameApp extends Application {
     });
 
     VBox layout = new VBox(20, title, laddersButton, quizButton);
-    layout.setAlignment(Pos.CENTER);
     layout.setMaxWidth(300);
+    layout.setAlignment(Pos.CENTER);
 
     StackPane root = new StackPane(layout);
     root.getStyleClass().add("root");
@@ -65,8 +71,8 @@ public class BoardGameApp extends Application {
     root.prefHeightProperty().bind(primaryStage.heightProperty());
 
     Scene scene = new Scene(root, 800, 600);
-    scene.getStylesheets().add(getClass()
-        .getResource("/css/style.css")
+    scene.getStylesheets().add(Objects.requireNonNull(getClass()
+            .getResource("/css/style.css"))
         .toExternalForm());
 
     primaryStage.setTitle("Choose Game");
@@ -77,9 +83,8 @@ public class BoardGameApp extends Application {
   }
 
   /**
-   * Application entry point.
-   * Exception handling before launching the application. It is practical
-   *  to see whether the program can launch or has errors.
+   * Application entry point. Exception handling before launching the application. It is practical
+   * to see whether the program can launch or has errors.
    *
    * @param args command-line arguments
    */
@@ -87,7 +92,7 @@ public class BoardGameApp extends Application {
     // Handler for uncaught exceptions on any thread
     Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
       // Print to console
-      throwable.printStackTrace();
+      logger.log(Level.SEVERE, "Uncaught exception in thread: " + thread.getName(), throwable);
 
       // Show an error dialog in the user interface
       Platform.runLater(() -> {
@@ -100,5 +105,5 @@ public class BoardGameApp extends Application {
     });
 
     launch(args);
-    }
   }
+}

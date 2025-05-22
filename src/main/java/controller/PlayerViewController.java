@@ -9,7 +9,7 @@ import view.ui.PlayerView;
 import view.ui.PlayerView.PlayerData;
 
 /**
- * Controller for the playerview screen.
+ * Controller for the player view screen.
  * Handles events from PlayerView and starts the game.
  */
 public class PlayerViewController implements PlayerView.Observer {
@@ -23,7 +23,7 @@ public class PlayerViewController implements PlayerView.Observer {
    * Constructor of the controller.
    *
    * @param primaryStage     the main application window
-   * @param amountController controller for selection of amount of players
+   * @param amountController controller for selection of number of players
    * @param previousScene    the scene to return to if the user chooses the "Back" button
    */
   public PlayerViewController(Stage primaryStage,

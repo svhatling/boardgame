@@ -9,7 +9,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -22,7 +21,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import model.entity.BoardGame;
 import model.entity.Player;
-import model.logic.GameType;
 import model.util.BoardConfigLoader;
 import model.util.BoardConfigLoader.TileConfig;
 import java.util.List;
@@ -48,9 +46,7 @@ public class BoardGameView extends BorderPane {
   private String chosenConfigFile = Easy_config;
 
   private final BoardGame game;
-  private final FullscreenHandler fullscreenHandler;
   private Observer observer;
-  private GameType gameType;
 
   // UI, text showing current player, all players, and dice roll.
   private final Label currentPlayerLabel = new Label("Current: -");
@@ -64,21 +60,17 @@ public class BoardGameView extends BorderPane {
   private final Canvas ladderCanvas = new Canvas(500, 450);
 
   private final VBox difficultyPane;
-  private final Button easyButton;
-  private final Button hardButton;
   private final Button rollButton;
   private final StackPane boardPane;
-  private final StackPane centerStack;
   private final VBox playerListBox  = new VBox(5);
   private final Map<Integer, Label> tileLabels = new HashMap<>();
 
   /**
    * Constructor of view, with header on top, board in the center, and player list on the right.
    *
-   * @param game the game model with board, players and dice.
+   * @param game the game model with board, players, and dice.
    */
-  public BoardGameView(BoardGame game, GameType gameType, FullscreenHandler fullscreenHandler) {
-    this.fullscreenHandler = fullscreenHandler;
+  public BoardGameView(BoardGame game, FullscreenHandler fullscreenHandler) {
     this.game = game;
     // Using css styling
     this.getStyleClass().add("root-boardgame");
@@ -149,18 +141,18 @@ public class BoardGameView extends BorderPane {
 
     ladderCanvas.widthProperty().bind(boardPane.widthProperty().subtract(20));
     ladderCanvas.heightProperty().bind(boardPane.heightProperty().subtract(20));
-    ladderCanvas.widthProperty().addListener((obs, oldW, newW) -> {
-      drawLaddersAndSnakes(chosenConfigFile);
-    });
-    ladderCanvas.heightProperty().addListener((obs, oldH, newH) -> {
-      drawLaddersAndSnakes(chosenConfigFile);
-    });
+    ladderCanvas.widthProperty().addListener((obs, oldW, newW) ->
+      drawLaddersAndSnakes(chosenConfigFile)
+    );
+    ladderCanvas.heightProperty().addListener((obs, oldH, newH) ->
+      drawLaddersAndSnakes(chosenConfigFile)
+    );
 
 
     //Difficulty buttons
-    easyButton = new Button("Easy");
+    Button easyButton = new Button("Easy");
     easyButton.getStyleClass().addAll("difficulty-button", "easy-button");
-    hardButton = new Button("Hard");
+    Button hardButton = new Button("Hard");
     hardButton.getStyleClass().addAll("difficulty-button", "hard-button");
     easyButton.setPrefWidth(100);
     hardButton.setPrefWidth(100);
@@ -172,7 +164,7 @@ public class BoardGameView extends BorderPane {
     difficultyPane.setPadding(new Insets(20));
 
     //Stack: difficulty on top of board
-    centerStack = new StackPane(difficultyPane, boardPane);
+    StackPane centerStack = new StackPane(difficultyPane, boardPane);
     setCenter(centerStack);
 
     //Button actions
@@ -216,16 +208,13 @@ public class BoardGameView extends BorderPane {
    * Creates an instruction box with a title and numbered points.
    */
   private VBox createImprovedInstructionsBox() {
-    // Main container
     VBox instructionsBox = new VBox(8);
-    instructionsBox.setPadding(new Insets(10));
     instructionsBox.getStyleClass().add("instructions-box");
+    instructionsBox.setPadding(new Insets(10));
 
-    // Title
     Label title = new Label("This is how you play:");
     title.getStyleClass().add("instructions-title");
 
-    // Instruction points
     VBox instructionPoints = new VBox(6);
     HBox point1 = createInstructionPoint("1", "Choose difficulty.");
     HBox point2 = createInstructionPoint("2", "Press \\\"Roll Dice\\\" to start the game");
@@ -235,7 +224,6 @@ public class BoardGameView extends BorderPane {
 
     instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
 
-    // Adds all the elements to the main container
     instructionsBox.getChildren().addAll(title, instructionPoints);
     instructionsBox.setAlignment(Pos.CENTER);
 
@@ -344,26 +332,24 @@ public class BoardGameView extends BorderPane {
       double y2 = to > from ? centerY2 + offsetY : centerY2 - offsetY;
 
       Color ladderColor = to > from ? Color.GREEN : Color.RED;
-      drawLadder(graphicsContext, x1, y1, x2, y2, cellWidth * 0.1, 5, ladderColor);
+      drawLadder(graphicsContext, x1, y1, x2, y2, cellWidth * 0.1, ladderColor);
     }
   }
 
   /**
    * Draws a ladder.
    *
+   * @param x1,y1           start tile
+   * @param x2,y2           end tile
    * @param graphicsContext GraphicsContext
-   * @param x1,y1 start tile
-   * @param x2,y2 end tile
-   * @param offset how far from the middle the poles should be placed
-   * @param steps number of steps
-   * @param color color on the ladders
-   *
+   * @param offset          how far from the middle the poles should be placed
+   * @param color           color on the ladders
    */
 
   private void drawLadder(GraphicsContext graphicsContext,
       double x1, double y1,
       double x2, double y2,
-      double offset, int steps, Color color) {
+      double offset, Color color) {
 
     graphicsContext.setStroke(color);
     graphicsContext.setLineWidth(4);
@@ -378,8 +364,8 @@ public class BoardGameView extends BorderPane {
     graphicsContext.strokeLine(x1 + px, y1 + py, x2 + px, y2 + py);
     graphicsContext.strokeLine(x1 - px, y1 - py, x2 - px, y2 - py);
 
-    for (int i = 1; i <= steps; i++) {
-      double t = i / (double)(steps + 1);
+    for (int i = 1; i <= 5; i++) {
+      double t = i / (double)(5 + 1);
       double cx = x1 + dx * t;
       double cy = y1 + dy * t;
       graphicsContext.strokeLine(cx - px, cy - py, cx + px, cy + py);
@@ -410,9 +396,7 @@ public class BoardGameView extends BorderPane {
       if (to > from) {
         fromCell.getStyleClass().add("tile-ladder-start");
         toCell  .getStyleClass().add("tile-ladder-end");
-      } else if (to == 1){
-        fromCell.getStyleClass().add("tile-back-to-start");
-      }else {
+      } else {
         fromCell.getStyleClass().add("tile-snake-start");
         toCell  .getStyleClass().add("tile-snake-end");
       }
@@ -505,8 +489,7 @@ public class BoardGameView extends BorderPane {
 
     // Removes the old highlights
     boardGrid.getChildren().forEach(node -> {
-      if (node instanceof Label) {
-        Label cell = (Label) node;
+      if (node instanceof Label cell) {
         cell.setStyle("");
         cell.setGraphic(null);
       }
@@ -517,7 +500,7 @@ public class BoardGameView extends BorderPane {
       int id = current.getCurrentTile().getTileId();
       for (javafx.scene.Node node : boardGrid.getChildren()) {
         if (node instanceof Label && ((Label) node).getText().equals(String.valueOf(id))) {
-          ((Label)node).setStyle("-fx-background-color: lightblue;");
+          (node).setStyle("-fx-background-color: lightblue;");
           break;
         }
       }
