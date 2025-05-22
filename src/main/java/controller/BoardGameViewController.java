@@ -43,6 +43,8 @@ public class BoardGameViewController implements Observer {
    *
    * @param primaryStage the main application window
    * @param playersData  the list of players with pieces
+   * @param gameType     the type of game to be played
+   * @param fullscreenHandler the handler for fullscreen mode
    */
   public BoardGameViewController(Stage primaryStage, List<PlayerData> playersData, GameType gameType,
       FullscreenHandler fullscreenHandler) {

@@ -21,6 +21,8 @@ public class BackToStartAction implements TileAction {
 
   /**
    * Gets the ID of the destination tile.
+   *
+   * @param player the player to which the action is performed
    */
   @Override
   public void perform(Player player) {

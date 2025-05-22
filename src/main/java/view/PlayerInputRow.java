@@ -154,12 +154,16 @@ public class PlayerInputRow extends HBox {
     }
   }
 
-  /** Getter for the player name */
+  /** Getter for the name of the player.
+   * @return the name of the player without leading or trailing spaces.
+   */
   public String getPlayerName() {
     return nameField.getText().trim();
   }
 
-  /** Getter for the selected piece */
+  /** Getter for the selected piece.
+   * @return the selected piece or null if none is selected.
+   */
   public String getSelectedPiece() {
     Toggle sel = pieceGroup.getSelectedToggle();
     return sel == null ? null : (String) sel.getUserData();
@@ -191,7 +195,10 @@ public class PlayerInputRow extends HBox {
     }
   }
 
-  /** Setter for the selected piece.*/
+  /**
+   * Setter for the selected piece.
+   * @param piece the piece to select
+   */
   public void setSelectedPiece(String piece) {
     for (ToggleButton btn : pieceButtons) {
       if (Objects.equals(btn.getUserData(), piece)) {
@@ -204,7 +211,9 @@ public class PlayerInputRow extends HBox {
     updatePreview(null);
   }
 
-  /** @return true if the player should be saved to the CSV file. */
+  /**
+   * Method to check if the player is a new player.
+   * @return true if the player should be saved to the CSV file. */
   public boolean shouldSaveNewPlayer() {
     return newRadio.isSelected() && saveNewCheck.isSelected();
   }

@@ -55,6 +55,12 @@ public class BoardConfigLoader {
     public int to;
     public String message;
 
+    /**
+     * Constructor for TileConfig.
+     *
+     * @param to      the destination tile ID
+     * @param message a message to be displayed when the action is performed
+     */
     public TileConfig(int to, String message) {
       this.to = to;
       this.message = message;

@@ -31,6 +31,7 @@ public class AmountOfPlayersView implements BoardGameObserver {
    *
    * @param stage    the primary stage to display the scene on
    * @param gameType the name of the game variant ("Ladders & Snakes" or "Quiz")
+   * @param fullscreenHandler the handler for fullscreen mode
    */
   public AmountOfPlayersView(Stage stage, GameType gameType, FullscreenHandler fullscreenHandler) {
     // creates the controller and registers this view as observer
@@ -116,6 +117,11 @@ public class AmountOfPlayersView implements BoardGameObserver {
     fullscreenHandler.setupFullscreenHandling(root);
   }
 
+  /**
+   * Updates the view when the board is ready.
+   * <p>This method is called when the board is ready.
+   * It does not perform any action in this view.
+   */
   @Override
   public void onBoardReady() {
     // No action needed
