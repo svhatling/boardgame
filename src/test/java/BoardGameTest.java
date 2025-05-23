@@ -14,8 +14,8 @@ class BoardGameTest {
   @BeforeEach
   void setUp() {
     game = new BoardGame();
-    game.createBoard("snakesandladders"); // Opprett spillbrett for Snakes and Ladders
-    game.createDice(2); // Opprett 2 terninger
+    game.createBoard("snakesandladders");
+    game.createDice(2);
     player1 = new Player("Player1", game.getBoard(), "Car");
     player2 = new Player("Player2", game.getBoard(), "Hat");
     game.addPlayer(player1);
