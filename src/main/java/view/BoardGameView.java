@@ -228,9 +228,10 @@ public class BoardGameView extends BorderPane {
     HBox point2 = createInstructionPoint("2", "Press \\\"Roll Dice\\\" to start the game");
     HBox point3 = createInstructionPoint("3", "Your piece will automatically move the amount of spaces from the dice roll.");
     HBox point4 = createInstructionPoint("4", "Red ladders bring you down and green ladders bring you up.");
-    HBox point5 = createInstructionPoint("5", "The first player to reach the end wins!");
+    HBox point5 = createInstructionPoint("5", "The yellow tile takes you back to start.");
+    HBox point6 = createInstructionPoint("5", "The first player to reach the end wins!");
 
-    instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5);
+    instructionPoints.getChildren().addAll(point1, point2, point3, point4, point5, point6);
 
     instructionsBox.getChildren().addAll(title, instructionPoints);
     instructionsBox.setAlignment(Pos.CENTER);

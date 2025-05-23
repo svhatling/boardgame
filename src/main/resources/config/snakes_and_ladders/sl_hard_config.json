@@ -49,6 +49,14 @@
       }
     },
     {
+      "id": 60,
+      "action": {
+        "type": "BactToStartAction",
+        "destinationTileId": 1,
+        "description": "Back to Start!"
+      }
+    },
+    {
       "id": 68,
       "action": {
         "type": "LadderAction",
