@@ -11,10 +11,10 @@ The system allows users to:
 - Choose between different game variants (snakes & ladders and quiz)
 - Play with up to 5 players simultaneously
 - Choose between different game boards via configuration files
-- Enjoy graphical user interface
-- Compete to reach the goal first in a fun and engaging gaming experience
+- Graphical user interface
+- Compete to reach the goal first
 
-The application follows MVC architecture and utilizes established software development principles such as SOLID and low coupling/high cohesion.
+The application follows MVC architecture and utilizes software development principles such as SOLID and low coupling/high cohesion.
 
 ---
 
@@ -37,8 +37,8 @@ The application follows MVC architecture and utilizes established software devel
 - Perform special actions when landing on special fields
 
 ### 4. **Finish**
-- See the winner being crowned
-- Start new game or check out the other one
+- See the winner
+- Start new game or go back to main menu
 
 ---
 
@@ -51,8 +51,6 @@ The application follows MVC architecture and utilizes established software devel
   Ladders, snakes and other interactive elements
 - **Graphical Interface**  
   Intuitive and colorful user interface
-- **Quiz Mode**  
-  Combination of knowledge and luck
 - **Player Storage**  
   Player data saved in CSV format
 
@@ -83,14 +81,13 @@ The application follows MVC architecture and utilizes established software devel
 2. Roll two dice and move the sum of the eyes
 3. Land at the bottom of a ladder → climb up
 4. Land at the top of a snake → slide down
-5. First to field 90 wins!
+5. Land at "back to start" tile → moved back to start tile
+6. First to field 90 wins
 
 ### Quiz
 1. Answer questions to be able to move
 2. Correct answer = 1 point
 3. Wrong answer or skip = 0 points
-4. Combination of knowledge and strategy
+5. Player with most points when one reaches tile 90 wins! (If players have the same amount of points, the first one to reach tile 90 wins)
 
 ---
-
-Thank you for using **Board Game Application** – where classic games meet modern technology for maximum fun!
