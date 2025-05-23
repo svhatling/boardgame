@@ -23,6 +23,8 @@ public class FullscreenHandler {
   /**
    * Sets up fullscreen handling for the given node. Should be called once when the view is
    * initialized.
+   *
+   * @param rootNode the root node of the scene to set up fullscreen handling for
    */
   public void setupFullscreenHandling(Node rootNode) {
     if (isSetup) {

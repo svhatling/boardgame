@@ -10,7 +10,8 @@ public class BoardGameFactory {
   /**
    * Create a new BoardGame of the given type with the specified number of dice.
    *
-   * @param gameType     the game variant, e.g. "snakesandladders" or "ludo"
+   * @param gameType     the game variant, e.g. "snakesandladders" or "quiz"
+   * @param configPath   the path to the configuration file
    * @param numberOfDice how many dice the game should use
    * @return a fully initialized BoardGame
    */

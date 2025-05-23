@@ -12,17 +12,17 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.logic.GameType;
 import model.util.FullscreenHandler;
 
 /**
- * PlayerView class allows users to enter player names and select game pieces.
- * It also provides functionality to save player records to a CSV file.
+ * PlayerView class allows users to enter player names and select game pieces. It also provides
+ * functionality to save player records to a CSV file.
  */
 public class PlayerView extends VBox {
 
@@ -43,7 +43,11 @@ public class PlayerView extends VBox {
   }
 
   /**
-   * @param numPlayers Number of players that was chosen on the previous "page"
+   * Constructor for PlayerView.
+   *
+   * @param numPlayers        Number of players that was chosen on the previous "page"
+   * @param gameType          The type of game that was chosen on the previous "page"
+   * @param fullscreenHandler The handler for fullscreen mode
    */
   public PlayerView(int numPlayers, GameType gameType, FullscreenHandler fullscreenHandler) {
     super(20);
@@ -95,7 +99,8 @@ public class PlayerView extends VBox {
     this.getChildren().add(buttonBox);
 
     this.getStyleClass().add("main-root");
-    this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+    this.getStylesheets()
+        .add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
     fullscreenHandler.setupFullscreenHandling(this);
   }
@@ -152,7 +157,7 @@ public class PlayerView extends VBox {
    */
   private void handleStart() {
     for (PlayerInputRow row : rows) {
-      String name  = row.getPlayerName();
+      String name = row.getPlayerName();
       String piece = row.getSelectedPiece();
       if (name == null || name.isBlank() || piece == null) {
         // Show warning and stop
@@ -185,19 +190,19 @@ public class PlayerView extends VBox {
   }
 
   /**
-     * Static class for the data of the players that is used in the playerview class.
-     */
-    public record PlayerData(String name, String piece) {
+   * Static class for the data of the players that is used in the playerview class.
+   *
+   * @param name  The name of the player
+   * @param piece The piece of the player
+   */
+  public record PlayerData(String name, String piece) {
 
     /**
      * Constructor for PlayerData.
-     *
-     * @param name  the name of the player
-     * @param piece the piece representing the player
      */
     public PlayerData {
     }
-    }
+  }
 
   /**
    * Sets the observer for this PlayerView.

@@ -42,6 +42,8 @@ public class BoardGame {
 
   /**
    * Creates the board for the game based on the specified game type.
+   *
+   * @param gameType the type of game (e.g., "snakesandladders", "quiz")
    */
   public void createBoard(String gameType) {
     createBoard(gameType, null);

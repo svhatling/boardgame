@@ -31,15 +31,28 @@ public class MainView extends Application {
   private Pane animationLayer;
   private static MainView instance;
 
+  /**
+   * Initializes the main view.
+   */
   @Override
   public void init() {
     instance = this;
   }
 
+  /**
+   * Returns the instance of MainView.
+   *
+   * @return the instance of MainView
+   */
   public static MainView getInstance() {
     return instance;
   }
 
+  /**
+   * Starts the JavaFX application.
+   *
+   * @param primaryStage the primary stage for this application
+   */
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
@@ -156,6 +169,9 @@ public class MainView extends Application {
 
   /**
    * Animates a floating shape.
+   *
+   * @param shape the shape to animate
+   * @param index the index of the shape for staggered animation
    */
   private void animateFloatingShape(Circle shape, int index) {
     TranslateTransition translate = new TranslateTransition(
@@ -177,6 +193,8 @@ public class MainView extends Application {
 
   /**
    * Adds hover animation to buttons.
+   *
+   * @param button the button to animate
    */
   private void addButtonHoverAnimation(Button button) {
     ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), button);
@@ -205,6 +223,8 @@ public class MainView extends Application {
 
   /**
    * Animates button click.
+   *
+   * @param button the button to animate
    */
   private void animateButtonClick(Button button) {
     ScaleTransition press = new ScaleTransition(Duration.millis(100), button);
@@ -221,6 +241,8 @@ public class MainView extends Application {
 
   /**
    * Animates the entrance of the main content.
+   *
+   * @param content the content to animate
    */
   private void animateEntrance(Node content) {
     // Fade in

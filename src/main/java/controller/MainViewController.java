@@ -10,6 +10,8 @@ public class MainViewController {
 
   /**
    * Constructor for MainViewController.
+   *
+   * @param gameType the type of game to be played
    */
   public void selectGame(GameType gameType) {
     System.out.println("Game selected: " + gameType);
